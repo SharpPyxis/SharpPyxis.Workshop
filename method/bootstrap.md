@@ -17,9 +17,22 @@ else. Two consequences that decide the whole design:
   sentence and it never silently fails.
 
 ⚠ Measured on the repositories this method came from: **seven per-tool trigger files existed,
-and not one of them reached the agent** — the session's primary folder held none. Worse than
-useless, those files carried *doctrine*, which made them a second source of truth living in a
-file that may never be read.
+and not one of them reached the agent.**
+
+It is tempting to read that as a placement mistake — put the file where the tool looks, and it
+works. It is not. The anchor a tool resolves from is a property of the **editor's state when
+the session opens**: which node of the tree is selected, which file holds focus. That state
+changes between one session and the next while nothing in the repository changes, so a file
+placed for one of them is missing for the next. There is no "right folder" to find, because
+the folder is not a property of the project.
+
+⚠ And the failure is not "nothing loads". It is **"something else loads"**: the agent starts,
+confidently, from a corpus that is not the one you meant, and goes straight into work built on
+it. A visible non-start costs one sentence to repair. A silent wrong start costs the session,
+and costs it without a signal.
+
+That is why the entry path is named by hand. Not as a fallback for when the wiring fails — as
+the contract, because the wiring cannot be made deterministic from where the developer stands.
 
 ## Tool-specific files are not part of the method
 
@@ -34,6 +47,15 @@ If a workshop uses such a file anyway, it must stay **thin**. Its entire job is:
 
 It must never carry a rule of its own. The moment it explains *why*, it has become a second
 source of truth in the least reliable location available.
+
+The harm such a file does is proportional to **how confidently it is wrong**. One that only
+names a path misleads about a location, and the error surfaces on the first read that fails.
+One that carries doctrine misleads about the rules — and nothing in the session will
+contradict it, because the rules are exactly what nobody goes back to check.
+
+⚠ A thin file is therefore never redundant safety. It is a second starting point, and one that
+can win. A workshop that keeps one accepts that risk deliberately; a workshop that has none
+loses nothing, because the reliable gesture was never the file.
 
 ## Wiring a workshop
 
