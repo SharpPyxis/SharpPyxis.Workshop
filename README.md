@@ -1,9 +1,76 @@
-# workshop
+# SharpPyxis.Workshop
 
-A **workshop** is a unit of work that owns its framing. It may hold one product spread
-over several repositories, or a single independent library. Each workshop carries a
-`_workspace/` folder holding its atlas, its todo and its handoff. This repository
-defines what workshops are, and how one developer and their AI agents work inside them.
+A tracking method for one developer working with AI agents.
+
+Its subject is narrow on purpose: **what an agent must read before it can be useful, and
+what a session must leave behind so the next one starts informed.**
+
+## The problem it addresses
+
+An agent starts every session knowing nothing. What it reads first decides the quality of
+everything that follows, and that reading is paid again at every start.
+
+The obvious answer — write things down — fails in a specific way, and usually in this
+order:
+
+- the notes grow until reading them costs more than they save. Since they are re-read at
+  every session start, that cost is paid again and again;
+- the same fact ends up in three files that disagree. You stop trusting them, and shortly
+  after, you stop writing them;
+- a decision taken three weeks ago is contradicted by one taken today, and nothing
+  notices — you kept the whole picture in your head, and the agent never had it;
+- the conventions file you were certain the agent had read was never within its reach.
+
+None of these is a failure of discipline. They are what happens to notes that have no
+assigned place, no reading budget, and no check.
+
+## What it gives you
+
+- **One place per kind of fact, so there is exactly one.** Five tenses — what *is*, what is
+  *open*, what is *volatile*, what is *done*, what is *not yet scoped* — and an item lives
+  in exactly one of them. Most drift in a framing folder is one document quietly taking on
+  another's job.
+- **A reading budget that does not grow with your notes.** What is read at every start is a
+  map. Everything else is reached by a trigger stated in the file's own header: conventions
+  before writing that kind of code, the closing protocol before closing. Your framing can
+  grow; your start-up cost does not.
+- **A session that ends in a defined state.** A closing protocol says what to record, where,
+  and in what order — so the next session starts from something written rather than from a
+  reconstruction.
+- **Checks rather than good intentions.** A lint reports the drift the rules exist to
+  prevent, including the size of what is read at every start. A rule nobody can afford to
+  read is not a rule.
+- **The same layout everywhere.** An installer lays out each workshop identically, so what
+  you learn in one applies to the next — including the one you create in six months.
+
+## Where it comes from
+
+It was not designed and then applied. It was extracted, over months of sessions, from the
+day-to-day development of several projects of different natures — worked out across them
+rather than for any one of them. Every rule in it exists because something went wrong
+first.
+
+Some of those failures are quoted in the files, with their numbers, because a rule is
+easier to respect when the cost of ignoring it is visible: a tracking lint that had become
+two divergent forks and was missing from a third workshop; seven per-tool trigger files, of
+which not one ever reached the agent; a framing folder found holding four repositories,
+three of them with no framing at all.
+
+The method is applied to its own development. Its framing is written under its own rules,
+and `sample/` shows what that looks like.
+
+## Who it is for
+
+One developer, working with AI agents, on more than one thing at a time. It is not a
+project-management framework: no estimation, no board, no ceremony, and nothing to fill in
+for anyone else's benefit.
+
+## The unit of work
+
+A **workshop** is a unit of work that owns its framing. It may hold one product spread over
+several repositories, or a single independent library. Each workshop carries a `_workspace/`
+folder holding its atlas, its todo and its handoff. This repository defines what workshops
+are, and how one developer and their agents work inside them.
 
 ## The layout, in full
 
