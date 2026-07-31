@@ -31,6 +31,7 @@ The method answers with three ideas:
 | `tracking.md` | Roles and life cycle of the framing documents, the todo grammar, the closing protocol |
 | `bootstrap.md` | The reading chain, its load and its budget |
 | `memory.md` | A tool's private memory versus memory shared between agents |
+| `git.md` | Repository creation, the versioned / local boundary, publication |
 | `lint/` | The checks, in one place, with per-workshop thresholds |
 | `templates/` | An empty workshop, an empty instance, and the installer |
 | `VERSION` | Stamped into every workshop the installer creates |
