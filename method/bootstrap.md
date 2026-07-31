@@ -8,8 +8,10 @@
 
 ## What actually reaches an agent
 
-An agent reads what is inside the folders declared by the editor's workspace, and nothing
-else. Two consequences that decide the whole design:
+An agent reads what is inside the folders it has been given, and nothing else. How that set is
+expressed is the tool's business — a multi-root editor workspace, a launch directory, a list of
+allowed paths — but every tool has one, and it is always finite. Two consequences that decide
+the whole design:
 
 - the **method** and the **instance** must both be declared folders. A file outside the list
   is not merely inconvenient to reach — it is unreachable;

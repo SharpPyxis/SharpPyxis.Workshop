@@ -224,9 +224,9 @@ is what lets the `git log` carry the factual record, so the handoff no longer ha
 
 ## Robustness and fallback
 
-The list of the workspace's folders is given to the agent in its environment context.
-**Locating the instance means consulting that list** — not running a file search inside one
-repository. The instance may be any of the folders, including the primary one.
+The set of folders the agent has been given is stated in its environment context, however the
+tool expresses it. **Locating the instance means consulting that list** — not running a file
+search inside one repository. The instance may be any of them, including the primary one.
 
 If, that check made, the instance is genuinely absent:
 
