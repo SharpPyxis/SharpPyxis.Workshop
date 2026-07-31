@@ -112,13 +112,9 @@ Fighting it would fight the rule. Moving what is rarely needed behind a trigger 
 
 ## Fallback
 
-Before concluding that the instance is absent, consult the workspace folder list. It
-corresponds to the folders declared by the open editor workspace, possibly extended by the
-tool. The instance may be any of them, including the primary folder.
+In `organization.md` § *Robustness and fallback*, and only there. It is needed at the moment
+the instance cannot be found — which is a moment for reading one file, not two.
 
-If it is genuinely absent:
-
-- use the local files of the repository at hand;
-- **state explicitly** that the standard bootstrap is unavailable, rather than proceeding as
-  if it had run;
-- do not invent a structure that has not been confirmed.
+This file said the same thing in its own words for a while, which is how a second source of
+truth starts: not by contradicting the first, but by agreeing with it until one of them is
+edited.
