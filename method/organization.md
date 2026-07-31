@@ -170,6 +170,13 @@ Three rules, each of them written after it was got wrong:
 must stay the developer's call — exactly as ⚠ and ❓ let a todo flag an arbitration instead of
 taking it.
 
+⚠ **Expect the first rule to lose on its own, and plan for it.** It is abstract and read early;
+the sentence that contradicts it is concrete, read late, and speaks about the case at hand. In
+that contest the second wins — not by disobedience, by apparent relevance. Observed the day
+after the rule was written: a handoff still said where the follow-up was steered, and it was
+followed. **Writing the rule here is necessary and not sufficient. The documents that redirect
+have to be corrected, one by one.**
+
 ## Index of the method, by trigger
 
 Almost nothing here is read unconditionally. Each file states its own trigger in its header.

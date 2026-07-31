@@ -101,6 +101,12 @@ the tensed documents. The lint enforces this.
   changed.
 - **One entry per session.** Enriching the current entry as the session goes is correct;
   opening a second one for the same session is not.
+- ⚠ **It may state that work has moved; it may not say where the session goes.** "The method is
+  now developed in another workshop" is a fact, and belongs here. "That is where the follow-up
+  is steered, not here" is an instruction — and the next agent will obey it, after the map and
+  about the case at hand, over any rule that says otherwise. A handover records the fact and
+  stops there. This is the single most likely sentence to survive a migration and mislead
+  afterwards, because it was true the day it was written.
 - **Keep the recent sessions only** — of the order of three to five — and archive the rest in
   a companion file, consulted on explicit request and never re-read at the start of a
   session.

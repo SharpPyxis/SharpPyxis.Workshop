@@ -75,6 +75,25 @@ method repository's root, because there the method is the work.
 files some tools declare. Observed: three folder paths changed, and the lint stayed green. A
 wrong path there breaks nothing visible — it only makes the method unreadable, silently.
 
+## Migrating a workshop: sweep for dead instructions, not only dead paths
+
+A path that no longer resolves is mechanical, and a lint finds every one of them. **A sentence
+that no longer holds is not**, and it does far more damage: a dangling path fails visibly at
+the first read, while a stale instruction is followed.
+
+Observed on the first workshop migrated under this method: every retired path was found and
+rewritten, the lint went green, and the session that followed was still redirected out of the
+workshop by a handoff sentence that had been true the day before. The sweep had looked for
+locations, not for imperatives.
+
+So a migration ends with a reading of the framing documents asking one question — **does any
+sentence here still tell an agent what to do, on the strength of a situation that has since
+changed?** Handover notes, "read this first" headers, and next-step lines are where they live.
+
+⚠ A lint can narrow the reading without replacing it: a framing document citing a location
+**outside its own workshop** — the method and the instance excepted — is a redirect candidate,
+and that is mechanically detectable.
+
 ## The load is a budget
 
 The sum of what is read at every session start is measured, and the lint reports it. A rule
