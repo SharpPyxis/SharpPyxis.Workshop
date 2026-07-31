@@ -5,6 +5,8 @@ A tracking method for one developer working with AI agents.
 Its subject is narrow on purpose: **what an agent must read before it can be useful, and
 what a session must leave behind so the next one starts informed.**
 
+The upkeep is the agent's job. Yours is to review it.
+
 ## The problem it addresses
 
 An agent starts every session knowing nothing. What it reads first decides the quality of
@@ -42,6 +44,24 @@ assigned place, no reading budget, and no check.
   read is not a rule.
 - **The same layout everywhere.** An installer lays out each workshop identically, so what
   you learn in one applies to the next — including the one you create in six months.
+
+## Written to be executed, not only respected
+
+Most of what is written here is addressed to the agent rather than to you. The rules are
+specific enough to be applied without a judgement call: what to record at the end of a
+session, in which file, in what order, with what grammar; when an item leaves the todo;
+where a guard-rail goes once the work that produced it closes.
+
+That is the point of the whole thing: **the framing maintains itself as a by-product of the
+work.** The agent writes the handoff entry, moves out what closed, updates the atlas, runs
+the lint and commits. Upkeep stops being a task to remember at the end of a long session —
+which is precisely when it does not get done.
+
+You stay the arbiter, and the design assumes it. What is a guard-rail rather than a passing
+precaution, what is genuinely finished, which decision must not be guessed — those are
+yours. The todo grammar gives each its own mark (⚠, ✅, ❓) so that an agent **flags** them
+instead of deciding them, and the lint keeps the review cheap: you read a report, not every
+file.
 
 ## Where it comes from
 
