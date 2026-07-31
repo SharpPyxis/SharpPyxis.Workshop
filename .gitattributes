@@ -1,0 +1,5 @@
+# Line endings: LF everywhere. The repository stores LF, and checkout writes LF
+# whatever the cloner's configuration — so a clone is byte-identical anywhere.
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf

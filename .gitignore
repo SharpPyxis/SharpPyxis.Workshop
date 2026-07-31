@@ -1,0 +1,8 @@
+# The .gitignore is authoritative on the versioned / local boundary, and every entry
+# says WHY it is ignored — a readable .gitignore prevents case-by-case judgement, by
+# a human as much as by an agent.
+#
+# Nothing private is ignored here, because nothing private is here. This repository is
+# public in full; what is private lives in sibling repositories, outside its tree. A
+# boundary drawn by structure holds against a mistyped command; one drawn by a rule in
+# this file only holds while the rule does.
