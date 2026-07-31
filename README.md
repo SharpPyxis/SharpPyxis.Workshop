@@ -28,10 +28,10 @@ assigned place, no reading budget, and no check.
 
 ## What it gives you
 
-- **One place per kind of fact, so there is exactly one.** Five tenses — what *is*, what is
-  *open*, what is *volatile*, what is *done*, what is *not yet scoped* — and an item lives
-  in exactly one of them. Most drift in a framing folder is one document quietly taking on
-  another's job.
+- **One place per kind of fact, so there is exactly one.** Four tenses — what *is*, what is
+  *open*, what is *volatile*, what is *finished* — and an item lives in exactly one of them,
+  plus one long form for whatever does not fit on a line. Most drift in a framing folder is
+  one document quietly taking on another's job.
 - **A reading budget that does not grow with your notes.** What is read at every start is a
   map. Everything else is reached by a trigger stated in the file's own header: conventions
   before writing that kind of code, the closing protocol before closing. Your framing can
@@ -122,8 +122,8 @@ projects/                        the root. Not a repository. Nothing is read fro
 │   └── _workspace/                THE FRAMING — outside every code repository
 │       ├── atlas.md                 what exists and works
 │       ├── todo.md                  what is open
-│       ├── planning/                what is not yet scoped
-│       ├── delivered/               what is done — one file per [TAG]
+│       ├── done/                    what is finished — one file per [TAG]
+│       ├── _planning/               the long form, at any stage — status in each header
 │       └── memories/
 │           ├── handoff.md           what is volatile — one entry per session
 │           └── shared/              stable facts, reachable from an index

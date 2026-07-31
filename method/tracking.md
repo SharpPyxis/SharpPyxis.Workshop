@@ -4,7 +4,8 @@
 > **Do not read** to answer a question or write code — the map (`organization.md`) already
 > says what each document holds.
 
-Five tenses, and an item lives in exactly one of them. Most drift in a framing folder is one
+Four tenses and one format. An item lives in exactly one **tense**; the format is where
+anything too long for a line goes, whatever its tense. Most drift in a framing folder is one
 document quietly taking on the job of another.
 
 ---
@@ -57,26 +58,39 @@ is active, on hold, or blocked, and by what.
 ⚠ ✅ is a transition, not a resting state. An item that stays checked in the todo is an item
 nobody moved to the atlas or the delivered narrative.
 
-## The delivered narrative — what is done
+## `done/` — what is finished
 
-A closed piece of work leaves the todo, but its story is often worth keeping: why it was
-done that way, what was tried, what was rejected. That belongs in a per-tag file — one per
+A closed piece of work leaves the todo, but its story is often worth keeping: why it was done
+that way, what was tried, what was rejected. That belongs in `done/<TAG>.md` — one file per
 `[TAG]` — outside both the atlas and the todo.
 
 The atlas keeps the consolidated result in a few lines; the narrative keeps the account. The
 todo keeps neither.
 
-## Planning — what is not yet scoped
+## `_planning/` — the long form, at any stage
 
-A subject too large or too early to be a todo item gets a document of its own. Each such
-document opens with a `> status:` header saying whether it is still valid, superseded, or
-pending — which is what lets a later pivot be assessed document by document rather than
-wholesale.
+Not a tense: a **format**. A subject whose reasoning does not fit on a line gets a document of
+its own, and it may enter before anything is decided, stay through the work, and leave only
+when it has shrunk to a few lines of atlas.
+
+What supplies the tense is the mandatory `> status:` header on each document — still valid,
+superseded, pending, under active development. That is what lets a later pivot be assessed
+document by document rather than wholesale, and it is why the header is not a convenience:
+without it, the folder holds documents at four different stages and says so nowhere.
+
+⚠ **A todo item citing a planning document is the normal case, not a violation of "one item,
+one tense".** It is the self-sufficiency rule doing its job: an item either carries its
+meaning or cites the document that does — and `_planning/` is where that cited document
+lives. The two are complementary; only *duplication* between them is drift.
 
 ⚠ **No loose `.md` at the root of a framing folder.** A scoping document sitting beside the
 atlas is read by nobody and contradicts it in silence. Either it is a planning document, and
-it goes in the planning folder with a status header, or it is not, and its content belongs
-in one of the tensed documents. The lint enforces this.
+it goes in `_planning/` with a status header, or it is not, and its content belongs in one of
+the tensed documents. The lint enforces this.
+
+> The leading underscore of `_planning/` is a sorting convention inherited from the workshops
+> that proved this layout. It carries no meaning beyond that — unlike `_workspace/`, where it
+> marks the meta level.
 
 ## `memories/handoff.md` — what is volatile
 

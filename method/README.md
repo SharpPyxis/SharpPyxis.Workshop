@@ -6,8 +6,8 @@ The rules themselves. What problem they address and where they come from is in t
 Three ideas run through everything here:
 
 - **documents separated by tense** — what *is* (atlas), what is *open* (todo), what is
-  *volatile* (handoff), what is *done* (a delivered narrative), what is *not yet scoped*
-  (planning). An item lives in exactly one of them;
+  *volatile* (handoff), what is *finished* (`done/`). An item lives in exactly one of them,
+  and `_planning/` holds the long form of anything that does not fit on a line, at any stage;
 - **reading by trigger** — almost nothing is read unconditionally. Each file states in its
   own header when it is to be read, and when it is not;
 - **a measured bootstrap load** — the sum of what is read at every start is a budget, and
