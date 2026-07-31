@@ -1,4 +1,4 @@
-# Organisation — the map
+# Organization — the map
 
 The single entry point of the method. Everything else is reached from here.
 
@@ -48,30 +48,65 @@ workshop — and a half-rename is worse than none.
 ## Layout
 
 ```text
-<workshop>/
-  <repository>/       one or more code repositories, each a repository in its own right
-  _workspace/         the framing, outside every code repository
-    atlas.md          what exists and works
-    todo.md           what is open
-    memories/         shared between agents, including handoff.md
+<root>/                          ROOT      no meaning, not a repository, nothing read from it
+├── _workshop/                   WORKSHOP  the meta level — one per machine, shared by all
+│   ├── <method repo>/           REPO      public: method/ (rules) + sample/ (example)
+│   ├── instance/                REPO      private: identity, conventions, notebooks
+│   └── _workspace/              FRAMING   private: framing of the method's own development
+├── <WorkshopName>/              WORKSHOP  owns exactly one framing
+│   ├── <repo-a>/                REPO      code — src/, tests/, docs/, per its stack
+│   ├── <repo-b>/                REPO      code — same workshop, same framing
+│   └── _workspace/              FRAMING   outside every code repository
+│       ├── atlas.md                       what exists and works
+│       ├── todo.md                        what is open
+│       ├── planning/                      what is not yet scoped
+│       ├── delivered/                     what is done — one file per [TAG]
+│       └── memories/handoff.md            what is volatile — one entry per session
+└── <OtherWorkshop>/             WORKSHOP  a single library is still a workshop
+    ├── <repo>/                  REPO
+    └── _workspace/              FRAMING
 ```
 
-The method itself is distributed as a repository laid out the same way:
+### Resolving what you are looking at
 
-```text
-<root>/
-  <method repository>/   public — method/ and sample/
-  instance/              private, sibling — never inside the public tree
-  _workspace/            private, sibling — the framing of the method's own development
-```
+Apply in order. Each test is mechanical — do not infer a level from a folder's name, its
+depth, or how important it looks.
 
-The instance is found **beside** the method repository, in a folder named `instance/`. A
-workshop that places it elsewhere declares the path in its own configuration; the method
-never hardcodes it.
+1. **Contains a `_workspace/`** → it is a **workshop**. This is the only test. A workshop is
+   never itself a repository.
+2. **Is a repository and contains no `_workspace/`** → it is **code**, and it belongs to the
+   workshop that contains it. Its internal skeleton is whatever its stack expects, and the
+   method says nothing about it.
+3. **Is named `_workspace/`** → it is the **framing** of the workshop that contains it. It
+   sits outside every code repository. It may have a private backup repository of its own;
+   that is a backup, not a tracking tool.
+4. **Contains workshops and nothing else of interest** → it is the **root**. Read nothing
+   from it.
 
-⚠ Nothing private ever lives inside the published tree, not even ignored. A boundary drawn
-by structure holds against a mistyped command; a boundary drawn by a `.gitignore` entry
-holds only as long as the entry does — and `git clean -xdf` deletes exactly what is ignored.
+Consequences worth stating, because each has been got wrong:
+
+- several repositories may share one workshop, **as long as they serve one framing**. Two
+  sets with independent framing are two workshops;
+- `_workshop/` passes test 1, and that is deliberate: the method is developed under its own
+  rules. It differs only in also hosting `instance/`, which is transverse and belongs to no
+  single workshop;
+- the instance is found **beside** the method repository, in a folder named `instance/`. A
+  workshop that places it elsewhere declares the path in its own configuration; the method
+  never hardcodes it.
+
+### Never
+
+- **Never publish a `_workspace/`**, including the method's own. Framing documents carry
+  names, decisions and session context belonging to their owner. The published example is
+  `sample/`, written for that purpose.
+- **Never place `sample/` next to a real `_workspace/`.** Two framings side by side are two
+  sources of truth — the exact drift this method exists to prevent.
+- **Never put private content inside a published tree, not even ignored.** A boundary drawn
+  by structure holds against a mistyped command; a `.gitignore` entry holds only as long as
+  the entry does, and `git clean -xdf` deletes exactly what is ignored.
+- **Never write framing into a code repository**, and never write code doctrine into the
+  framing. Reusable code and its reference documentation are versioned with what they
+  document.
 
 ## The three framing documents
 
@@ -113,7 +148,7 @@ Almost nothing here is read unconditionally. Each file states its own trigger in
 
 | File | Read when |
 | --- | --- |
-| `organisation.md` | Always — this file |
+| `organization.md` | Always — this file |
 | `tracking.md` | Writing in a framing document, or closing a session |
 | `bootstrap.md` | Setting up a workshop, or diagnosing why an agent read nothing |
 | `memory.md` | Deciding where a fact should be stored |

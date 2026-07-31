@@ -3,7 +3,7 @@
 > **Read when** creating a repository, writing or changing a `.gitignore`, deciding whether a
 > file should be tracked, or preparing a publication.
 > **Do not read** to commit normally — the two frequent rules, message language and honest
-> scope, are in the map (`organisation.md` § *Commits*).
+> scope, are in the map (`organization.md` § *Commits*).
 
 ---
 

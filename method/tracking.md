@@ -1,7 +1,7 @@
 # Tracking — life cycle of the framing documents
 
 > **Read when** writing in a framing document, or closing a session.
-> **Do not read** to answer a question or write code — the map (`organisation.md`) already
+> **Do not read** to answer a question or write code — the map (`organization.md`) already
 > says what each document holds.
 
 Five tenses, and an item lives in exactly one of them. Most drift in a framing folder is one

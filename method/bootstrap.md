@@ -29,7 +29,7 @@ method that mandated them would ship rules that are wrong everywhere they were n
 If a workshop uses such a file anyway, it must stay **thin**. Its entire job is:
 
 - consult the workspace folder list to locate the method and the instance;
-- read `method/organisation.md`;
+- read `method/organization.md`;
 - follow what that file references.
 
 It must never carry a rule of its own. The moment it explains *why*, it has become a second

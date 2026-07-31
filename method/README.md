@@ -27,7 +27,7 @@ The method answers with three ideas:
 
 | | |
 | --- | --- |
-| `organisation.md` | The single entry point: the map, and the reading order |
+| `organization.md` | The single entry point: the map, and the reading order |
 | `tracking.md` | Roles and life cycle of the framing documents, the todo grammar, the closing protocol |
 | `bootstrap.md` | The reading chain, its load and its budget |
 | `memory.md` | A tool's private memory versus memory shared between agents |
