@@ -106,7 +106,9 @@ the tensed documents. The lint enforces this.
   is steered, not here" is an instruction — and the next agent will obey it, after the map and
   about the case at hand, over any rule that says otherwise. A handover records the fact and
   stops there. This is the single most likely sentence to survive a migration and mislead
-  afterwards, because it was true the day it was written.
+  afterwards, because it was true the day it was written. There is a moment when it gets
+  written, and it is worth knowing: **when one workshop gives birth to another.** Check the
+  parent's handoff that day, not months later when a session has already followed it.
 - **Keep the recent sessions only** — of the order of three to five — and archive the rest in
   a companion file, consulted on explicit request and never re-read at the start of a
   session.
