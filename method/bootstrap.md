@@ -77,6 +77,42 @@ method repository's root, because there the method is the work.
 files some tools declare. Observed: three folder paths changed, and the lint stayed green. A
 wrong path there breaks nothing visible — it only makes the method unreadable, silently.
 
+## A prerequisite the agent resolves is not a prerequisite
+
+The reference lint needs a runtime. Listing it as a prerequisite in a readme puts the cost on
+the reader who skimmed it — and that reader is precisely the one who meets the failure, at the
+moment they were closing a session.
+
+The rule is placed on the agent instead: **when the checks are first run, verify the runtime and
+offer to install it.** A missing interpreter is then a step, not a wall.
+
+| | |
+| --- | --- |
+| Runtime | Python, **3.11 minimum** |
+| Dependencies | none — standard library only: no third-party package, no virtual environment, no dependency file |
+| Invocation | `py -3` on Windows, `python3` elsewhere |
+
+None of the three is a taste, and each carries the reason it exists:
+
+- **standard library only** is what keeps "install Python" a non-event. A lint that pulls a
+  package restores the friction the choice was made to avoid — and restores it on every machine
+  that adopts the method, not on the author's, where the package is already there;
+- **3.11** is set by the configuration format rather than picked. A per-workshop configuration
+  must carry the reason for each threshold it declares; a format without comments cannot, and
+  any other that can costs a parser, which the line above forbids. TOML carries them, and TOML
+  parsing entered the standard library at 3.11;
+- ⚠ **the invocation differs per platform and must not be guessed.** On Windows, `python3`
+  resolves to a store stub and fails with a message that reads as *Python was not found* — on a
+  machine where it is installed and working. An agent that trusts that message diagnoses an
+  absence, offers an installation, and puts a second interpreter beside a working one.
+
+⚠ The check belongs in the **script** as much as in this file. This file is read when a workshop
+is set up; a machine that changes afterwards is caught only by a guard that runs. A guard that
+executes beats a rule that was read once, six months ago.
+
+⚠ And the offer stays an offer. Installing a runtime modifies the developer's machine, which is
+theirs to decide: propose the command and the version, then wait.
+
 ## Migrating a workshop: sweep for dead instructions, not only dead paths
 
 A path that no longer resolves is mechanical, and a lint finds every one of them. **A sentence
