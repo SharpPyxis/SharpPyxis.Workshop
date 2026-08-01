@@ -1,0 +1,161 @@
+# Lint contract — what must be checked
+
+> **Read when** running the checks, changing their configuration, or reimplementing them.
+> **Do not read** during ordinary work.
+
+This file is the portable part. It states **what** a workshop's framing must be checked for,
+and why each check exists. `workshop-lint.py` is one implementation of it — the reference one,
+shipped so that adopting the method does not start with writing a tool.
+
+⚠ **One implementation, and only one.** This method exists partly because the same lint was
+found in two divergent forks — 269 lines against 198, with 77 in common — and absent from a
+third workshop, precisely the one where an unfiled document was sitting at the root of a framing
+folder against a rule the other two enforced. Shipping a second implementation would reproduce
+that fault by design. A workshop that cannot run the reference implementation reimplements from
+**this file**, not from that code.
+
+---
+
+## Levels
+
+| Level | Means | Exit |
+| --- | --- | --- |
+| `OK` | The check passed | — |
+| `WARN` | A drift worth seeing, that does not block a commit | 0 |
+| `FAIL` | A rule is broken; fix before committing the session close | 1 |
+
+⚠ The distinction is not severity, it is **who decides**. A `FAIL` is mechanical: the rule says
+so, and no judgement is involved. A `WARN` is a measurement handed to the owner — a threshold
+crossed, a date drifting, a document that may have outlived its subject. A check that guesses at
+intent produces `WARN`, never `FAIL`.
+
+## The socle — every workshop, no exception
+
+**Handoff — bounded number of sessions.** The volatile file is re-read at every start; one that
+grows without bound damages exactly what it exists to help.
+
+**Todo — nothing finished left in place.** A closed item leaves: notable ones become a line in
+the atlas, minor ones disappear. A todo crowded with closed items loses its steering value.
+
+**Sizes — per file, in characters.** ⚠ **Characters, not lines.** Lines measure formatting as
+much as volume: a consolidation pass was once measured removing 15% of a file's content while
+its line count did not move, because the file mixed prose wrapped at 100 columns with paragraphs
+held on single 200-to-1200-character lines. A line-based threshold therefore penalises readable
+text and rewards a wall. Characters are deterministic, need no dependency, and track tokens at
+roughly 3.5:1 — closer to 3 on passages dense in identifiers, which is why words are worse
+still: they undercount precisely the passages that cost the most.
+
+**Bootstrap load — the sum.** The per-file thresholds are a distribution guard-rail; the number
+that actually constrains a session is the **total** re-read at every start, before a line of
+code is opened: the method's map, the instance index and the identity file it declares, and the
+workshop's tensed documents. ⚠ A workshop that checks only the per-file sizes is not measuring
+its budget — it is measuring its balance.
+
+**Planning documents — a status header, and a resolvable tag.** Every document in the long-form
+folder carries `> Statut :` (or its local equivalent). Without it the folder holds documents at
+four different stages and says so nowhere. A `[TAG]` cited in that header must be findable in
+the todo; if it is not, the scoping has probably been executed and the document has outlived it.
+
+**No stray document at the root of the framing folder.** A scoping document sitting beside the
+atlas is read by nobody and contradicts it in silence. Either it is a planning document and it
+goes in the long-form folder with a status header, or its content belongs in one of the tensed
+documents.
+
+**Todo grammar.** A piece of work is `## [TAG] Title` followed within two lines by a status line
+drawn from a **closed vocabulary**. Tags are unique. Item prefixes come from the declared set,
+and the prefixes reserved for other tenses are refused outright — an item marked done inside the
+todo is an item nobody moved to the atlas or to the delivered narrative.
+
+**Delivered narratives — named by tag, and cited without dangling.** One file per `[TAG]`, named
+after it. Every reference from the todo to such a file must resolve.
+
+**Cited tags exist.** ⚠ Any `[TAG]` cited anywhere in the framing must exist as a section of the
+todo or as a delivered narrative. Citing by identity protects a reference against a corpus that
+*moves*; it does nothing against one that *closes*. A tag does not go stale visibly — it stays
+readable, plausible and wrong. Observed: three citations of a tag survived its closure, and two
+of them announced a blocker that had been lifted, one of them gating a publication.
+
+**Header dates.** A document whose declared date lags well behind its last modification is a
+document whose header no longer describes it. ⚠ `WARN` only: modification times do not survive a
+clone, so this check measures a working copy, not a truth.
+
+**Citations resolve.** Three checks, and their narrowness is deliberate:
+
+- **links** — every markdown link target must resolve. A link is unambiguously a location: it is
+  clickable, and a dangling one sends a reader to a file that is not there;
+- **declared prefixes** — a quoted token starting with a prefix the workshop declares
+  *structural* must resolve;
+- **retired names** — names declared retired must appear nowhere, including outside the framing
+  folder. Paths leak into code comments and dotfile headers, which have no reason to follow the
+  corpus when it moves. This is the migration check, and its list belongs to the workshop being
+  migrated, never to all of them.
+
+⚠ **Why the first two must stay narrow.** An early implementation tried to resolve every quoted
+token that *looked like* a path. It produced several hundred false failures on a real workshop,
+because almost every such token is an **identity**, not a location: a document named without its
+folder, a URL route, a MIME type, a date format. The corpus was already citing by identity —
+which is the rule — and the check punished it. **A lint verifies what is declared to be a
+location; it does not guess.**
+
+⚠ And the failure mode to design against: an early sweep escaped its pattern for a regular
+expression while asking for a literal match. It searched for the escape characters themselves
+and reported only the one token that had none — **seventeen occurrences missed in silence**. A
+lint that under-reports is worse than no lint, because it returns a green that means nothing.
+
+**Redirect candidates.** A framing document citing a location **outside its own workshop** — the
+method and the instance excepted — is a candidate. ⚠ `WARN`, and it narrows a reading rather
+than replacing it: the sentence that caused this check to exist did cite an outside path, but a
+wording without any path passes straight through. The defect is semantic; this is only its
+mechanical shadow.
+
+## Checks a workshop declares for itself
+
+Off unless configured. Each exists because a real workshop needed it and another did not.
+
+**Repository state.** For every repository the workshop frames: the line-ending files present,
+no file drifted back to the other convention on disk, a tracking remote, and the count of
+commits not yet pushed. ⚠ A commit that is never pushed protects nothing.
+
+**Editor workspace.** The folder list an agent is actually given must resolve, **in exact case**.
+⚠ Both halves have failed in the field. Three folder paths were changed and the lint stayed
+green — a wrong path there breaks nothing visible, it only makes the method unreadable, in
+silence. And a name whose case differs from disk loads nothing at all on a case-sensitive file
+system, while working perfectly on the author's machine.
+
+**Publication files.** For a repository meant to be published: the files its audience expects.
+
+**Roadmap freshness.** Where a workshop keeps an ordered snapshot of its work, a tag that has
+closed or gone dormant since means the snapshot is stale.
+
+**Echoed items.** A workshop may mark items that must be read out at every run — publication
+blockers, typically. ⚠ A blocker that has to be remembered is a blocker that gets forgotten, and
+echoing it costs one line.
+
+**Tags cited from outside the framing.** A static site, a code repository or any surface that
+references the workshop's tags. A citation left behind by a closed tag points at nothing, and —
+unlike a dangling path — it fails nowhere at all.
+
+**Extra fields on the status line.** A workshop that classifies its work along an axis of its own
+declares the field and its closed vocabulary.
+
+## Configuration
+
+Declared **per workshop**, in the framing folder — the configuration of a framing belongs to
+what it frames. ⚠ Hard-coding it is what produced the forks: the two divergent versions differ
+almost entirely in constants, not in logic.
+
+The format must let a declared value carry the **reason** it holds. A threshold without its
+reason is raised to silence the lint; a threshold with its reason gets discussed instead. That
+requirement excludes any format without comments, and — combined with the standard-library-only
+constraint — settles the format as TOML and the runtime floor as Python 3.11.
+
+⚠ **A template must declare no number.** A threshold set at creation time, before the workshop
+has any content, is guesswork that will be either ignored or wrong. Observed: 400 lines posted
+for a todo whose natural floor was around 420. What a template documents is the **formula** — a
+todo's floor is roughly *open subjects × lines per subject + header* — not a value.
+
+## Runtime
+
+Stated in `bootstrap.md` § *A prerequisite the agent resolves is not a prerequisite*, and
+enforced by the implementation itself rather than by this document alone: a rule read once, when
+a workshop was set up, does not catch a machine that changed afterwards.
