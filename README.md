@@ -2,6 +2,16 @@
 
 A tracking method for one developer working with AI agents.
 
+> **Opening a session, name the workshop and the entry point.** One sentence, and it never
+> silently fails:
+>
+> ```text
+> Hello — we are working on Ledger today.
+> Entry point: projects/_workshop/workshop/method/organization.md
+> ```
+>
+> That is the whole gesture. Why it is typed rather than configured: § *Entry point*, below.
+
 Its subject is narrow on purpose: **what an agent must read before it can be useful, and
 what a session must leave behind so the next one starts informed.**
 
