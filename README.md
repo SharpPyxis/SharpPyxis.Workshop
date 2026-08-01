@@ -174,8 +174,8 @@ published:
 - an **instance** — one owner's profile, transverse technical conventions and
   notebooks. The method never reads its contents, only the index it declares;
 - the **framing of this repository's own development** — its `_workspace/`, held to the
-  same rule as every workshop's: private. `sample/` exists so that an example can ship
-  without shipping someone's working notes.
+  same rule as every workshop's: private. `sample/` is what lets an example ship without
+  shipping someone's working notes.
 
 The rule that decides every borderline case:
 
@@ -183,10 +183,10 @@ The rule that decides every borderline case:
 > transverse technical conventions, read on demand before writing that kind of code*
 > is method. What that corpus says is instance.
 
-Because nothing private is inside this tree, publishing is pushing the repository as it
-stands — no export step, no filtering, and no rule to remember at the moment it matters.
-A boundary drawn by structure holds against a mistyped command; one drawn by an entry in
-a `.gitignore` holds only as long as the entry does.
+Because nothing private is inside this tree, there is no export step, no filtering, and no
+rule to remember at the moment it matters: publication is a change of visibility, not a
+build. A boundary drawn by structure holds against a mistyped command; one drawn by an entry
+in a `.gitignore` holds only as long as the entry does.
 
 ⚠ `sample/` must **not** be placed next to an actual `_workspace/` when the method is
 adopted — it would become a second source of truth for framing, which is exactly the
@@ -210,10 +210,18 @@ trigger files existed, and not one of them reached the agent.
 
 ## Status
 
-Under construction. Nothing here is referenced by any workspace yet — the previous
-corpus stays authoritative until the switch happens in one step.
+Under construction, and in use. Five workshops are wired to this repository and read
+`method/organization.md` at the start of every session; the switch happened on 2026-08-01,
+in a single step, as the method's own rules require.
 
-Two decisions are deliberately left open rather than guessed:
+⚠ **`sample/` is described throughout this file and has not been written yet.** It is the
+one thing publication waits on: a method that ships without an example of what it produces
+asks its reader to imagine the artefact. Every mention of it above describes the design, not
+the current contents of this repository.
 
-- ⬜ the published name of `method/`;
-- ⬜ its license, to be chosen before the first publication.
+One decision is deliberately left open rather than guessed:
+
+- ⬜ the license, to be chosen before the first publication.
+
+The published name is settled: `method/` names its function and stands against `sample/`,
+while the repository above it carries the belonging.
