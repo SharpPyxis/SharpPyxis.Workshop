@@ -24,6 +24,17 @@ method that hardcoded a language or a name would be wrong everywhere it was not 
 ⚠ This is the one instruction that is **not** behind a trigger. Everything else in the
 method is read when a condition is met; this is read always, first, unconditionally.
 
+**If there is no instance, or it holds no index** — the case on a fresh copy, since the
+repository ships `instance/` empty — read `onboarding.md`. It turns the absence into a short
+interview producing a first identity file and the index that declares it.
+
+⚠ It **offers**; it does not start. The absence is found in the first seconds of a session
+opened to do something else, and nothing justifies taking that session over. State it in one
+sentence, offer, and wait — then either write the instance or carry on without it, saying
+plainly that you are working without the identity rules. This is the same discipline as
+offering to install a missing runtime, and for the same reason: the cost falls on someone
+else's machine.
+
 ## Vocabulary
 
 | Term | Meaning |
@@ -156,14 +167,20 @@ its own status header.
 
 ## Reading order
 
-Before substantial work:
+Before substantial work. The first three interleave, and that is by design — § *Step 0* sits at
+the top of this file so that reading the map in order produces the right sequence:
 
-1. `instance/index.md` and the identity file it declares — always, first (§ *Step 0*);
-2. this file;
-3. identify the workshop concerned by the request;
-4. its `_workspace/atlas.md` and `_workspace/todo.md`;
-5. the relevant files of `_workspace/memories/`;
-6. only then, the code needed for the work asked.
+1. **this file, as far as § *Step 0*** — its opening lines;
+2. `instance/index.md` and the identity file it declares — before a single line of prose;
+3. **the rest of this file**;
+4. identify the workshop concerned by the request;
+5. its `_workspace/atlas.md` and `_workspace/todo.md`;
+6. the relevant files of `_workspace/memories/`;
+7. only then, the code needed for the work asked.
+
+⚠ Steps 1 and 3 were once a single entry, placed second — which had this file being read after
+a list that lives inside it. Harmless to a reader who already knew, and misleading to the only
+audience that matters here: one arriving with nothing.
 
 For a trivial or very local request this may be reduced to what is strictly needed — but
 never at the expense of step 1, and never by inventing a structure instead of reading one.
@@ -212,6 +229,7 @@ Almost nothing here is read unconditionally. Each file states its own trigger in
 | File | Read when |
 | --- | --- |
 | `organization.md` | Always — this file |
+| `onboarding.md` | There is no instance, or it holds no index — fires at most once per machine |
 | `tracking.md` | Writing in a framing document, or closing a session |
 | `bootstrap.md` | Setting up a workshop, or diagnosing why an agent read nothing |
 | `memory.md` | Deciding where a fact should be stored |

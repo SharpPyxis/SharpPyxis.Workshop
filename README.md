@@ -225,6 +225,12 @@ notebooks. The method never reads its contents — only the `index.md` you put t
 declares what exists and **when** each file is read. Everything else in your copy is received:
 you read `method/`, you do not edit it.
 
+You do not write that first file from a blank page. The first session that finds no instance
+**offers** to build one with you — ten minutes of questions, and it writes the identity file and
+the index that declares it. It offers and waits: a session opened to do something else is never
+taken over by it. The rest of the corpus arrives later, one file at a time, each written the
+first time its absence is actually felt.
+
 The rule that decides every borderline case:
 
 > **The method declares slots; the instance fills them.** *That there is a corpus of

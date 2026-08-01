@@ -7,6 +7,15 @@ method reads it from step 0 of every session.
 > technical conventions, read on demand before writing that kind of code* is method. What that
 > corpus says is instance.
 
+## You do not have to write the first one alone
+
+Nothing works before this folder has an `index.md` and the identity file it declares — so the
+first session that finds them missing **offers to build them with you**: a handful of questions
+about your language, your register and how you work, and it writes both. Say yes, or say later
+and it carries on without them, telling you so rather than guessing.
+
+It offers and waits. A session you opened to do something else is not taken over by this.
+
 ## What goes here
 
 | | |

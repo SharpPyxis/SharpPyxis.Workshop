@@ -18,6 +18,7 @@ Three ideas run through everything here:
 | | |
 | --- | --- |
 | `organization.md` | The single entry point: the map, and the reading order |
+| `onboarding.md` | Building a first instance, when there is none — an interview, offered and never started unasked |
 | `tracking.md` | Roles and life cycle of the framing documents, the todo grammar, the closing protocol |
 | `bootstrap.md` | The reading chain, its load and its budget |
 | `memory.md` | A tool's private memory versus memory shared between agents |
@@ -47,7 +48,9 @@ and leaving `instance/` alone — it is the one folder an update must never touc
 
 ⚠ `instance/` ships with a readme and nothing else. Shipping a skeleton `index.md` would be
 shipping an untested model, which costs more than an absent one, since a model is copied without
-being re-read.
+being re-read. **You do not have to write the first one alone**: the first session that finds no
+instance offers to build it with you, in ten minutes of questions — `onboarding.md`. It offers
+and waits; it never takes over a session you opened for something else.
 
 ## A worked example
 
