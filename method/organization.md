@@ -67,7 +67,7 @@ workshop — and a half-rename is worse than none.
 ├── <WorkshopName>/              WORKSHOP  owns exactly one framing
 │   ├── <repo-a>/                REPO      code — src/, tests/, docs/, per its stack
 │   ├── <repo-b>/                REPO      code — same workshop, same framing
-│   └── _workspace/              FRAMING   outside every code repository
+│   └── _workspace/              FRAMING   a repository of its own, outside the code ones
 │       ├── atlas.md                       what exists and works
 │       ├── todo.md                        what is open
 │       ├── done/                          what is finished — one file per [TAG]
@@ -107,9 +107,10 @@ depth, or how important it looks.
 2. **Is a repository and contains no `_workspace/`** → it is **code**, and it belongs to the
    workshop that contains it. Its internal skeleton is whatever its stack expects, and the
    method says nothing about it.
-3. **Is named `_workspace/`** → it is the **framing** of the workshop that contains it. It
-   sits outside every code repository. It may have a private backup repository of its own;
-   that is a backup, not a tracking tool.
+3. **Is named `_workspace/`** → it is the **framing** of the workshop that contains it. It is
+   **a repository of its own**, sitting outside every code repository: the method leans on its
+   `git log` for the factual record, which is what lets the handoff stay short. Keep it
+   private (§ *Never*, below); `git.md` has the rest.
 4. **Holds `method/organization.md` and `instance/`** → it is the **meta level**. That pair is
    the whole test, and nothing depends on what the folder is called.
 5. **Contains workshops and nothing else of interest** → it is the **root**. Read nothing

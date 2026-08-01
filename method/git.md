@@ -20,6 +20,33 @@ Both, plus a global `core.autocrlf=false`, because each covers a hole the others
 Without them, a clone on a foreign platform rewrites every line and the next commit shows
 thousands of phantom diffs.
 
+## A framing folder is a repository, and that is load-bearing
+
+A `_workspace/` is versioned, always. Not as a precaution — the method **delegates the factual
+record to the `git log`**. The handoff carries volatile context only, the atlas the consolidated
+state, the todo what is open, and none of the three says what changed and when, because the
+history does. Remove the history and one of them grows back into a journal, which is the exact
+drift the four tenses exist to prevent.
+
+Everything built on top assumes it: the closing protocol ends in a commit per repository
+touched, the checks report line-ending drift and what is waiting to be pushed, and a commit is
+required to tell the same story as the framing update it accompanies.
+
+It is a repository **of its own**, never a folder inside a code repository. Otherwise the
+framing rides along in code commits, its history mixes with releases, and it is invisible to
+anyone working from a sibling repository of the same workshop.
+
+⚠ **A remote is optional; keeping it private is not.** Where a framing is pushed, or whether it
+is pushed at all, is the owner's decision — an installer that guessed a host would be guessing
+about a person. But a framing document carries names, decisions and session context belonging to
+its owner, so if it goes anywhere, it goes somewhere private. `organization.md` § *Never* states
+the case that admits no judgement: a `_workspace/` is never published, including this method's
+own.
+
+⚠ And a remote is a **backup**, not the tracking. The tracking is the files and their tenses. A
+workshop whose framing has no remote works exactly as well and is merely unbacked — which its
+own todo should say, rather than leaving it to be discovered.
+
 ## The `.gitignore` is authoritative
 
 It is the reference on the versioned / local boundary. It decides — the name of a folder does
