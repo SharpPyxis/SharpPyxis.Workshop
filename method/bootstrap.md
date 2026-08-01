@@ -77,6 +77,37 @@ method repository's root, because there the method is the work.
 files some tools declare. Observed: three folder paths changed, and the lint stayed green. A
 wrong path there breaks nothing visible — it only makes the method unreadable, silently.
 
+## Changing a wiring, and from where
+
+A workshop's folder list is changed **from a session of that workshop**.
+
+The file that carries it invites the opposite: it sits at the root, outside every repository,
+and holds nothing but paths. Three properties make it the worst thing to edit from a
+neighbouring session:
+
+- it is **outside every perimeter**. The file sits at the root; everything it decides happens
+  inside one workshop. It is that workshop's starting point, and nobody else's;
+- it is **outside every history**. Editor workspace files are routinely ignored, and the root
+  is not a repository. The change therefore enters no `git log` — so the factual record the
+  method leans on, precisely so that a handover need not carry it, is missing here;
+- it is **confirmed only at the next bootstrap**. Whether a folder list works is seen when a
+  session opens against it. From elsewhere one can write the file; one cannot watch it load.
+
+An act with no trace and no confirmation, on someone else's entry point — and a framing
+document that prescribes it has stepped past describing, into acting abroad.
+
+⚠ A corpus-wide move is the case this rule cannot cover: the method changes location and every
+workshop must follow at once, which no single workshop's session can do. Then **name the
+operation to the developer, do it in one pass, and record it in the same breath.** Observed: a
+session was interrupted between writing four of these files and recording the fact. The framing
+announced three workshops still waiting while every one of them had been migrated, and nothing
+short of opening the files one by one could tell. A todo line is an acceptable record when it is
+the last gesture of a short action; it is no record at all when it is the only one.
+
+⚠ Reading these files globally is not writing them globally. A lint that sweeps every workspace
+file at the root — from any session — only checks that the declared paths resolve. It decides
+nothing for a neighbour, and it is what makes the exception above survivable after the fact.
+
 ## A prerequisite the agent resolves is not a prerequisite
 
 The reference lint needs a runtime. Listing it as a prerequisite in a readme puts the cost on
