@@ -88,9 +88,13 @@ atlas is read by nobody and contradicts it in silence. Either it is a planning d
 it goes in `_planning/` with a status header, or it is not, and its content belongs in one of
 the tensed documents. The lint enforces this.
 
-> The leading underscore of `_planning/` is a sorting convention inherited from the workshops
-> that proved this layout. It carries no meaning beyond that — unlike `_workspace/`, where it
-> marks the meta level.
+> The leading underscore is the same one everywhere: it marks a folder the **method** places,
+> rather than content, and sorts it above what sits beside it. `_workshop/`, `_workspace/` and
+> `_planning/` all read that way, at three different levels.
+>
+> ⚠ This note replaced one claiming `_planning/` was the odd one out — a sorting habit set
+> against `_workspace/`'s supposed meaning. The distinction did not exist, and the note was read
+> exactly as its wording invited: as a sign the folder had been named carelessly.
 
 ## `memories/handoff.md` — what is volatile
 

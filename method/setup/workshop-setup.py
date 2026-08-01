@@ -415,6 +415,12 @@ def main() -> int:
 
     print()
     print("Open « %s » to work in this workshop." % wiring_file.name)
+    if conventions.ok:
+        # Tool-specific, and deliberately printed rather than written into the method: a wiring
+        # opened for the first time is untrusted, and an editor that answers by disabling its
+        # extensions looks exactly like an editor that lost them.
+        print("It has never been opened, so the editor may hold it in restricted mode until you")
+        print("trust it — extensions stay disabled meanwhile, and none of them were uninstalled.")
     print("Nothing was written outside it. Whether this session's handoff mentions the creation is")
     print("yours to decide, in your own words — the installer does not write in a parent workshop.")
     if repos:

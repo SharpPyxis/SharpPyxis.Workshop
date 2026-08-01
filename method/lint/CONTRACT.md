@@ -56,6 +56,13 @@ folder carries `> Statut :` (or its local equivalent). Without it the folder hol
 four different stages and says so nowhere. A `[TAG]` cited in that header must be findable in
 the todo; if it is not, the scoping has probably been executed and the document has outlived it.
 
+⚠ **And the check reports when the folder is absent.** A check that returns in silence cannot be
+told apart from one that did not run. This matters more than it looks: the folder's name is
+configurable while the implementation is shared, so a workshop whose configuration lags behind a
+changed default loses the check entirely, with nothing in the report to say so. Observed in this
+method's own workshop, which has no long-form folder and whose report said nothing about it for
+as long as the check existed.
+
 **No stray document at the root of the framing folder.** A scoping document sitting beside the
 atlas is read by nobody and contradicts it in silence. Either it is a planning document and it
 goes in the long-form folder with a status header, or its content belongs in one of the tensed

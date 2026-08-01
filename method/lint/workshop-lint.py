@@ -273,11 +273,30 @@ def check_bootstrap_load(cfg, layout, report) -> None:
 
 
 def check_planning(cfg, layout, report) -> None:
-    folder = layout.framing / cfg.get("framing", {}).get("planning", "_planning")
+    name = cfg.get("framing", {}).get("planning", "_planning")
+    folder = layout.framing / name
     if not folder.is_dir():
+        # ⚠ Silence cannot be told apart from a check that did not run. The folder name is
+        # configurable and this implementation is shared by every workshop, so a default that
+        # changes lands everywhere at the instant it is committed — and a workshop whose
+        # configuration lags behind would lose this check without a line saying so.
+        stripped = name.lstrip("_")
+        neighbour = next(
+            (p.name for p in sorted(layout.framing.iterdir()) if p.is_dir() and p.name != name and p.name.lstrip("_") == stripped),
+            None,
+        )
+        if neighbour:
+            report("WARN", "%s/: absent, but %s/ sits beside it — declare framing.planning or rename the folder" % (name, neighbour))
+        else:
+            report("OK", "%s/: absent — no long-form document in this workshop" % name)
         return
+    documents = sorted(folder.glob("*.md"))
+    if not documents:
+        report("OK", "%s/: present, no long-form document yet" % folder.name)
+        return
+
     todo_text = "\n".join(read_text(layout.framing / n) for n in todo_names(cfg))
-    for path in sorted(folder.glob("*.md")):
+    for path in documents:
         head = read_lines(path)[:8]
         status = next((l for l in head if re.match(r"^> [Ss]tatut ?:|^> [Ss]tatus ?:", l)), None)
         if not status:
