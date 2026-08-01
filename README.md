@@ -243,9 +243,15 @@ Under construction, and in use. Five workshops are wired to this repository and 
 `method/organization.md` at the start of every session; the switch happened on 2026-08-01,
 in a single step, as the method's own rules require.
 
-One decision is deliberately left open rather than guessed:
-
-- ⬜ the license, to be chosen before the first publication.
-
 The published name is settled: `method/` names its function and stands against `sample/`,
 while the repository above it carries the belonging.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+It redistributes no third-party component, and there is no notice file for that reason: the
+reference lint and the installer use the Python standard library alone, with no package, no
+virtual environment and no dependency file. That constraint is what keeps *"install Python"* a
+non-event for anyone adopting the method, and it is stated in
+[`method/lint/CONTRACT.md`](method/lint/CONTRACT.md).
