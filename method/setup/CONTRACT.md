@@ -81,6 +81,18 @@ read from them and reproduced. If none exists, the implementation asks rather th
 The distinction matters and is not pedantry: reading the corpus is deterministic and inspectable;
 detecting an installed editor is a guess about a machine that changes.
 
+⚠ **What is learned must be reported, one line per thing copied.** Learning from a corpus
+reproduces its accidents as faithfully as its conventions, and nothing in the reading tells the
+two apart — so the only person who can is the developer, at the moment the copy happens.
+Observed on the first workshop this installer created: it faithfully reproduced lists of
+instruction files that an agent had added to every wiring unasked, and its report said only
+*"conventions read from the corpus"*. A summary that cannot be contradicted is not a report.
+
+⚠ And a wiring an installer writes declares **folders, and nothing that names a file to read**.
+A per-tool list of instruction files is a second starting point; § *Tool-specific files* in
+`bootstrap.md` lets a workshop keep one deliberately, which is exactly why a script must not
+create one on the developer's behalf.
+
 ## What must not be produced
 
 **Nothing in the parent workshop.** Not a pointer, not a tag, not a path — the installer writes

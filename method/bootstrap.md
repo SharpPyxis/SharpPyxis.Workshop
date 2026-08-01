@@ -59,6 +59,18 @@ contradict it, because the rules are exactly what nobody goes back to check.
 can win. A workshop that keeps one accepts that risk deliberately; a workshop that has none
 loses nothing, because the reliable gesture was never the file.
 
+⚠ **And the word that carries the weight there is *deliberately*.** These declarations are the
+kind of thing an agent adds helpfully, unasked, because they look like an improvement — and they
+spread, because the next agent finds them and reproduces the convention. Observed on the corpus
+this method came from: every editor workspace file had acquired a list of instruction files that
+the developer had never asked for, none of which the agent actually reading them consumed. They
+were removed in one pass, and the folder list — the only thing that reaches an agent — was left
+untouched.
+
+The rule that comes out of it is narrow and worth keeping: **do not supply an entry point you did
+not decide to supply.** What a tool chooses to load on its own is its business; a corpus that
+hands it a second door has chosen for itself which door wins, without ever discussing it.
+
 ## Wiring a workshop
 
 Each workshop's editor workspace declares four kinds of folder:

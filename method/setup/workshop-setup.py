@@ -211,25 +211,7 @@ class Conventions:
         self.method_label = consensus(method_labels) or "Method"
         self.instance_label = consensus(instance_labels) or "Instance"
         self.framing_pattern = consensus(framing_patterns) or "{} - Workspace"
-        self.instruction_keys = self._instruction_keys(workspaces, corpus)
         self.plain_settings = self._plain_settings(workspaces)
-
-    def _instruction_keys(self, workspaces: list, corpus: Corpus) -> dict:
-        """Settings holding a list of instruction files. Entries pointing inside the method or the
-        instance are valid for any workshop and are kept verbatim; entries pointing inside a
-        workshop are the old workshop's, and are regenerated for the new one."""
-        keys = {}
-        for data in workspaces:
-            for key, value in data.get("settings", {}).items():
-                if not (isinstance(value, list) and value and all(isinstance(e, dict) and "file" in e for e in value)):
-                    continue
-                shared = []
-                for entry in value:
-                    target = (corpus.root / entry["file"].replace("/", os.sep)).resolve()
-                    if corpus.method.resolve() in target.parents or corpus.instance.resolve() in target.parents:
-                        shared.append(entry["file"])
-                keys.setdefault(key, []).append(tuple(shared))
-        return {key: list(consensus(seen) or ()) for key, seen in keys.items()}
 
     def _plain_settings(self, workspaces: list) -> dict:
         """Scalar settings held, with the same value, by a majority of siblings. One that appears
@@ -247,6 +229,20 @@ class Conventions:
         their icon, and prepending a second one is how a convention gets copied wrong."""
         return ("%s %s" % (self.icon, text)).strip()
 
+    def describe(self) -> list:
+        """⚠ What is learned must be reported. Learning from the corpus reproduces its accidents
+        as faithfully as its conventions, and nothing in the reading tells the two apart — so the
+        developer is the one who has to see what was copied, at the moment it is copied.
+        Observed: instruction-file lists, added to every wiring by an agent nobody had asked, were
+        reproduced into a new workshop without a line saying so."""
+        if not self.ok:
+            return ["no sibling wiring to read from — plain labels, no settings"]
+        told = ['labels « %s » and « %s »' % (self.method_label, self.instance_label),
+                'framing label pattern « %s »' % self.framing_pattern]
+        for key, value in sorted(self.plain_settings.items()):
+            told.append("setting %s = %s" % (key, json.dumps(value)))
+        return told
+
 
 def build_wiring(corpus: Corpus, conventions: Conventions, name: str, framing: Path, repos: list) -> dict:
     folders = [
@@ -257,22 +253,11 @@ def build_wiring(corpus: Corpus, conventions: Conventions, name: str, framing: P
         folders.append({"name": conventions.label(repo.name), "path": corpus.relative(repo)})
     folders.append({"name": conventions.framing_pattern.format(name), "path": corpus.relative(framing)})
 
-    settings = dict(conventions.plain_settings)
-    framing_entries = [
-        "%s/atlas.md" % corpus.relative(framing),
-        "%s/todo.md" % corpus.relative(framing),
-        "%s/memories/handoff.md" % corpus.relative(framing),
-    ]
-    for key, shared in conventions.instruction_keys.items():
-        # A key whose entries are all method- or instance-side describes conventions, not a
-        # workshop: it is copied as it stands. A key that named the old workshop's framing gets
-        # the new one's, in the same order the corpus already uses.
-        names = list(shared)
-        if any("organization.md" in entry for entry in shared):
-            names += framing_entries
-        settings[key] = [{"file": entry} for entry in names]
-
-    return {"folders": folders, "settings": settings}
+    # ⚠ Folders, and nothing that names a file to read. What reaches an agent is the folder list;
+    # a per-tool list of instruction files is a **second starting point**, and one that can win.
+    # `bootstrap.md` allows a workshop to keep one deliberately — which is precisely why an
+    # installer must not create one on the developer's behalf.
+    return {"folders": folders, "settings": dict(conventions.plain_settings)}
 
 
 # ============================================================================================
@@ -411,7 +396,9 @@ def main() -> int:
     rendered = json.dumps(wiring, indent=2, ensure_ascii=False) + "\n"
     if not args.dry_run:
         wiring_file.write_text(rendered, encoding="utf-8", newline="\n")
-    report.did("editor wiring %s — %d folder(s)%s" % (wiring_file.name, len(wiring["folders"]), ", conventions read from the corpus" if conventions.ok else ""))
+    report.did("editor wiring %s — %d folder(s)" % (wiring_file.name, len(wiring["folders"])))
+    for line in conventions.describe():
+        report.note("read from the corpus: %s" % line)
     if args.dry_run:
         # The wiring is the one artefact worth reading before it is written: it is what an agent
         # will and will not reach, and a wrong path there breaks nothing visible.
