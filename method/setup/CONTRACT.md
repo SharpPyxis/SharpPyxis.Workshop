@@ -79,6 +79,24 @@ plausible relative path and let it be wrong — produces a workshop that starts 
 a corpus that is not the one intended, which is the failure mode this method was written against:
 not "nothing loads" but "something else loads", confidently, with no signal.
 
+### ⚠ The first workshop on a machine
+
+The reference implementation learns the corpus root and the framing-folder name from an existing
+workshop, so **it cannot create the first one**: on a fresh machine there is nothing to learn
+from. Until that is closed, the first workshop is laid out by hand — copy `templates/workshop/`,
+rename the dotfiles, fill the placeholders in its `lint.toml` — and every later one goes through
+the installer.
+
+That is a poor place for a manual step, and it is stated rather than hidden for exactly that
+reason: the argument for having an installer at all is that a hand-made workshop drifts from the
+others, and this makes the very first one the most likely to.
+
+The way out does not require guessing, which is why it is worth doing properly rather than
+patching with a flag: **the root is the parent of the meta level, and the meta level is where the
+implementation itself lives**; **the framing folder's name is the name of the single folder under
+`templates/workshop/`**. Both are read, neither is assumed — the same rule this contract already
+applies to editor conventions.
+
 ## What must be learned, never invented
 
 The editor wiring file is **tool-specific, and the method says nothing about which tool**.
