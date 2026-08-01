@@ -164,7 +164,36 @@ projects/                        the root. Not a repository. Nothing is read fro
 | | Contents |
 | --- | --- |
 | `method/` | Rules, lints, templates and the installer. What anyone can adopt. |
-| `sample/` | A worked example of a framing — atlas, todo, handoff — naming no product and no person. |
+| `sample/` | A worked example of a framing, naming no product and no person. |
+
+### Reading `sample/`
+
+It is the framing of `Ledger`, the workshop drawn in the layout above: a double-entry ledger
+with an API and a web client, held in one workshop because they serve one framing. `Ledger` is
+invented, and every figure in it is illustrative.
+
+| | What it is there to show |
+| --- | --- |
+| `atlas.md` | Decision level, not implementation level — and a guard-rail that outlived the work that produced it |
+| `todo.md` | The grammar, the four marks, and an item that **cites** the document carrying its reasoning instead of duplicating it |
+| `memories/handoff.md` | Volatile only. Note what the last entry does *not* say: work moved, and the entry stops there |
+| `done/EXPORT.md` | A closed piece of work keeps its story — what was tried, what was rejected — out of both the atlas and the todo |
+| `_planning/rounding.md` | The long form, with the status header that says which stage it is at |
+
+Read them in that order and the four tenses separate on their own.
+
+⚠ **It is an example, not a template.** What you copy is `method/templates/`, and the installer
+fills it in. Two things follow, and both are deliberate:
+
+- **there is no `lint.toml` in it.** A configuration is something you copy; this folder is
+  something you read, and the two must never be confusable — an adopter who copies an example
+  inherits someone else's thresholds in silence;
+- **there is no readme in it either.** A framing folder carries no loose document beside its
+  atlas, and an example that broke the rule it illustrates would teach the wrong half. That is
+  why this section is here rather than there.
+
+⚠ And it is never placed next to a real `_workspace/`. Two framings side by side are two
+sources of truth, which is the exact drift the method exists to prevent.
 
 ## What is deliberately not
 
@@ -213,11 +242,6 @@ trigger files existed, and not one of them reached the agent.
 Under construction, and in use. Five workshops are wired to this repository and read
 `method/organization.md` at the start of every session; the switch happened on 2026-08-01,
 in a single step, as the method's own rules require.
-
-⚠ **`sample/` is described throughout this file and has not been written yet.** It is the
-one thing publication waits on: a method that ships without an example of what it produces
-asks its reader to imagine the artefact. Every mention of it above describes the design, not
-the current contents of this repository.
 
 One decision is deliberately left open rather than guessed:
 
