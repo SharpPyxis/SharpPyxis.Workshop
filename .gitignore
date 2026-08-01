@@ -2,7 +2,15 @@
 # says WHY it is ignored — a readable .gitignore prevents case-by-case judgement, by
 # a human as much as by an agent.
 #
-# Nothing private is ignored here, because nothing private is here. This repository is
-# public in full; what is private lives in sibling repositories, outside its tree. A
-# boundary drawn by structure holds against a mistyped command; one drawn by a rule in
-# this file only holds while the rule does.
+# Nothing is ignored here, and that is deliberate on both counts.
+#
+# Nothing private is ignored, because nothing private is here. What is private lives in
+# a *copy* of this repository, downstream, on the machine that uses it — never in this
+# tree, and never pushed back to it. A boundary drawn by structure holds against a
+# mistyped command; one drawn by a rule in this file only holds while the rule does.
+#
+# ⚠ And `instance/` is NOT ignored, though it is the folder meant to hold private
+# content. It ships empty on purpose. Ignoring it here would take effect inside every
+# copy, where the folder is full — silently un-versioning the one corpus its owner
+# most wants kept. An ignore rule written against this tree would then decide, at a
+# distance, about a tree it has never seen.

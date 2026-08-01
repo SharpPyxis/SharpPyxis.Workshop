@@ -48,6 +48,19 @@ A tree posted here would contradict the rule, and would have to be held up by pl
 since git does not keep empty folders. What a stack expects is the stack's tooling to create, or
 the instance's to declare; it is not the method's to guess.
 
-⚠ `templates/instance/` does not exist yet. Creating an instance is the other path — an adopter
-setting the method up on a machine — and it has never been exercised. `organization.md` announces
-this folder for both; that half is not delivered.
+## Why there is no `templates/instance/`
+
+Creating an instance is the other path — an adopter setting the method up on a machine — and it
+is deliberately **not** served from here. The published repository carries `instance/` at its own
+root, empty, and adopting the method is copying the repository: the slot arrives already in
+place, in the right position, without anyone running anything.
+
+A template would have been the worse half of that. It would have to be copied *somewhere*, and
+the position is exactly what carries the meaning — `instance/` beside `method/`, inside the meta
+level, is what makes the layout resolve at all. A folder whose whole content is its location does
+not want a copier, it wants to be shipped where it belongs.
+
+⚠ What is still not delivered is an **example** instance — real conventions, under a warning,
+for an adopter to disagree with. That belongs beside `sample/`, never inside `instance/`: what
+you copy and what you read must never be confusable, and an adopter who inherited someone else's
+C# conventions in silence would have hit the exact drift this method exists to prevent.

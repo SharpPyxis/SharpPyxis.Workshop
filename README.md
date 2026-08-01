@@ -7,7 +7,7 @@ A tracking method for one developer working with AI agents.
 >
 > ```text
 > Hello — we are working on Ledger today.
-> Entry point: projects/_workshop/workshop/method/organization.md
+> Entry point: projects/_workshop/method/organization.md
 > ```
 >
 > That is the whole gesture. Why it is typed rather than configured: § *Entry point*, below.
@@ -110,12 +110,13 @@ meaning of its own — the method never reads anything from it.
 ```text
 projects/                        the root. Not a repository. Nothing is read from it.
 │
-├── _workshop/                   THE META LEVEL — one per machine, shared by every workshop
-│   ├── workshop/                  public repository: the method (this one)
-│   │   ├── method/                  the rules — one entry point, the rest behind triggers
-│   │   └── sample/                  a worked example of a framing
-│   ├── instance/                  PRIVATE repository: profile, conventions, notebooks
-│   └── _workspace/                PRIVATE repository: framing of the method's own work
+├── _workshop/                   THE META LEVEL — one per machine, shared by every workshop.
+│   │                            This repository, copied, with instance/ filled in.
+│   │                            Private in full. Call it what you like; nothing reads the name.
+│   ├── method/                    the rules — one entry point, the rest behind triggers
+│   ├── sample/                    a worked example of a framing
+│   └── instance/                  YOURS — profile, transverse conventions, notebooks.
+│                                  This repository ships the folder empty; you fill it.
 │
 ├── Ledger/                      A WORKSHOP — not a repository, owns exactly one framing
 │   ├── ledger.api/                a repository — a project in the ordinary sense
@@ -147,8 +148,11 @@ projects/                        the root. Not a repository. Nothing is read fro
 
 - **A workshop is any folder that contains a `_workspace/`.** That is the whole test — not
   its name, not its depth, not whether it looks important. `Ledger/` and `TinyParse/` are
-  workshops; so is `_workshop/`, and that is not a coincidence: the method is developed
-  under its own rules.
+  workshops.
+- **The meta level is the folder holding `method/organization.md` and `instance/`.** That
+  pair is its whole test, and nothing depends on what it is called. It is **not** a workshop:
+  it holds no framing, because there is nothing to frame — you are reading the method there,
+  not writing it.
 - **A repository is where code lives**, with whatever skeleton its stack expects. A
   repository never contains a `_workspace/`, and a workshop is never itself a repository —
   the folder `Ledger/` is not versioned; `ledger.api/` and `ledger.web/` are.
@@ -175,6 +179,7 @@ projects/                        the root. Not a repository. Nothing is read fro
 | --- | --- |
 | `method/` | Rules, lints, templates and the installer. What anyone can adopt. |
 | `sample/` | A worked example of a framing, naming no product and no person. |
+| `instance/` | Empty on purpose. The slot you fill in your own copy — see below. |
 
 ### Reading `sample/`
 
@@ -205,16 +210,20 @@ fills it in. Two things follow, and both are deliberate:
 ⚠ And it is never placed next to a real `_workspace/`. Two framings side by side are two
 sources of truth, which is the exact drift the method exists to prevent.
 
-## What is deliberately not
+## The half you write
 
-Two things live **outside** this repository, in sibling repositories that are never
-published:
+Adopting the method is a copy, not a clone:
 
-- an **instance** — one owner's profile, transverse technical conventions and
-  notebooks. The method never reads its contents, only the index it declares;
-- the **framing of this repository's own development** — its `_workspace/`, held to the
-  same rule as every workshop's: private. `sample/` is what lets an example ship without
-  shipping someone's working notes.
+```text
+copy this repository to  projects/_workshop/
+then fill  _workshop/instance/
+```
+
+`instance/` ships **empty**, and it is the one folder you are expected to fill: your profile
+and how you want an agent to address you, your transverse technical conventions, your
+notebooks. The method never reads its contents — only the `index.md` you put there, which
+declares what exists and **when** each file is read. Everything else in your copy is received:
+you read `method/`, you do not edit it.
 
 The rule that decides every borderline case:
 
@@ -222,10 +231,16 @@ The rule that decides every borderline case:
 > transverse technical conventions, read on demand before writing that kind of code*
 > is method. What that corpus says is instance.
 
-Because nothing private is inside this tree, there is no export step, no filtering, and no
-rule to remember at the moment it matters: publication is a change of visibility, not a
-build. A boundary drawn by structure holds against a mistyped command; one drawn by an entry
-in a `.gitignore` holds only as long as the entry does.
+⚠ **A copy rather than a clone, and the difference is the whole safety.** Your copy holds your
+profile and your conventions; this repository is upstream, and nothing travels back. Updating
+is copying a newer `method/` over yours — there is no push, no remote, and therefore no command
+that could publish what you wrote. A boundary drawn by structure holds against a mistyped
+command; one drawn by an entry in a `.gitignore` holds only as long as the entry does.
+
+One thing is deliberately **not** here, and stays that way: the **framing of this repository's
+own development**. The method is developed in a workshop like any other — the repository plus
+its `_workspace/` — and `_workspace/` is private, here as everywhere. `sample/` is what lets an
+example ship without shipping someone's working notes.
 
 ⚠ `sample/` must **not** be placed next to an actual `_workspace/` when the method is
 adopted — it would become a second source of truth for framing, which is exactly the
@@ -239,8 +254,12 @@ compiles, it does not belong here.
 
 The method declares **one** path: `method/organization.md`. Everything else is reached
 from there, so that adopting the method never means rewriting a dozen hardcoded
-locations. The instance is found **beside** this repository, by the layout the method
-declares — not by a path written into it.
+locations. The instance is found **beside `method/`, inside your copy**, by the layout the
+method declares — not by a path written into it.
+
+That is also why the path above is the same sentence on every machine. It was not, until the
+layout in this readme was written from the one machine that develops the method rather than
+from the one that reads it — which made a published example path that nobody else could type.
 
 How an agent comes to read that file is tool-specific, changes with tool versions, and
 is deliberately **not** part of the method. Naming the path at the start of a session is
@@ -249,12 +268,16 @@ trigger files existed, and not one of them reached the agent.
 
 ## Status
 
-Under construction, and in use. Five workshops are wired to this repository and read
-`method/organization.md` at the start of every session; the switch happened on 2026-08-01,
-in a single step, as the method's own rules require.
+Under construction, and in use. Five workshops read `method/organization.md` at the start of
+every session, from a copy of this repository laid out exactly as described above.
 
 The published name is settled: `method/` names its function and stands against `sample/`,
 while the repository above it carries the belonging.
+
+⚠ What has **not** been exercised: adoption on a machine other than the author's. The layout
+resolves by structure rather than by hardcoded names, and the copy above is the whole
+procedure — but the reference installer and the lint have only ever resolved one corpus, and a
+check that never ran is a hypothesis.
 
 ## License
 

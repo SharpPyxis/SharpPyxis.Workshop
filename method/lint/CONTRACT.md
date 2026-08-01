@@ -16,6 +16,32 @@ that fault by design. A workshop that cannot run the reference implementation re
 
 ---
 
+## Resolving the layout
+
+Everything below is checked against a layout that must be **resolved by disposition, never by
+name** — a hard-coded folder name breaks at the first rename, and for everyone who adopts the
+method under other names.
+
+| | How it is found |
+| --- | --- |
+| the workshop | the parent of the framing folder the checks were pointed at |
+| the root | the parent of that workshop |
+| the meta level | the folder under the root holding **`method/organization.md` and `instance/`** — that pair is the whole test |
+| the instance | `instance/` inside the meta level |
+| the method | `method/` inside the meta level — **except** in a workshop that contains the method itself, where the working copy prevails |
+
+⚠ The meta-level rule used to read *"the workshop that also hosts the instance"*, and it was
+wrong in a way only another machine could reveal. It was inferred from the one corpus where the
+method is **developed** — and there alone the meta level carries a framing folder as well.
+Everywhere else the condition is false by construction, so the reference implementation refused
+to resolve a correct layout. **A rule inferred from the only instance you can see is a rule you
+have not tested.**
+
+⚠ The exception on the last line is not a convenience. Without it, a session enlarging the entry
+point has its bootstrap budget measured against the *received copy* — a green report at the exact
+place where the budget is decided, saying nothing. An implementation reports which of the two it
+used, so the reader can contradict it.
+
 ## Levels
 
 | Level | Means | Exit |

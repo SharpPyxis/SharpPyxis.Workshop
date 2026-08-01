@@ -97,30 +97,28 @@ class Corpus:
         self.meta = self._find_meta()
         if not self.meta:
             report.refuse(
-                "no meta level found under %s — expected one folder holding both a %s/ and an instance/.\n"
+                "no meta level found under %s — expected one folder holding both method/organization.md and an instance/.\n"
                 "        Refusing to write rather than emit a plausible relative path: a workshop wired to the\n"
                 "        wrong corpus does not fail visibly, it starts every session from the wrong rules."
-                % (self.root, self.framing_name)
+                % self.root
             )
         self.instance = self.meta / "instance"
-        self.method = self._find_method()
-        if not self.method:
-            report.refuse("no folder under %s declares method/organization.md — cannot wire a workshop to a method it cannot find" % self.meta)
+        self.method = self.meta / "method"
 
     def _find_meta(self):
-        """The meta level is the workshop that also hosts the instance, which is transverse and
-        belongs to no single workshop."""
-        for child in sorted(self.root.iterdir()):
-            if child.is_dir() and (child / self.framing_name).is_dir() and (child / "instance").is_dir():
-                return child
-        return None
+        """The meta level holds the method and the instance: a folder containing both
+        `method/organization.md` and an `instance/`. That pair is the whole test, and nothing
+        here depends on what the folder is called.
 
-    def _find_method(self):
-        """The method repository is the one declaring the entry point. The entry point is named
-        by the method; the repository holding it is not."""
-        for child in sorted(self.meta.iterdir()):
-            if child.is_dir() and (child / "method" / "organization.md").is_file():
-                return child / "method"
+        ⚠ It is deliberately NOT "the workshop that also hosts the instance". That earlier rule
+        was read off the one machine where the method is developed, on which the meta level
+        happens to carry a framing folder as well. Nowhere else does it — so the condition was
+        false by construction for every adopter, and this installer refused to run against a
+        correct layout. A new workshop is always wired to the received copy: the working copy of
+        someone writing the method is not what a consuming workshop should read."""
+        for child in sorted(self.root.iterdir()):
+            if child.is_dir() and (child / "method" / "organization.md").is_file() and (child / "instance").is_dir():
+                return child
         return None
 
     def relative(self, path: Path) -> str:
@@ -338,7 +336,9 @@ def main() -> int:
     if corpus.method.resolve() != setup_dir.parent.resolve():
         report.refuse(
             "this script lives under %s but the corpus resolves its method to %s.\n"
-            "        Two methods in one corpus is a second source of truth; refusing rather than picking one."
+            "        Run the installed one. A new workshop is wired to the received copy, so creating it with a\n"
+            "        script from anywhere else would wire it to files it will never read — and on the machine\n"
+            "        where the method is written, the working copy is exactly that anywhere else."
             % (setup_dir.parent, corpus.method)
         )
 

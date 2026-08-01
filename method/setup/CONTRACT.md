@@ -58,9 +58,21 @@ framing that is merely old from one that has drifted.
 ## What must be resolved, never assumed
 
 **The corpus layout.** The relative path from the new workshop to the method and to the instance
-is *computed*, not written in. It is resolved the same way the lint resolves it: the meta level is
-the folder holding both a framing folder and an instance folder; the method is the repository
-inside it that declares the entry point. Nothing depends on what any of them is called.
+is *computed*, not written in. It is resolved the same way the lint resolves it: **the meta level
+is the folder holding `method/organization.md` and `instance/`**. That pair is the whole test, and
+nothing depends on what any of it is called.
+
+⚠ The rule used to read *"the folder holding both a framing folder and an instance folder"*, and
+it was wrong in a way worth recording, because nothing short of standing on another machine would
+have shown it. It was read off the one corpus where the method is **developed** — and there, and
+only there, the meta level carries a framing folder too. For everyone else the condition is false
+by construction, so both this installer and the lint refused to resolve a perfectly correct
+layout. **A rule inferred from the only instance you can see is a rule you have not tested**, and
+the meta level is the one place where the author's machine is not like anyone else's.
+
+**A new workshop is wired to the received copy**, never to a working copy of the method. On the
+machine where the method is written both exist, and the distinction stops being academic: the
+installer refuses to run when the script it was launched from is not the one the corpus resolves.
 
 ⚠ If either cannot be resolved, the installer **stops without writing**. The alternative — emit a
 plausible relative path and let it be wrong — produces a workshop that starts every session from

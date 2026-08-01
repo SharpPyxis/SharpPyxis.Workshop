@@ -98,7 +98,7 @@ class Report:
 # organization.md states the tests, and they are mechanical:
 #   a workshop is any folder containing a framing folder — that is the only test;
 #   the framing folder sits outside every code repository;
-#   the meta level is the workshop that also hosts the instance, which is transverse.
+#   the meta level is the folder holding `method/organization.md` and `instance/`.
 #
 # Resolving any of this by a hard-coded folder name would break at the first rename and for
 # everyone who adopts the method under other names — which is the failure the whole "cite by
@@ -112,41 +112,65 @@ class Layout:
         self.root = self.workshop.parent
         self.meta = self._find_meta()
         self.instance = (self.meta / "instance") if self.meta else None
+        self.method_is_working_copy = self._method_inside_workshop() is not None
         self.method = self._find_method()
 
     def _find_meta(self):
-        """The meta level is the workshop that hosts the instance — a folder holding both a
-        framing folder and an `instance/`. Nothing here depends on what it is called."""
-        candidates = []
+        """The meta level holds the method and the instance: a folder containing both
+        `method/organization.md` and an `instance/`. That pair is the whole test, and nothing
+        here depends on what the folder is called.
+
+        ⚠ It is deliberately NOT "the workshop that also hosts the instance". That earlier
+        rule was read off the one machine where the method is developed, on which the meta
+        level happens to carry a framing folder as well. Nowhere else does it — so the
+        condition was false by construction for every adopter, and this resolver refused a
+        correct layout with `no meta level found`."""
         for child in sorted(self.root.iterdir()):
             if not child.is_dir():
                 continue
-            if (child / self.framing.name).is_dir() and (child / "instance").is_dir():
-                candidates.append(child)
-        if len(candidates) == 1:
-            return candidates[0]
-        return candidates[0] if candidates else None
+            if (child / "method" / "organization.md").is_file() and (child / "instance").is_dir():
+                return child
+        return None
+
+    def _method_inside_workshop(self):
+        """The method as a repository of the workshop being checked — present only in the
+        workshop where the method is written."""
+        for child in sorted(self.workshop.iterdir()):
+            if child.is_dir() and (child / "method" / "organization.md").is_file():
+                return child / "method"
+        return None
 
     def _find_method(self):
-        """The method repository is the one declaring the entry point. Same reasoning: the
-        entry point is named by the method, the repository holding it is not."""
-        if not self.meta:
-            return None
-        for child in sorted(self.meta.iterdir()):
-            entry = child / "method" / "organization.md"
-            if entry.is_file():
-                return child / "method"
+        """The method this workshop is checked against — normally the received copy at the
+        meta level.
+
+        ⚠ A workshop that *contains* the method is the one where it is being written, and
+        there the working copy prevails. Otherwise a session enlarging the entry point would
+        have its bootstrap budget measured against a copy of the previous state: a green
+        report, at the exact place where the budget is decided, meaning nothing."""
+        own = self._method_inside_workshop()
+        if own:
+            return own
+        if self.meta and (self.meta / "method" / "organization.md").is_file():
+            return self.meta / "method"
         return None
 
     def describe(self) -> str:
         def rel(p):
             return p.name if p else "not found"
 
+        if not self.method:
+            method = "not found"
+        elif self.method_is_working_copy:
+            method = "working copy (this workshop writes it)"
+        else:
+            method = "received copy"
+
         return "framing %s · workshop %s · meta %s · method %s" % (
             rel(self.framing),
             rel(self.workshop),
             rel(self.meta),
-            "found" if self.method else "not found",
+            method,
         )
 
 

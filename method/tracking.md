@@ -88,9 +88,11 @@ atlas is read by nobody and contradicts it in silence. Either it is a planning d
 it goes in `_planning/` with a status header, or it is not, and its content belongs in one of
 the tensed documents. The lint enforces this.
 
-> The leading underscore is the same one everywhere: it marks a folder the **method** places,
-> rather than content, and sorts it above what sits beside it. `_workshop/`, `_workspace/` and
-> `_planning/` all read that way, at three different levels.
+> The leading underscore is the same one everywhere: it marks a folder that holds **structure**
+> rather than content, and sorts it above what sits beside it. `_workspace/` and `_planning/`
+> read that way at two different levels, and `_workshop/` is the same habit applied to the meta
+> level — with the difference that nothing reads *that* name, so it is a convention of the eye
+> alone.
 >
 > ⚠ This note replaced one claiming `_planning/` was the odd one out — a sorting habit set
 > against `_workspace/`'s supposed meaning. The distinction did not exist, and the note was read

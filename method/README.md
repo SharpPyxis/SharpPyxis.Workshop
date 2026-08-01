@@ -35,14 +35,19 @@ way to spend the budget the method exists to protect.
 
 ## Adopting it
 
-Create an `instance/` folder **beside this repository** — a sibling, its own private
-repository — holding an `index.md` that declares an identity file and the trigger of every
-other file it carries. Then run `setup/workshop-setup.py` once per workshop; it resolves the
-corpus around it and refuses to write if it cannot. The instance is yours and stays yours: the
-method never reads its contents, only the index it declares.
+Copy the repository to a folder of your own — `_workshop/` by habit, though nothing reads the
+name — and fill the `instance/` it ships empty: an `index.md` declaring an identity file and the
+trigger of every other file it carries. Then run `setup/workshop-setup.py` once per workshop; it
+resolves the corpus around it and refuses to write if it cannot. The instance is yours and stays
+yours: the method never reads its contents, only the index it declares.
 
-⚠ There is no template for the instance yet. Creating one is the adopter's path, it has never
-been exercised, and shipping an untested skeleton for it would be worse than saying so.
+⚠ **A copy, not a clone.** Your folder holds your profile and your conventions; this repository
+is upstream and nothing travels back to it. Updating means copying a newer `method/` over yours,
+and leaving `instance/` alone — it is the one folder an update must never touch.
+
+⚠ `instance/` ships with a readme and nothing else. Shipping a skeleton `index.md` would be
+shipping an untested model, which costs more than an absent one, since a model is copied without
+being re-read.
 
 ## A worked example
 

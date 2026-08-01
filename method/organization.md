@@ -49,10 +49,10 @@ workshop — and a half-rename is worse than none.
 
 ```text
 <root>/                          ROOT      no meaning, not a repository, nothing read from it
-├── _workshop/                   WORKSHOP  the meta level — one per machine, shared by all
-│   ├── <method repo>/           REPO      public: method/ (rules) + sample/ (example)
-│   ├── instance/                REPO      private: identity, conventions, notebooks
-│   └── _workspace/              FRAMING   private: framing of the method's own development
+├── _workshop/                   META      one per machine, shared by all. Private in full.
+│   ├── method/                            the rules — one entry point, the rest by trigger
+│   ├── sample/                            a worked example of a framing
+│   └── instance/                          yours: identity, conventions, notebooks
 ├── <WorkshopName>/              WORKSHOP  owns exactly one framing
 │   ├── <repo-a>/                REPO      code — src/, tests/, docs/, per its stack
 │   ├── <repo-b>/                REPO      code — same workshop, same framing
@@ -67,6 +67,25 @@ workshop — and a half-rename is worse than none.
     └── _workspace/              FRAMING
 ```
 
+### The meta level is a copy, and it is yours
+
+`_workshop/` is the method **as you received it**, with `instance/` filled in. You get it by
+copying the published repository, which ships `instance/` empty for exactly that purpose, and
+from then on it is a private folder of your own — versioned wherever you keep private things,
+or not at all.
+
+Two consequences follow, and both matter more than they look:
+
+- **it is private in full**, not selectively. Nothing has to be filtered out of it, because
+  nothing in it is meant to travel back. What is published is the repository it came from;
+- **it is not a workshop.** It holds no framing, because there is nothing to frame: you are
+  not developing the method, you are reading it. It is the one folder in this layout that
+  holds neither code nor a `_workspace/`.
+
+⚠ Updating it is a copy, not a merge — the published repository is upstream, and nothing flows
+back. A method whose upstream is a repository you cannot write to is a boundary held by
+permissions rather than by care, which is the only kind that survives a mistyped command.
+
 ### Resolving what you are looking at
 
 Apply in order. Each test is mechanical — do not infer a level from a folder's name, its
@@ -80,19 +99,24 @@ depth, or how important it looks.
 3. **Is named `_workspace/`** → it is the **framing** of the workshop that contains it. It
    sits outside every code repository. It may have a private backup repository of its own;
    that is a backup, not a tracking tool.
-4. **Contains workshops and nothing else of interest** → it is the **root**. Read nothing
+4. **Holds `method/organization.md` and `instance/`** → it is the **meta level**. That pair is
+   the whole test, and nothing depends on what the folder is called.
+5. **Contains workshops and nothing else of interest** → it is the **root**. Read nothing
    from it.
 
 Consequences worth stating, because each has been got wrong:
 
 - several repositories may share one workshop, **as long as they serve one framing**. Two
   sets with independent framing are two workshops;
-- `_workshop/` passes test 1, and that is deliberate: the method is developed under its own
-  rules. It differs only in also hosting `instance/`, which is transverse and belongs to no
-  single workshop;
-- the instance is found **beside** the method repository, in a folder named `instance/`. A
-  workshop that places it elsewhere declares the path in its own configuration; the method
-  never hardcodes it.
+- the instance is found **inside the meta level**, beside `method/`, in a folder named
+  `instance/`. A workshop that places it elsewhere declares the path in its own configuration;
+  the method never hardcodes it;
+- ⚠ **the workshop where the method is developed is a workshop like any other** — the method's
+  repository plus its `_workspace/`, sitting beside the other workshops. It is *not* the meta
+  level, and the two must not be confused: the meta level is the copy every workshop reads
+  from, and it stays a copy even on the machine where the method is written. Stated because it
+  was got wrong here first, and in five places at once: the layout was described from the one
+  machine that develops the method, which made the description true nowhere else.
 
 ### Never
 
@@ -104,6 +128,10 @@ Consequences worth stating, because each has been got wrong:
 - **Never put private content inside a published tree, not even ignored.** A boundary drawn
   by structure holds against a mistyped command; a `.gitignore` entry holds only as long as
   the entry does, and `git clean -xdf` deletes exactly what is ignored.
+  ⚠ The published repository ships an **empty** `instance/`, and that is not an exception to
+  this: what ships is the slot, and it is filled only in the copy, which is nobody's published
+  tree. The distinction is worth holding on to — a slot travelling outward is a rule waiting to
+  be broken, while a slot filled downstream cannot travel at all.
 - **Never write framing into a code repository**, and never write code doctrine into the
   framing. Reusable code and its reference documentation are versioned with what they
   document.
