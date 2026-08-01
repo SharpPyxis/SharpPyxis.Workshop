@@ -189,7 +189,8 @@ Almost nothing here is read unconditionally. Each file states its own trigger in
 | `memory.md` | Deciding where a fact should be stored |
 | `git.md` | Creating a repository, drawing a versioned / local boundary, preparing a publication |
 | `lint/` | Running the checks, or changing their configuration |
-| `templates/` | Creating a workshop or an instance |
+| `setup/` | Creating a workshop |
+| `templates/` | Changing what a new workshop is created with |
 
 The instance declares its own files and their triggers, in `instance/index.md`. The method
 never reads their contents.

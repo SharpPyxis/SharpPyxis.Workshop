@@ -23,7 +23,8 @@ Three ideas run through everything here:
 | `memory.md` | A tool's private memory versus memory shared between agents |
 | `git.md` | Repository creation, the versioned / local boundary, publication |
 | `lint/` | The checks, in one place, with per-workshop thresholds |
-| `templates/` | An empty workshop, an empty instance, and the installer |
+| `setup/` | Creating a workshop: the contract, and the installer |
+| `templates/` | What a new workshop is created with |
 | `VERSION` | Stamped into every workshop the installer creates |
 
 ## Reading it for the first time
@@ -34,10 +35,14 @@ way to spend the budget the method exists to protect.
 
 ## Adopting it
 
-Copy `templates/instance/` **beside the repository** — a sibling folder named `instance/`,
-its own private repository — fill in the profile, then run the installer for each workshop.
-The instance is yours and stays yours: the method never reads its contents, only the index
-it declares.
+Create an `instance/` folder **beside this repository** — a sibling, its own private
+repository — holding an `index.md` that declares an identity file and the trigger of every
+other file it carries. Then run `setup/workshop-setup.py` once per workshop; it resolves the
+corpus around it and refuses to write if it cannot. The instance is yours and stays yours: the
+method never reads its contents, only the index it declares.
+
+⚠ There is no template for the instance yet. Creating one is the adopter's path, it has never
+been exercised, and shipping an untested skeleton for it would be worse than saying so.
 
 ## A worked example
 

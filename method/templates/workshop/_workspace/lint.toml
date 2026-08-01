@@ -1,0 +1,76 @@
+# lint.toml — framing checks for {{WORKSHOP}}.
+#
+# The configuration of a framing belongs to what it frames. Hard-coding it is what produced the
+# two divergent forks the unified lint exists to prevent — see `method/lint/CONTRACT.md`.
+#
+# ⚠ Every threshold declares the reason that holds it. A number without its reason gets raised
+# to silence the lint; a number with its reason gets discussed instead. That single requirement
+# is what fixed the format to TOML and the runtime floor to Python 3.11.
+#
+# Run from this folder: py -3 <method>/lint/workshop-lint.py .
+
+[workshop]
+name = "{{WORKSHOP}}"
+# The method version this workshop was framed under. It lets a later lint tell a framing that is
+# simply old from one that has drifted.
+method_version = "{{METHOD_VERSION}}"
+# Every repository this workshop frames, the framing itself included.
+repositories = {{REPOSITORIES}}
+
+[framing]
+root_files = ["atlas.md", "todo.md"]
+dated_files = ["atlas.md", "todo.md"]
+# The handoff carries a few sessions of volatile context, never a journal: the atlas holds the
+# consolidated state, the todo the open, and the git log the factual record.
+handoff_sessions = 5
+
+[sizes]
+# ⚠ Deliberately empty, and that is the rule rather than an omission. A threshold set at creation,
+# before this workshop has any content, is guesswork that will be either ignored or wrong —
+# observed: 400 lines posted for a todo whose natural floor turned out to be around 420.
+#
+# Post them at the first session close, in CHARACTERS, never in lines: a consolidation pass was
+# measured removing 15 % of a file's content without its line count moving. The formula is in
+# `method/tracking.md` § *Sizes*. Measure first; write the number with the measurement beside it.
+#
+# "atlas.md" =
+# "todo.md" =
+# "memories/handoff.md" =
+
+[bootstrap]
+# The sum re-read at every session start, before a line of code is opened.
+#
+# ⚠ Declared here rather than derived from [sizes]: with no threshold posted yet, a derived list
+# would be empty and the budget would silently ignore this workshop's own framing — a green that
+# means nothing.
+framing_files = ["atlas.md", "todo.md", "memories/handoff.md"]
+budget = 75000
+chars_per_token = 3.5
+# The method declares where the instance index lives; the instance declares which of its files
+# are read unconditionally. The workshop repeats it so the lint does not guess.
+instance_files = {{INSTANCE_FILES}}
+
+[todo]
+files = ["todo.md"]
+# Closed vocabulary. A workshop writing its framing in another language translates these three
+# values and changes nothing else — the lint compares against what is declared here.
+statuses = ["active", "on hold", "blocked"]
+item_prefixes = ["⬜", "⚠", "❓", "💡"]
+# ✅ is a transition, not a resting state: an item left checked in the todo is one nobody moved
+# to the atlas or to the delivered narrative.
+forbidden_prefixes = ["✅"]
+
+[references]
+# ⚠ Narrow on purpose, and empty until this workshop has locations worth checking. Declare only
+# prefixes whose every citation is an EXISTING location: an early version tried to resolve every
+# token that looked like a path and produced several hundred false failures, because almost all
+# of them are identities — a document named without its folder, a URL route, a MIME type.
+# must_resolve_prefixes = []
+
+[checks]
+line_endings = true
+line_ending_files = [".gitattributes", ".editorconfig"]
+# What the agent actually reaches. A wrong path here breaks nothing visible — it only makes the
+# method unreadable, in silence — and a name whose case differs from disk loads nothing at all
+# on a case-sensitive file system while working perfectly on the author's machine.
+editor_workspaces = true

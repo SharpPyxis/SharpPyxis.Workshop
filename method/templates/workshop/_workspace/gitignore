@@ -1,0 +1,34 @@
+# .gitignore of a framing repository.
+#
+# This repository holds ONLY framing documents: no code, no build artefact. The list is therefore
+# short, and that is normal. Every entry says why it is here — a folder's name decides nothing,
+# only this file does.
+#
+# ⚠ PRIVATE repository. A workshop's framing is never published: it carries names, decisions and
+# session context belonging to its owner.
+
+# ── Editor tooling ─────────────────────────────────────────────────────────────
+# Machine-local settings, and the editor workspace file, which lives at the corpus root and
+# belongs to no repository.
+.vs/
+.vscode/
+.idea/
+*.code-workspace
+
+# ── Temporary files ────────────────────────────────────────────────────────────
+# Editors drop working copies beside the file being edited; they appear and vanish as you type.
+~$*
+*.tmp
+*.bak
+*.swp
+*~
+
+# ── System ─────────────────────────────────────────────────────────────────────
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ── Local, unshared work ───────────────────────────────────────────────────────
+# Drafts, exports, throwaway notes. The folder exists so there is somewhere to put a file without
+# wondering whether it should be versioned: by construction, the answer is no.
+_local/

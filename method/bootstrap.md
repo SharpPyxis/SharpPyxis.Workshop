@@ -96,6 +96,13 @@ neighbouring session:
 An act with no trace and no confirmation, on someone else's entry point — and a framing
 document that prescribes it has stepped past describing, into acting abroad.
 
+⚠ **Creating a wiring is not changing one**, and the exception is mechanical rather than
+permissive: a workshop being created has no session of its own yet, so no other author is
+possible. The right is therefore **unique and non-renewable** — the second time a session from
+elsewhere touches those same files, it is the neighbour again. An installer keys on exactly
+that: it refuses to run against anything that already exists, because the existence of the
+target is what tells it which side of the rule it is on. The rest is in `setup/CONTRACT.md`.
+
 ⚠ A corpus-wide move is the case this rule cannot cover: the method changes location and every
 workshop must follow at once, which no single workshop's session can do. Then **name the
 operation to the developer, do it in one pass, and record it in the same breath.** Observed: a
