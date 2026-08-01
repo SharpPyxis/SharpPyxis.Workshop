@@ -11,6 +11,9 @@ A tracking method for one developer working with AI agents.
 > ```
 >
 > That is the whole gesture. Why it is typed rather than configured: § *Entry point*, below.
+>
+> **Arriving for the first time?** That sentence is not yours yet — it names a workshop, and you
+> have none. Start at § *Getting started*: a copy, a folder, and one conversation.
 
 Its subject is narrow on purpose: **what an agent must read before it can be useful, and
 what a session must leave behind so the next one starts informed.**
@@ -210,23 +213,37 @@ fills it in. Two things follow, and both are deliberate:
 ⚠ And it is never placed next to a real `_workspace/`. Two framings side by side are two
 sources of truth, which is the exact drift the method exists to prevent.
 
-## The half you write
+## Getting started
 
-Adopting the method is a copy, not a clone, and the first session opens on the copy alone —
-there is no workshop yet, and the editor wiring file that later sessions use sits at the corpus
-root, outside every repository, so nothing you copy or clone can deliver it:
+**What you need**: an agent that can be pointed at a set of folders and told to read a file.
+That is what coding agents do; which one is not the method's business, and § *Entry point* says
+why it refuses to have an opinion.
+
+**1. Copy this repository** into a folder of your own — `_workshop/` by habit, though nothing
+reads the name. A copy, not a clone: see below.
+
+**2. Open a session on that folder** and say, in your own words:
 
 ```text
-copy this repository to  projects/_workshop/
-open a session on that folder, and say:
-
-    I have just copied the method here. There is nothing else yet.
-    Entry point: projects/_workshop/method/organization.md
+I have just copied the method here. There is nothing else yet.
+Entry point: projects/_workshop/method/organization.md
 ```
 
-From there the agent reads the map, finds no instance, and offers to build one with you. The
-gesture at the top of this page — naming a workshop — is the ordinary one, from the second
-session onwards.
+There is no workshop yet and no editor wiring file, and neither is needed. ⚠ The wiring file
+later sessions use sits at the corpus **root**, outside every repository — so nothing you copy
+or clone could have delivered it, and the first session is opened by hand whatever the method
+ships. From the second session on, the gesture at the top of this page applies.
+
+**3. Answer the questions.** The agent reads the map, finds no instance, and offers to build one
+with you: your language, your register, how you work. Ten minutes, and it writes the two files
+that everything else reads. Say *later* and it carries on without them, telling you so rather
+than guessing.
+
+**4. Lay out your first workshop.** By hand for now — the installer learns the corpus from an
+existing workshop, and there is none yet; `method/setup/CONTRACT.md` states the limitation and
+what closes it. Every workshop after that one goes through `method/setup/workshop-setup.py`.
+
+### The half you write
 
 `instance/` ships **empty**, and it is the one folder you are expected to fill: your profile
 and how you want an agent to address you, your transverse technical conventions, your
@@ -234,11 +251,8 @@ notebooks. The method never reads its contents — only the `index.md` you put t
 declares what exists and **when** each file is read. Everything else in your copy is received:
 you read `method/`, you do not edit it.
 
-You do not write that first file from a blank page. The first session that finds no instance
-**offers** to build one with you — ten minutes of questions, and it writes the identity file and
-the index that declares it. It offers and waits: a session opened to do something else is never
-taken over by it. The rest of the corpus arrives later, one file at a time, each written the
-first time its absence is actually felt.
+It does not arrive all at once. Step 3 above writes the identity file and the index; the rest of
+the corpus follows one file at a time, each written the first time its absence is actually felt.
 
 The rule that decides every borderline case:
 
