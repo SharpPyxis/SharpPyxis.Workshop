@@ -37,8 +37,16 @@ at a distance on the corpus that ships it.
 
 | | |
 | --- | --- |
-| `repo/` | The two files every repository gets at creation (`method/git.md` § *Creating a repository*) |
+| `repo/` | The two line-ending files every repository gets, the framing folder included (`method/git.md` § *Creating a repository*) |
+| `code-repo/` | What only a code repository gets on top: its `.gitignore`, and a readme holding its name |
 | `workshop/` | An empty workshop: its framing folder, and nothing else |
+
+⚠ **No `src/`, no `tests/`, no `docs/`.** `organization.md` says a repository's internal skeleton
+is whatever its stack expects and that the method says nothing about it — and the repository
+readme illustrates exactly that, laying its two example repositories out differently on purpose.
+A tree posted here would contradict the rule, and would have to be held up by placeholder files,
+since git does not keep empty folders. What a stack expects is the stack's tooling to create, or
+the instance's to declare; it is not the method's to guess.
 
 ⚠ `templates/instance/` does not exist yet. Creating an instance is the other path — an adopter
 setting the method up on a machine — and it has never been exercised. `organization.md` announces

@@ -397,7 +397,12 @@ def main() -> int:
     for repo in repos:
         if not args.dry_run:
             repo.mkdir(parents=True, exist_ok=True)
+        # `repo/` is what every repository gets, the framing included; `code-repo/` is what only
+        # code gets. ⚠ Neither carries a src/tests/docs skeleton: `organization.md` says the method
+        # says nothing about a repository's internals, and the two example repositories in the
+        # readme are laid out differently on purpose.
         copy_template(templates / "repo", repo, values, report)
+        copy_template(templates / "code-repo", repo, dict(values, REPOSITORY=repo.name), report)
         report.did("repository %s/" % repo.name)
         init_repository(repo, "setup: %s — repository skeleton" % repo.name, report)
 
