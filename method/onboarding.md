@@ -58,7 +58,12 @@ produce one.
 
 **An `index.md`.** It declares what exists in the folder and, for each file, **when it is read**.
 On day one it has a single line — the identity file, read always and first. That is not a poor
-index, it is a correct one.
+index, it is a correct one, and `corpus.md` shows exactly what it looks like.
+
+⚠ The interesting question arrives with the **second** file, not the first: a line that says
+*when* to read something has to be decidable before the file is opened, and getting that wrong
+is how a corpus quietly becomes unusable. `corpus.md` is where that is written, and it is read
+then rather than now — there is nothing to decide about a one-line index.
 
 ⚠ **The identity file's name is declared by the index, never assumed by the method.** Anything
 here that hard-coded a filename would be wrong on the first machine that chose another. The
@@ -73,6 +78,6 @@ minutes. Read them out, take the corrections, then write.
 The instance grows one file at a time, and only ever the same way: a trigger fires, the corpus
 has nothing to say about it, and that gap is what a new file answers. Each addition is declared
 in `index.md` **in the same gesture** — a file no index names is read by nobody, which is not a
-figure of speech but a measured outcome.
+figure of speech but a measured outcome. How to write that declaration is `corpus.md`.
 
 There is nothing else to run, and this file is not read again.

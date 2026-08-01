@@ -25,6 +25,34 @@ It offers and waits. A session you opened to do something else is not taken over
 | Your technical conventions | One file per **situation of work**, not per shelf: writing C#, designing a schema, writing an interface. Each declares its own trigger. |
 | Your notebooks | Backlogs, dated observations, anything transverse to every workshop and belonging to none. |
 
+## Writing a line of the index
+
+The index answers one question, and it is never *"what is this file about?"* — it is **"do I
+need this, now, for what I am about to do?"** So a line describes a **situation**, not a subject,
+and it has to be decidable **before** the file is opened.
+
+| | |
+| --- | --- |
+| ✗ | `sql-conventions.md` — *Database conventions* |
+| ✓ | `data.modeling.md` — *Designing or changing a schema, whatever the engine* |
+| ✓ | `data.postgresql.md` — *Writing PostgreSQL: DDL, a migration, a query* |
+
+The first is a shelf. Someone about to write a `select` cannot tell whether it is meant for
+them, so they either read all of it for nothing or skip something they needed.
+
+Two habits make the difference, and both are cheap:
+
+- **say what it excludes.** The negative half is what saves the reading, because it is what
+  stops an agent reading defensively — *"do not read for a pure documentation, C# or frontend
+  session: it adds nothing there and costs context"*;
+- **one file, one trigger.** Two subjects always read together are one file; one subject read in
+  two distinct situations is two files. It is the only rule that reliably tells you where to
+  cut, and it is what keeps this index a list of situations rather than a list of shelves.
+
+⚠ The examples above illustrate the *shape*. What your corpus holds, and what its files are
+called, is yours — the method declares the slot and never its content. The full reasoning, with
+the failure modes worth knowing before you cut, is in the method's `corpus.md`.
+
 ## The two rules that keep it usable
 
 - ⚠ **A file that `index.md` does not name is read by nobody.** Not "harder to find" —

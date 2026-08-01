@@ -230,6 +230,7 @@ Almost nothing here is read unconditionally. Each file states its own trigger in
 | --- | --- |
 | `organization.md` | Always — this file |
 | `onboarding.md` | There is no instance, or it holds no index — fires at most once per machine |
+| `corpus.md` | Adding a file to a corpus read by trigger, or splitting or renaming one |
 | `tracking.md` | Writing in a framing document, or closing a session |
 | `bootstrap.md` | Setting up a workshop, or diagnosing why an agent read nothing |
 | `memory.md` | Deciding where a fact should be stored |

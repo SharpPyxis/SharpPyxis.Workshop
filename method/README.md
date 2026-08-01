@@ -19,6 +19,7 @@ Three ideas run through everything here:
 | --- | --- |
 | `organization.md` | The single entry point: the map, and the reading order |
 | `onboarding.md` | Building a first instance, when there is none — an interview, offered and never started unasked |
+| `corpus.md` | Writing a trigger, and cutting a set of files by it |
 | `tracking.md` | Roles and life cycle of the framing documents, the todo grammar, the closing protocol |
 | `bootstrap.md` | The reading chain, its load and its budget |
 | `memory.md` | A tool's private memory versus memory shared between agents |
