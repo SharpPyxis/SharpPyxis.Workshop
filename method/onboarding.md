@@ -7,6 +7,30 @@
 
 ---
 
+## Day zero — how the session reading this got opened
+
+There is no workshop yet, and no editor wiring file. That is expected, and it is worth stating
+because everything else in the method assumes both.
+
+**No copy and no clone can deliver the wiring file.** It sits at the corpus root — outside every
+repository, which is exactly why `bootstrap.md` says it is outside every history too. So the
+first session is opened differently from all the ones that follow: give the agent the folder you
+copied, and name the entry point.
+
+```text
+I have just copied the method to projects/_workshop/. There is nothing else yet.
+Entry point: projects/_workshop/method/organization.md
+```
+
+That is enough. Nothing in the reading chain requires a workshop to exist — § *Step 0* needs the
+instance, and the map needs itself. The opening gesture in the readme, which names a workshop, is
+the **ordinary** one; on day zero there is no workshop to name.
+
+⚠ The first workshop is laid out **by hand** today, and only the first — `setup/CONTRACT.md`
+§ *The first workshop on a machine* says why, and what will close it. Say so rather than leaving
+it to be met as a refusal, and offer to do it: copying a template folder and filling four
+placeholders is work an agent does well and a person does grudgingly.
+
 ## The rule that bounds everything below
 
 **Notice, say it in one sentence, offer, and wait.**

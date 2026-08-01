@@ -38,10 +38,16 @@ way to spend the budget the method exists to protect.
 ## Adopting it
 
 Copy the repository to a folder of your own — `_workshop/` by habit, though nothing reads the
-name — and fill the `instance/` it ships empty: an `index.md` declaring an identity file and the
-trigger of every other file it carries. Then run `setup/workshop-setup.py` once per workshop; it
-resolves the corpus around it and refuses to write if it cannot. The instance is yours and stays
-yours: the method never reads its contents, only the index it declares.
+name — and open a session on it, naming `method/organization.md` as the entry point. There is no
+workshop and no editor wiring yet; neither is needed, and `onboarding.md` covers that first
+session. Fill the `instance/` the repository ships empty: an `index.md` declaring an identity
+file and the trigger of every other file it carries. Then run `setup/workshop-setup.py` once per
+workshop; it resolves the corpus around it and refuses to write if it cannot. The instance is
+yours and stays yours: the method never reads its contents, only the index it declares.
+
+⚠ The **first** workshop on a machine is laid out by hand — the installer learns the corpus from
+an existing workshop and there is none yet. `setup/CONTRACT.md` states the limitation and what
+closes it.
 
 ⚠ **A copy, not a clone.** Your folder holds your profile and your conventions; this repository
 is upstream and nothing travels back to it. Updating means copying a newer `method/` over yours,

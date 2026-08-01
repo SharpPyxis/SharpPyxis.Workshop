@@ -212,12 +212,21 @@ sources of truth, which is the exact drift the method exists to prevent.
 
 ## The half you write
 
-Adopting the method is a copy, not a clone:
+Adopting the method is a copy, not a clone, and the first session opens on the copy alone —
+there is no workshop yet, and the editor wiring file that later sessions use sits at the corpus
+root, outside every repository, so nothing you copy or clone can deliver it:
 
 ```text
 copy this repository to  projects/_workshop/
-then fill  _workshop/instance/
+open a session on that folder, and say:
+
+    I have just copied the method here. There is nothing else yet.
+    Entry point: projects/_workshop/method/organization.md
 ```
+
+From there the agent reads the map, finds no instance, and offers to build one with you. The
+gesture at the top of this page — naming a workshop — is the ordinary one, from the second
+session onwards.
 
 `instance/` ships **empty**, and it is the one folder you are expected to fill: your profile
 and how you want an agent to address you, your transverse technical conventions, your
