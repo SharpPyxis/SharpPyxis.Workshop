@@ -85,6 +85,12 @@ copying the published repository, which ships `instance/` empty for exactly that
 from then on it is a private folder of your own — versioned wherever you keep private things,
 or not at all.
 
+⚠ **Its position is the one thing that is not free.** The name is not read, the host is yours,
+versioning it is optional — but it sits **directly inside the root, beside the workshops**, never
+within one and never elsewhere on the disk. Every resolution in this method starts from a
+workshop's framing folder, climbs to the root, and looks for the meta level among its children.
+Placed anywhere else it is not found, and the checks refuse rather than guess.
+
 Two consequences follow, and both matter more than they look:
 
 - **it is private in full**, not selectively. Nothing has to be filtered out of it, because

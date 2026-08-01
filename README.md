@@ -110,8 +110,11 @@ are, and how one developer and their agents work inside them.
 Everything below sits under whatever folder you keep your work in. That root has no
 meaning of its own — the method never reads anything from it.
 
+The root is the only position the method depends on: `_workshop/` and every workshop are its
+direct children, and that is what lets any of them find the others.
+
 ```text
-projects/                        the root. Not a repository. Nothing is read from it.
+projects/                        THE ROOT — you choose it. Not a repository, nothing read from it
 │
 ├── _workshop/                   THE META LEVEL — one per machine, shared by every workshop.
 │   │                            This repository, copied, with instance/ filled in.
@@ -153,9 +156,10 @@ projects/                        the root. Not a repository. Nothing is read fro
   its name, not its depth, not whether it looks important. `Ledger/` and `TinyParse/` are
   workshops.
 - **The meta level is the folder holding `method/organization.md` and `instance/`.** That
-  pair is its whole test, and nothing depends on what it is called. It is **not** a workshop:
-  it holds no framing, because there is nothing to frame — you are reading the method there,
-  not writing it.
+  pair is its whole test, and nothing depends on what it is called — but it does depend on where
+  it sits: **directly inside the root, beside the workshops**, which is what makes it findable
+  from any of them. It is **not** a workshop: it holds no framing, because there is nothing to
+  frame — you are reading the method there, not writing it.
 - **A repository is where code lives**, with whatever skeleton its stack expects. A
   repository never contains a `_workspace/`, and a workshop is never itself a repository —
   the folder `Ledger/` is not versioned; `ledger.api/` and `ledger.web/` are.
@@ -219,8 +223,16 @@ sources of truth, which is the exact drift the method exists to prevent.
 That is what coding agents do; which one is not the method's business, and § *Entry point* says
 why it refuses to have an opinion.
 
-**1. Copy this repository** into a folder of your own — `_workshop/` by habit, though nothing
-reads the name. A copy, not a clone: see below.
+**1. Choose the root, then copy into it.** The root is the folder that will hold all your
+workshops — whatever your projects already sit under is usually the right answer. Copy this
+repository *inside* it, as `_workshop/` or any name you prefer. A copy, not a clone: see below.
+
+> ⚠ **The position is the one thing that is not negotiable.** The name is not read, the host is
+> yours, versioning it is optional — but the copy must sit **directly inside that root, beside
+> your workshops**, never inside one. Every resolution starts from a workshop, climbs to the root,
+> and looks for the method among its children; anywhere else, it is simply not found, and the
+> checks refuse rather than guess. Everything else in this method is deliberately loose. This is
+> the one thing it needs.
 
 **2. Open a session on that folder** and say, in your own words:
 
