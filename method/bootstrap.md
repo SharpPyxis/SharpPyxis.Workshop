@@ -73,17 +73,33 @@ hands it a second door has chosen for itself which door wins, without ever discu
 
 ## Wiring a workshop
 
-Each workshop's editor workspace declares four kinds of folder:
+Each workshop's editor workspace declares three kinds of folder:
 
 | Folder | Why |
 | --- | --- |
-| the method's `method/` | Holds the entry point. Point at `method/`, not at the repository root — a workshop that consumes the method has no business seeing its sample or its plumbing |
-| `instance/` | The identity and conventions, read from step 0 |
+| the meta level | **One entry, the copy itself** — not `method/` and `instance/` separately. It carries the entry point and the identity read at step 0 |
 | the workshop's repositories | The work itself |
 | the workshop's `_workspace/` | Its framing |
 
-The workshop where the **method itself** is developed is the exception: it declares the
-method repository's root, because there the method is the work.
+**One entry rather than two, because the copy is a local tool and its composition is not the
+method's to fix.** `method/` is not improved there — that happens upstream, and arrives as a new
+copy — but `instance/` is exactly where an owner adapts how they work, and may hold things this
+method never anticipated. Splitting the entry freezes a shape that belongs to somebody else.
+
+⚠ It also brings `sample/` within reach of every session. That is not the forbidden case — the
+copy holds no `_workspace/`, so there are not two framings side by side — but it does put an
+example framing where an agent that explores can find it. The example is written to be read once;
+a copy that keeps it keeps a second framing corpus in view, and deleting it is the intended end.
+
+**There is no exception for the workshop where the method itself is developed.** It declares the
+meta level like every other workshop, and its method repository is declared for what it is: that
+workshop's code. Reading the received copy rather than the source is what makes the author the
+first adopter — the path every reader takes is then the path the author takes too, and what breaks
+for one breaks for both, the same day.
+
+⚠ The price falls entirely on that one workshop, and it is real: **nothing pulls the copy**, so
+every change to the method has to be carried over by hand. A workshop in that position owes itself
+a closing step that does it, not a habit that remembers to.
 
 ⚠ A lint over these declarations must check the **folder paths**, not only the instruction
 files some tools declare. Observed: three folder paths changed, and the lint stayed green. A

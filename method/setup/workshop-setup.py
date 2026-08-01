@@ -179,8 +179,7 @@ class Conventions:
         workspaces = read_workspaces(corpus)
         if not workspaces:
             report.warn("no editor wiring found at %s — writing a minimal one, with plain labels" % corpus.root)
-            self.method_label = "Method"
-            self.instance_label = "Instance"
+            self.meta_label = "Workshop"
             self.framing_pattern = "{} - Workspace"
             self.icon = ""
             self.instruction_keys = {}
@@ -188,7 +187,7 @@ class Conventions:
             return
 
         self.ok = True
-        method_labels, instance_labels, framing_patterns, icons = [], [], [], []
+        meta_labels, framing_patterns, icons = [], [], []
         for data in workspaces:
             for folder in data.get("folders", []):
                 label, path = folder.get("name", ""), folder.get("path", "")
@@ -196,18 +195,18 @@ class Conventions:
                 match = re.match(r"^([^\w\s]+)\s+", label)
                 if match:
                     icons.append(match.group(1))
-                if target == corpus.method.resolve() or target == corpus.method.parent.resolve():
-                    method_labels.append(label)
-                elif target == corpus.instance.resolve():
-                    instance_labels.append(label)
+                if target == corpus.meta.resolve():
+                    meta_labels.append(label)
                 elif target.name == corpus.framing_name and target.parent.parent == corpus.root.resolve():
                     # « 🗂️ CraftNorma - Workspace » against workshop CraftNorma gives the pattern;
                     # a label that never names its workshop is a constant, and stays one.
                     framing_patterns.append(label.replace(target.parent.name, "{}"))
 
+        # ⚠ A sibling still splitting the meta level into `method/` and `instance/` contributes no
+        # label here, and that is the intent: the wiring written is the one `bootstrap.md` § *Wiring
+        # a workshop* describes, never the older shape read off a neighbour that has not caught up.
         self.icon = consensus(icons) or ""
-        self.method_label = consensus(method_labels) or "Method"
-        self.instance_label = consensus(instance_labels) or "Instance"
+        self.meta_label = consensus(meta_labels) or "Workshop"
         self.framing_pattern = consensus(framing_patterns) or "{} - Workspace"
         self.plain_settings = self._plain_settings(workspaces)
 
@@ -235,7 +234,7 @@ class Conventions:
         reproduced into a new workshop without a line saying so."""
         if not self.ok:
             return ["no sibling wiring to read from — plain labels, no settings"]
-        told = ['labels « %s » and « %s »' % (self.method_label, self.instance_label),
+        told = ['meta-level label « %s »' % self.meta_label,
                 'framing label pattern « %s »' % self.framing_pattern]
         for key, value in sorted(self.plain_settings.items()):
             told.append("setting %s = %s" % (key, json.dumps(value)))
@@ -243,10 +242,9 @@ class Conventions:
 
 
 def build_wiring(corpus: Corpus, conventions: Conventions, name: str, framing: Path, repos: list) -> dict:
-    folders = [
-        {"name": conventions.method_label, "path": corpus.relative(corpus.method)},
-        {"name": conventions.instance_label, "path": corpus.relative(corpus.instance)},
-    ]
+    # One entry for the meta level, not one per folder inside it: the copy is a local tool, and
+    # what it holds beyond `method/` and `instance/` is its owner's business (`bootstrap.md`).
+    folders = [{"name": conventions.meta_label, "path": corpus.relative(corpus.meta)}]
     for repo in repos:
         folders.append({"name": conventions.label(repo.name), "path": corpus.relative(repo)})
     folders.append({"name": conventions.framing_pattern.format(name), "path": corpus.relative(framing)})

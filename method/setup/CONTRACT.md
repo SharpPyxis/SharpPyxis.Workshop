@@ -48,9 +48,10 @@ up*, and the created todo says so rather than leaving it to be discovered.
 
 **Optionally, the workshop's code repositories**, each initialised the same way.
 
-**An editor wiring** listing, at minimum: the method's `method/` folder, the instance folder, and
-the new framing folder. Point at `method/`, not at the repository root — a workshop that consumes
-the method has no business seeing its sample or its plumbing.
+**An editor wiring** listing, at minimum: the **meta level as a single folder**, and the new
+framing folder. One entry, not one per folder inside the copy — the reason is in `bootstrap.md`
+§ *Wiring a workshop*, and it is that the copy's composition belongs to its owner, not to the
+method.
 
 **The method's version, stamped** into the workshop's configuration, so a later lint can tell a
 framing that is merely old from one that has drifted.
