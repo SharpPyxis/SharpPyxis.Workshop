@@ -209,3 +209,23 @@ In order:
 ⚠ If a workshop's atlas defines a more precise closing checklist, **it prevails** — it adds
 the local specifics: tooling, sites, scripts. What belongs there is what is genuinely due *at the
 close*; anything due earlier is declared under § *Gestures a workshop declares*.
+
+### ⚠ Record what left no trace
+
+Two outcomes modify no file, so neither the lint nor the `git log` can carry them, and both are the
+most expensive things to redo — redoing them means covering the same ground to reconfirm the same
+nothing.
+
+- **What was checked and found empty**, with its date. *"Compared, nothing active left in it"* is a
+  result. Written down, it closes the question for good; left out, the next session re-reads the
+  same folder to reach the same conclusion.
+- **What was proposed and not answered.** An unanswered proposal is a normal state, not a failure:
+  signalling rather than deciding is the contract. What is not normal is recording it as though it
+  had never been made — the next session then reads an untouched item and cannot tell an analysis
+  that concluded from one that never happened. Write the finding, then write that the action was
+  proposed and is unconfirmed.
+
+⚠ One case cannot be recorded at all: a proposal accepted in the closing minutes and carried out
+**after** the last commit. The session is over when the action happens. Only the next session
+asking closes it — so ask, rather than infer a state from an untouched checkbox. Asking costs a
+sentence; assuming costs the whole verification again.
