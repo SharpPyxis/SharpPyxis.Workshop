@@ -191,6 +191,30 @@ due hours later, which is the contest the concrete case wins. Where the cost of 
 the workshop owes itself a mechanism too — a hook, a check that fails — and says which, so a later
 session knows whether it is relying on a rule or on a machine.
 
+## Resuming a session that was cut
+
+**Read this when a session ended between an act and its recording** — the developer says so, or the
+framing's working tree is dirty at start-up, which means the previous session recorded nothing. ⚠
+The second signal is a net, not a guarantee: a session cut after its commits but before its handover
+leaves a clean tree and looks exactly like a finished one.
+
+In order, and none of it is reconstruction from memory:
+
+1. **Establish the state from the disk**, mechanically: list the folders, run the checks, read
+   `git status`, diff whatever the workshop keeps in two places. A handful of gestures, no
+   interpretation. This gives what was done.
+2. ⚠ **Then look for a trace of the session itself, before concluding the reasons are lost.** Most
+   tools keep one; how to reach it is theirs to say, not this method's. Measured here: a session
+   rebuilt the state from disk, wrote in the handover that the previous session's decisions
+   *"existed nowhere"*, and had them dictated again — while the conversation that took them was
+   still on the machine. **The disk says what was done and never why; that half is not gone by
+   default, it is simply somewhere the disk is not.**
+3. **Do not replay the work.** Work redone produces a second plausible state, and nothing marks
+   which of the two the corpus was built on.
+
+⚠ Both halves are needed and neither substitutes for the other: the disk cannot be argued with, and
+it cannot explain itself.
+
 ## Closing a session
 
 In order:

@@ -124,6 +124,16 @@ neighbouring session:
 An act with no trace and no confirmation, on someone else's entry point — and a framing
 document that prescribes it has stepped past describing, into acting abroad.
 
+⚠ **And in the workshop's own session, it is the last thing that session does.** The wiring file is
+what the tool read to open the session; rewriting it while that session runs can make the tool
+reload and end it — with the work done and unrecorded, the one state this method exists to avoid.
+Observed twice in a single day on the workshop where this method is written; one of those sessions
+had to be replayed by hand the next day.
+
+So: commit, write the handover, **then** change the wiring — never in the middle of the work it
+belongs to. A workshop may instead decide the file is the developer's alone to edit, which removes
+the question rather than sequencing it.
+
 ⚠ **Creating a wiring is not changing one**, and the exception is mechanical rather than
 permissive: a workshop being created has no session of its own yet, so no other author is
 possible. The right is therefore **unique and non-renewable** — the second time a session from
