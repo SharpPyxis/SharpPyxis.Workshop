@@ -21,6 +21,24 @@ document quietly taking on the job of another.
 - It also serves as the index of the workshop: the repositories it frames, and where they
   are hosted.
 
+**Factual and imperative, never a chronicle.** Write what *is* and what *must be*. How it came to
+be that way belongs in `done/`, and the factual record is already in the `git log`. Three questions
+sort it, and they are mechanical enough to apply without arbitration:
+
+- *what is, or must be?* — it stays, in the imperative;
+- *how did we get here?* — it goes. A section narrating a superseded state, the rule that was
+  replaced, the exception that fell, reads as live context to the next session and is paid for out
+  of the reading budget at every start;
+- *is it already written in a document that has authority?* — then the atlas does not repeat it.
+  Cite it and move on. A rule living in two places is two sources of truth, and the copy drifts in
+  silence. ⚠ Check this one rather than assume it: an atlas measured against its own method corpus
+  was two thirds duplication, none of it visible from inside the file.
+
+⚠ **A reason stays when it explains why a rule is counter-intuitive; it goes when it recounts the
+incident.** Strip a rule of the reason that makes it survive and a later session judges it
+superfluous and skips it — the same failure as a threshold posted without its reason, which gets
+raised to silence the lint rather than discussed.
+
 ## `todo.md` — what is open
 
 Prolongs the atlas, never duplicates it. A finished item **leaves**: notable ones become a
