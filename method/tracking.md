@@ -148,6 +148,28 @@ a todo's floor is roughly *number of open subjects × lines per subject + header
 posted at creation time, before the workshop has any content, is guesswork that will be
 either ignored or wrong.
 
+## Work on a transverse corpus does not belong to a workshop
+
+The instance is read by every workshop and owned by none. **Open work on it lives in it**, declared
+by its own index — never as a piece of work in some workshop's todo, however naturally it started
+there.
+
+The boundary is the same one that decides where a rule goes: *that a corpus of transverse
+conventions exists, read by trigger* is the method's; **what that corpus says** is the instance's.
+A workshop that improves the first has a piece of work; the moment the remainder is only the
+second, it has a piece of work that is not its own.
+
+Two things follow, and the second is the one that gets forgotten:
+
+- **any session can then do it**, from any workshop — `organization.md` § *Perimeter* already puts
+  the instance inside every session's perimeter. Keeping the work in one workshop's todo is what
+  made it look otherwise;
+- ⚠ **moving a piece of work leaves the same dead citations as closing one**, and they are worse:
+  they stay plausible. `organization.md` § *Cite by identity* protects against a corpus that moves,
+  not against a tag that does. Sweep every citation of the tag in the same gesture — the todo, the
+  handoff, the delivered narratives — and name the work in plain words where it is only being
+  referred to.
+
 ## Gestures a workshop declares
 
 Some workshops carry an operation that has to happen when something is touched: a folder that must
