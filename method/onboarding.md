@@ -26,10 +26,12 @@ That is enough. Nothing in the reading chain requires a workshop to exist — §
 instance, and the map needs itself. The opening gesture in the readme, which names a workshop, is
 the **ordinary** one; on day zero there is no workshop to name.
 
-⚠ The first workshop is laid out **by hand** today, and only the first — `setup/CONTRACT.md`
-§ *The first workshop on a machine* says why, and what will close it. Say so rather than leaving
-it to be met as a refusal, and offer to do it: copying a template folder and filling four
-placeholders is work an agent does well and a person does grudgingly.
+The first workshop is created by the installer like every other one — it resolves the root and the
+framing folder's name from the meta level when there is no workshop to learn from
+(`setup/CONTRACT.md` § *The first workshop on a machine*). ⚠ It declares only `index.md` as read
+unconditionally, because the identity file's name belongs to the index; adding that second name to
+the new workshop's configuration is the one manual step left, and the installer's report asks for
+it by name.
 
 ## The rule that bounds everything below
 

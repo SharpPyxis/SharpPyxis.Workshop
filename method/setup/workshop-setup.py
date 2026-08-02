@@ -10,6 +10,11 @@ That folder is not decoration: it is what tells the installer the corpus root, t
 convention of a framing folder, and which instance files this corpus reads unconditionally —
 all of which are conventions to be *read*, never guessed.
 
+On a machine whose root holds no workshop yet there is nothing to learn from, and the installer
+resolves those same facts from the meta level instead of asking for a flag. That path carries its
+own refusals, because the check that guards the ordinary one cannot guard it — see
+`Corpus.day_zero`.
+
 ⚠ The installer refuses to touch anything that already exists. Creating a wiring is a right,
 changing one is not, and the existence of the target is exactly what tells it which of the two
 it is being asked to do. See CONTRACT.md § *The one rule that bounds the whole thing*.
@@ -82,63 +87,159 @@ class Report:
 # ============================================================================================
 
 
+def is_meta(path: Path) -> bool:
+    """The meta level holds the method and the instance: a folder containing both
+    `method/organization.md` and an `instance/`. That pair is the whole test, and nothing here
+    depends on what the folder is called.
+
+    ⚠ It is deliberately NOT "the workshop that also hosts the instance". That earlier rule was
+    read off the one machine where the method is developed, on which the meta level happens to
+    carry a framing folder as well. Nowhere else does it — so the condition was false by
+    construction for every adopter, and this installer refused to run against a correct layout."""
+    return path.is_dir() and (path / "method" / "organization.md").is_file() and (path / "instance").is_dir()
+
+
+def find_meta(root: Path):
+    """The one meta level directly inside the root. A new workshop is always wired to the received
+    copy: the working copy of someone writing the method is not what a consuming workshop reads."""
+    try:
+        children = sorted(root.iterdir())
+    except OSError:
+        return None
+    for child in children:
+        if is_meta(child):
+            return child
+    return None
+
+
 class Corpus:
     """The layout is resolved exactly as the lint resolves it, and for the same reason: naming
     any of these folders in the code would break at the first rename, and for everyone who
-    adopts the method under other names."""
+    adopts the method under other names.
 
-    def __init__(self, framing: Path, report: Report) -> None:
+    Built through one of the two constructors below, never directly: which one applies is decided
+    by what exists on disk, not by a flag the developer has to know about."""
+
+    def __init__(self, root: Path, meta: Path, framing_name: str, reference) -> None:
+        self.root = root
+        self.meta = meta
+        self.framing_name = framing_name
+        # The framing folder we learned from — None on day zero, where there is none to learn from.
+        self.reference = reference
+        self.instance = meta / "instance"
+        self.method = meta / "method"
+
+    @classmethod
+    def from_framing(cls, framing: Path, report: Report):
+        """The ordinary case: an existing workshop tells us the root and how a framing folder is
+        named here. Returns None rather than refusing — the caller decides whether an unresolved
+        origin is a mistake to report or a machine with no workshop yet."""
         if not framing.is_dir():
-            report.refuse("%s is not a folder — point --from at the framing folder of the workshop you are in" % framing)
-        self.framing_name = framing.name
-        self.here = framing.parent
-        self.root = self.here.parent
+            return None
+        root = framing.parent.parent
+        meta = find_meta(root)
+        if meta is None:
+            return None
+        return cls(root, meta, framing.name, framing)
 
-        self.meta = self._find_meta()
-        if not self.meta:
+    @classmethod
+    def day_zero(cls, setup_dir: Path, report: Report):
+        """The first workshop on a machine, where the ordinary path has nothing to learn from.
+
+        Both unknowns are still *read*: the root is the parent of the meta level, and the meta
+        level is where this implementation lives; the framing folder's name is the name of the
+        single folder under `templates/workshop/`. No `--root` flag — a flag would move the
+        decision to someone who has less to go on than the corpus does.
+
+        ⚠ What this path loses is the guard that protects the other one. Deriving the meta level
+        *from the script* makes "the script must be the one the corpus resolves" compare a thing
+        to itself. The three refusals below replace it, and the first is the one that matters: run
+        from a working copy of the method, this would otherwise take the workshop containing that
+        copy for the corpus root and wire a new workshop inside it."""
+        meta = setup_dir.parent.parent
+        if not is_meta(meta):
             report.refuse(
-                "no meta level found under %s — expected one folder holding both method/organization.md and an instance/.\n"
-                "        Refusing to write rather than emit a plausible relative path: a workshop wired to the\n"
-                "        wrong corpus does not fail visibly, it starts every session from the wrong rules."
-                % self.root
+                "%s does not hold both method/organization.md and instance/, so this script is not running\n"
+                "        from a meta level. There is no workshop to learn from either — nothing here can be\n"
+                "        resolved, and a plausible guess is exactly what this installer must not emit."
+                % meta
             )
-        self.instance = self.meta / "instance"
-        self.method = self.meta / "method"
+        root = meta.parent
+        framing_name = template_framing_name(meta / "method", report)
 
-    def _find_meta(self):
-        """The meta level holds the method and the instance: a folder containing both
-        `method/organization.md` and an `instance/`. That pair is the whole test, and nothing
-        here depends on what the folder is called.
+        # ⚠ The meta level sits directly inside the root, beside the workshops, never within one
+        # (`organization.md` § *The meta level is a copy*). A root that is itself a workshop means
+        # we are standing in a working copy of the method, one level too deep.
+        if (root / framing_name).is_dir():
+            report.refuse(
+                "%s is itself a workshop — it holds a %s/. The meta level sits beside the workshops, never\n"
+                "        inside one, so this is a working copy of the method rather than a received one. Creating\n"
+                "        a workshop from here would wire it to files no session will ever read."
+                % (root, framing_name)
+            )
 
-        ⚠ It is deliberately NOT "the workshop that also hosts the instance". That earlier rule
-        was read off the one machine where the method is developed, on which the meta level
-        happens to carry a framing folder as well. Nowhere else does it — so the condition was
-        false by construction for every adopter, and this installer refused to run against a
-        correct layout. A new workshop is always wired to the received copy: the working copy of
-        someone writing the method is not what a consuming workshop should read."""
-        for child in sorted(self.root.iterdir()):
-            if child.is_dir() and (child / "method" / "organization.md").is_file() and (child / "instance").is_dir():
-                return child
-        return None
+        existing = [child.name for child in sorted(root.iterdir()) if child.is_dir() and (child / framing_name).is_dir()]
+        if existing:
+            report.refuse(
+                "%s already holds %d workshop(s): %s.\n"
+                "        This is not day zero, and the conventions of an existing workshop are read rather than\n"
+                "        rebuilt from the templates. Run again with --from <that workshop>/%s."
+                % (root, len(existing), ", ".join(existing), framing_name)
+            )
+
+        resolved = find_meta(root)
+        if resolved is None or resolved.resolve() != meta.resolve():
+            report.refuse(
+                "%s holds a second meta level (%s), and it is the one the corpus resolves.\n"
+                "        Two copies of the method side by side make the choice ambiguous, and this installer\n"
+                "        picks neither." % (root, resolved)
+            )
+
+        report.note("day zero: no workshop to learn from — root %s, framing folder « %s », both read from the meta level"
+                    % (root, framing_name))
+        return cls(root, meta, framing_name, None)
 
     def relative(self, path: Path) -> str:
         """Every path in an editor wiring is relative to the corpus root, forward slashes."""
         return path.resolve().relative_to(self.root.resolve()).as_posix()
 
 
+def template_framing_name(method: Path, report: Report) -> str:
+    """Read, never assumed: `templates/workshop/` holds exactly one folder, and its name is what a
+    framing folder is called. Anything else is a template that changed shape without this being
+    updated, and guessing past that would silently name the folder every session opens."""
+    source = method / "templates" / "workshop"
+    found = [child.name for child in sorted(source.iterdir()) if child.is_dir()] if source.is_dir() else []
+    if len(found) != 1:
+        report.refuse(
+            "expected exactly one folder under %s to name the framing folder, found %d%s."
+            % (source, len(found), (" (%s)" % ", ".join(found)) if found else "")
+        )
+    return found[0]
+
+
 def instance_files(corpus: Corpus, report: Report) -> list:
     """Which instance files are read unconditionally is the instance's business, and the workshop
     repeats it so the lint does not guess. Read it from the workshop we are standing in rather
     than inventing a default: that is the convention already in force in this corpus."""
-    config = corpus.here / corpus.framing_name / "lint.toml"
-    if config.is_file():
-        try:
-            declared = tomllib.loads(config.read_text(encoding="utf-8")).get("bootstrap", {}).get("instance_files")
-        except tomllib.TOMLDecodeError:
-            declared = None
-        if declared:
-            return list(declared)
-    report.warn("no instance_files declared in the current workshop — falling back to index.md alone")
+    if corpus.reference is not None:
+        config = corpus.reference / "lint.toml"
+        if config.is_file():
+            try:
+                declared = tomllib.loads(config.read_text(encoding="utf-8")).get("bootstrap", {}).get("instance_files")
+            except tomllib.TOMLDecodeError:
+                declared = None
+            if declared:
+                return list(declared)
+        report.warn("no instance_files declared in the current workshop — falling back to index.md alone")
+        return ["index.md"]
+
+    # ⚠ Day zero. `index.md` is the one name the method guarantees; the identity file beside it is
+    # named by the index, and reading a name out of someone's prose is the guess this installer
+    # exists not to make. Under-declaring here is the same call `[sizes]` already makes by shipping
+    # empty: a number invented at creation is worse than one posted at the first close, with the
+    # corpus in hand.
+    report.note("instance_files = [\"index.md\"] — add the identity file your index declares; only the index knows its name")
     return ["index.md"]
 
 
@@ -323,14 +424,29 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Create a workshop, and stop there.")
     parser.add_argument("name", help="the workshop's name — it names the folder and the wiring file alike")
     parser.add_argument("--repos", nargs="*", default=[], help="code repositories to create inside it, each initialised")
-    parser.add_argument("--from", dest="origin", default=".", help="framing folder of the workshop you are in (default: .)")
+    parser.add_argument("--from", dest="origin", default=None,
+                        help="framing folder of the workshop you are in (default: the current folder, "
+                             "or the meta level when the root holds no workshop yet)")
     parser.add_argument("--dry-run", action="store_true", help="report what would be written, write nothing")
     args = parser.parse_args()
 
     report = Report(args.dry_run)
     setup_dir = Path(__file__).resolve().parent
-    corpus = Corpus(Path(args.origin).resolve(), report)
 
+    # An origin that was given and does not resolve is a mistake to report, never a reason to fall
+    # back: day zero is a state of the disk — no workshop to learn from — and silently treating a
+    # mistyped path as one would rebuild from templates what an existing workshop already declares.
+    corpus = Corpus.from_framing(Path(args.origin if args.origin is not None else ".").resolve(), report)
+    if corpus is None:
+        if args.origin is not None:
+            report.refuse(
+                "%s is not the framing folder of a workshop whose corpus resolves — expected a folder whose\n"
+                "        grandparent holds a meta level (method/organization.md plus instance/)." % Path(args.origin).resolve()
+            )
+        corpus = Corpus.day_zero(setup_dir, report)
+
+    # ⚠ Guards the ordinary path only: on day zero the meta level is derived from this very script,
+    # so the comparison is true by construction. What replaces it there is in `Corpus.day_zero`.
     if corpus.method.resolve() != setup_dir.parent.resolve():
         report.refuse(
             "this script lives under %s but the corpus resolves its method to %s.\n"

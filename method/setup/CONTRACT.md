@@ -74,29 +74,48 @@ the meta level is the one place where the author's machine is not like anyone el
 **A new workshop is wired to the received copy**, never to a working copy of the method. On the
 machine where the method is written both exist, and the distinction stops being academic: the
 installer refuses to run when the script it was launched from is not the one the corpus resolves.
+⚠ That check needs an existing workshop to resolve the corpus from, so it cannot guard the first
+one — § *The first workshop on a machine* says what replaces it there.
 
 ⚠ If either cannot be resolved, the installer **stops without writing**. The alternative — emit a
 plausible relative path and let it be wrong — produces a workshop that starts every session from
 a corpus that is not the one intended, which is the failure mode this method was written against:
 not "nothing loads" but "something else loads", confidently, with no signal.
 
-### ⚠ The first workshop on a machine
+### The first workshop on a machine
 
-The reference implementation learns the corpus root and the framing-folder name from an existing
-workshop, so **it cannot create the first one**: on a fresh machine there is nothing to learn
-from. Until that is closed, the first workshop is laid out by hand — copy `templates/workshop/`,
-rename the dotfiles, fill the placeholders in its `lint.toml` — and every later one goes through
-the installer.
+An implementation learns the corpus root and the framing-folder name from an existing workshop.
+On a fresh machine there is none, and that must not make the first workshop the one laid out by
+hand: the argument for having an installer at all is that a hand-made workshop drifts from the
+others, so the very first one would be the most likely to.
 
-That is a poor place for a manual step, and it is stated rather than hidden for exactly that
-reason: the argument for having an installer at all is that a hand-made workshop drifts from the
-others, and this makes the very first one the most likely to.
+Both unknowns are **read**, and neither is assumed — no `--root` flag, which would move the
+decision to someone with less to go on than the corpus has:
 
-The way out does not require guessing, which is why it is worth doing properly rather than
-patching with a flag: **the root is the parent of the meta level, and the meta level is where the
-implementation itself lives**; **the framing folder's name is the name of the single folder under
-`templates/workshop/`**. Both are read, neither is assumed — the same rule this contract already
-applies to editor conventions.
+- **the root is the parent of the meta level**, and the meta level is where the implementation
+  itself lives;
+- **the framing folder's name is the name of the single folder under `templates/workshop/`**.
+
+⚠ **This path loses the guard that protects the other one, and must replace it.** Deriving the
+meta level *from the implementation* makes "the script must be the one the corpus resolves"
+compare a thing to itself. Three refusals stand in its place, and the first is the one that
+matters:
+
+- **the root must not itself be a workshop** — it holds no framing folder. A root that does means
+  the implementation is running from a **working copy of the method**, one level too deep, and
+  creating a workshop from there wires it to files no session will ever read;
+- **the root must hold no workshop at all.** Day zero is a state of the disk, not a mode to
+  select: where a workshop exists, its conventions are read rather than rebuilt from templates;
+- **an origin that was given and does not resolve is a mistake to report**, never a reason to
+  fall back. A mistyped path silently treated as day zero is the same failure in a new place.
+
+⚠ What day zero cannot learn, it must **under-declare rather than invent**. Which instance files
+are read unconditionally is one: `index.md` is the only name the method guarantees, and the
+identity file beside it is named by the index — reading a name out of someone's prose is exactly
+the guess this contract exists to forbid. Declare the index alone and **say so in the report**, so
+the developer adds the other name while the corpus is in front of them. It is the call `[sizes]`
+already makes by shipping empty: a value invented at creation is worse than one posted at the
+first close.
 
 ## What must be learned, never invented
 

@@ -45,9 +45,9 @@ file and the trigger of every other file it carries. Then run `setup/workshop-se
 workshop; it resolves the corpus around it and refuses to write if it cannot. The instance is
 yours and stays yours: the method never reads its contents, only the index it declares.
 
-⚠ The **first** workshop on a machine is laid out by hand — the installer learns the corpus from
-an existing workshop and there is none yet. `setup/CONTRACT.md` states the limitation and what
-closes it.
+The **first** workshop on a machine goes through the installer like the others: with none to learn
+from, it reads the root and the framing folder's name off the meta level, and carries its own
+refusals in place of the check that needs an existing workshop (`setup/CONTRACT.md`).
 
 ⚠ **A copy, not a clone.** Your folder holds your profile and your conventions; this repository
 is upstream and nothing travels back to it. Updating means copying a newer `method/` over yours,

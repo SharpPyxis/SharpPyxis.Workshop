@@ -251,9 +251,10 @@ with you: your language, your register, how you work. Ten minutes, and it writes
 that everything else reads. Say *later* and it carries on without them, telling you so rather
 than guessing.
 
-**4. Lay out your first workshop.** By hand for now — the installer learns the corpus from an
-existing workshop, and there is none yet; `method/setup/CONTRACT.md` states the limitation and
-what closes it. Every workshop after that one goes through `method/setup/workshop-setup.py`.
+**4. Create your first workshop.** `method/setup/workshop-setup.py`, like every workshop after it.
+With none to learn from yet, it reads the corpus root and the framing folder's name off the meta
+level instead — and refuses rather than guess, including when it finds it is running from a
+working copy of the method rather than a received one.
 
 ### The half you write
 
@@ -315,10 +316,13 @@ every session, from a copy of this repository laid out exactly as described abov
 The published name is settled: `method/` names its function and stands against `sample/`,
 while the repository above it carries the belonging.
 
-⚠ What has **not** been exercised: adoption on a machine other than the author's. The layout
-resolves by structure rather than by hardcoded names, and the copy above is the whole
-procedure — but the reference installer and the lint have only ever resolved one corpus, and a
-check that never ran is a hypothesis.
+Both tools have now resolved a second corpus — a separate root, other workshop names, no wiring
+to read from — and the four steps above were walked end to end on it, day zero included.
+
+⚠ What has still **not** been exercised: another machine, and a case-sensitive file system. The
+layout resolves by structure rather than by hardcoded names, which is what makes the copy above
+the whole procedure — but a check that never ran on a second operating system is a hypothesis,
+and case is where a path that works on the author's machine loads nothing at all elsewhere.
 
 ## License
 
