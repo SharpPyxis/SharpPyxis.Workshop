@@ -109,6 +109,21 @@ Day one, after `onboarding.md`, an index has one line, and that is a correct ind
 ```
 
 Later it is the same table, longer. Every addition declares its trigger **in the same gesture**
-as the file itself: a file no index names is read by nobody. That is not a manner of speaking —
-two genuinely useful files were found living outside every index in the corpus this method came
-from, invisible for months, and one of them was a todo.
+as the file itself.
+
+## The index is the last gesture, and it is not optional
+
+A new file, a split or a rename is **not finished until the index of its own corpus says so**, in
+the same session. Not the next one: an index updated later is an index updated never, and the file
+it was meant to declare is already invisible.
+
+Which index is its corpus's own, and nothing else decides it:
+
+- the **instance** declares its files in the index that `organization.md` § *Step 0* names. The
+  instance owns that location; the method declares the slot and never hardcodes the path;
+- the **method** declares its own in `organization.md` § *Index of the method, by trigger*.
+
+⚠ **Both directions fail, and both have been observed.** A file no index names is read by nobody —
+two genuinely useful files lived outside every index for months, one of them a todo. An index line
+no file answers is the same failure mirrored, and harder to see from the other side: a folder was
+declared in the method's index and did not exist.
