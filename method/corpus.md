@@ -99,8 +99,8 @@ Day one, after `onboarding.md`, an index has one line, and that is a correct ind
 ```markdown
 ## Read always, and first
 
-| File | Contents |
-| --- | --- |
+| File         | Contents                                          |
+| ------------ | ------------------------------------------------- |
 | `profile.md` | Identity, communication rules, working principles |
 
 ## Technical conventions — read by trigger
