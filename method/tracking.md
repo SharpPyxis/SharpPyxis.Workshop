@@ -148,6 +148,27 @@ a todo's floor is roughly *number of open subjects × lines per subject + header
 posted at creation time, before the workshop has any content, is guesswork that will be
 either ignored or wrong.
 
+## Gestures a workshop declares
+
+Some workshops carry an operation that has to happen when something is touched: a folder that must
+be mirrored, an index regenerated, a file rebuilt when its source changes. The method knows nothing
+about any of them, and must not — but it declares where they are written and **when they fire**.
+
+A workshop declares them in its atlas, one line each: **the trigger, the gesture, and the reason
+that holds it.** The trigger is a condition, most often a path that was touched — not a moment in
+the session.
+
+⚠ **Do not fold them into the closing checklist by default.** § *Closing a session* is one trigger
+among others, and it is the wrong one for anything whose value decays: a gesture postponed to the
+close is the gesture a cut session skips, and it leaves the corpus inconsistent for everyone who
+opens a session meanwhile. Ask what it costs between the moment the gesture becomes due and the
+close. If the answer is anything but nothing, the trigger is the action, not the end.
+
+⚠ **A declared gesture is not a guaranteed one.** It is read at the start of a session and comes
+due hours later, which is the contest the concrete case wins. Where the cost of missing it is real,
+the workshop owes itself a mechanism too — a hook, a check that fails — and says which, so a later
+session knows whether it is relying on a rule or on a machine.
+
 ## Closing a session
 
 In order:
@@ -164,4 +185,5 @@ In order:
 5. **Commit each repository touched**, then list what is left to push.
 
 ⚠ If a workshop's atlas defines a more precise closing checklist, **it prevails** — it adds
-the local specifics: tooling, sites, scripts.
+the local specifics: tooling, sites, scripts. What belongs there is what is genuinely due *at the
+close*; anything due earlier is declared under § *Gestures a workshop declares*.
