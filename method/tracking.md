@@ -208,10 +208,19 @@ Three rules, and the first is what keeps the mechanism from turning into storage
   convention file, a delivered narrative, an archived entry. A message that summarizes it creates a
   second version of it, and nobody maintains a copy meant to be deleted.
 
+⚠ **The address is resolved, never inferred.** A familiar word — *the site*, *the app*, *the back
+end* — is not an address, and a corpus rarely holds only one candidate. Resolve it from the request,
+then from this workshop's own framing, which usually names the neighbors it deals with; confirm the
+spelling against the root, since the name is the address. **In doubt, ask** — `organization.md`
+already says so about choosing a perimeter, and the arithmetic is the same here: asking costs a
+sentence, a misaddressed message costs all of it.
+
 ⚠ **The exact case is a dependency, not a matter of style.** A message addressed to `stellaegis`
 when the folder is `Stellaegis` is delivered to nobody, and it fails silently on the file systems
 that tell them apart. It is checkable, and cheaply: every file in the mailbox must name an existing
-workshop, case for case.
+workshop, case for case. Note which of the two failures that check catches: a wrong but existing
+address is recoverable, since whoever opens the file sees it is not theirs; a misspelled one is read
+by nobody, which is why it is the one worth a machine.
 
 ## Gestures a workshop declares
 
