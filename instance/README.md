@@ -24,6 +24,7 @@ It offers and waits. A session you opened to do something else is not taken over
 | An identity file | Who you are and how you want to be addressed — the language to answer in, the register, whether you work alone. `organization.md` § *Step 0* has it read before an agent writes a single line of prose, acknowledgement included. `index.md` names it; the method does not. |
 | Your technical conventions | One file per **situation of work**, not per shelf: writing C#, designing a schema, writing an interface. Each declares its own trigger. |
 | Your notebooks | Backlogs, dated observations, anything transverse to every workshop and belonging to none. |
+| `messages/` | **Named by the method**, and the only other one. What a session found for a workshop it was not in, waiting for a session of that workshop to read it and delete it. It ships holding nothing; its own readme says how it works. |
 
 ## Writing a line of the index
 
@@ -71,6 +72,6 @@ newer `method/` over yours — **never** this folder, which is the one thing an 
 alone. There is no push and no remote toward the published repository, so no command can send
 what you wrote here anywhere.
 
-⚠ This readme is the exception to the index rule above, and the only one: it is addressed to
-you, on the day you open the folder, and it is not part of what an agent reads. Delete it once
-your `index.md` exists, or keep it — nothing depends on it either way.
+⚠ This readme is an exception to the index rule above — with the one in `messages/`, and those two
+only: both are addressed to you, on the day you open the folder, and neither is part of what an
+agent reads. Delete them once your `index.md` exists, or keep them — nothing depends on either way.

@@ -183,11 +183,17 @@ and maintained; a message is delivered, read once, turned into whatever the rece
 actually keeps, and deleted. A mailbox that accumulates has become a second todo, which is the state
 this exists to avoid.
 
-The mailbox sits in the instance — the one surface every workshop reads and none owns — and it is
-addressed by name: **one file per target workshop, named exactly as that workshop's folder.** The
-name is the address, so a session opening on `Ledger` looks up `Ledger` and finds a file or finds
-nothing. The instance declares where the mailbox sits, in its index; this method declares what a
-file in it is called, and `organization.md` § *Reading order* when it is looked up.
+The mailbox is `instance/messages/` — inside the one surface every workshop reads and none owns —
+and it is addressed by name: **one file per target workshop, named exactly as that workshop's
+folder.** The name is the address, so a session opening on `Ledger` looks up `Ledger` and finds a
+file or finds nothing. `organization.md` § *Reading order* says when it is looked up. The published
+repository ships the folder with its readme and no message in it.
+
+⚠ **The method names this one, and it is the second name it fixes inside the instance.** Everything
+else there is the owner's, declared through `index.md` — but three readers have to find the mailbox
+and two of them do not read prose: the session at step 0, a check, and whatever tooling comes later.
+That is the argument that already fixes `index.md` itself, and it does not weaken *the method
+declares slots, the instance fills them*: what is fixed is where to look, never what is found there.
 
 ⚠ **A folder of its own, holding nothing else.** Everywhere else the instance names its files by
 subject; here the names belong to the workshops, and the two name spaces must not share a folder —

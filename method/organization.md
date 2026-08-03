@@ -181,9 +181,9 @@ the top of this file so that reading the map in order produces the right sequenc
 2. `instance/index.md` and the identity file it declares — before a single line of prose;
 3. **the rest of this file**;
 4. identify the workshop concerned by the request;
-5. **any message addressed to it** — the instance's index says where the mailbox is, and a file
-   there is named after the workshop it is for. Usually there is none: a listing, and nothing more.
-   `tracking.md` § *Work found for another workshop* has the rest;
+5. **any message addressed to it** — `instance/messages/` holds one file per workshop, named after
+   it. Usually there is none: a listing, and nothing more. `tracking.md` § *Work found for another
+   workshop* has the rest;
 6. its `_workspace/atlas.md` and `_workspace/todo.md`;
 7. the relevant files of `_workspace/memories/`;
 8. only then, the code needed for the work asked.
