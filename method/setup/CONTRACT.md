@@ -113,9 +113,14 @@ matters:
 are read unconditionally is one: `index.md` is the only name the method guarantees, and the
 identity file beside it is named by the index — reading a name out of someone's prose is exactly
 the guess this contract exists to forbid. Declare the index alone and **say so in the report**, so
-the developer adds the other name while the corpus is in front of them. It is the call `[sizes]`
-already makes by shipping empty: a value invented at creation is worse than one posted at the
-first close.
+the developer adds the other name while the corpus is in front of them.
+
+⚠ The test that decides it is whether the missing value is **knowable elsewhere**. An identity
+file's name lives in one place — the index — and only its author can say it, so under-declaring
+and asking is the only honest move. That is not the case for a threshold bounding what a reader can
+re-read at every start: it holds whatever the project, so it ships with a value rather than a
+blank. The two were once treated as the same call, and shipping `[sizes]` empty was the mistake
+that came of it.
 
 ## What must be learned, never invented
 

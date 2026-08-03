@@ -25,17 +25,23 @@ dated_files = ["atlas.md", "todo.md"]
 handoff_sessions = 5
 
 [sizes]
-# ⚠ Deliberately empty, and that is the rule rather than an omission. A threshold set at creation,
-# before this workshop has any content, is guesswork that will be either ignored or wrong —
-# observed: 400 lines posted for a todo whose natural floor turned out to be around 420.
+# In CHARACTERS, never in lines: a consolidation pass was measured removing 15 % of a file's
+# content without its line count moving, because the file mixed prose wrapped at 100 columns with
+# paragraphs held on single 1200-character lines. A line threshold measures formatting as much as
+# volume — it penalises readable text and rewards a wall.
 #
-# Post them at the first session close, in CHARACTERS, never in lines: a consolidation pass was
-# measured removing 15 % of a file's content without its line count moving. The formula is in
-# `method/tracking.md` § *Sizes*. Measure first; write the number with the measurement beside it.
+# ⚠ These are the METHOD'S defaults, not a measurement of this workshop: nothing here has been
+# read. What they bound is how much can be re-read at every session start, and that is a property
+# of the reader rather than of the project — which is what lets a shipped number be honest. They
+# are deliberately generous: they catch a file that has swollen, they do not constrain one that is
+# still growing. The values are what a mature workshop of seven open subjects actually measures.
 #
-# "atlas.md" =
-# "todo.md" =
-# "memories/handoff.md" =
+# Replace them with measured ones once this workshop has content worth measuring, and write the
+# measurement beside each. The formula is in `method/tracking.md` § *Sizes*. A number carrying its
+# reason gets discussed; a number without one gets raised to silence the lint.
+"atlas.md" = 28000
+"todo.md" = 20000
+"memories/handoff.md" = 12000
 
 [bootstrap]
 # The sum re-read at every session start, before a line of code is opened.

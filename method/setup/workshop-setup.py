@@ -236,9 +236,13 @@ def instance_files(corpus: Corpus, report: Report) -> list:
 
     # ⚠ Day zero. `index.md` is the one name the method guarantees; the identity file beside it is
     # named by the index, and reading a name out of someone's prose is the guess this installer
-    # exists not to make. Under-declaring here is the same call `[sizes]` already makes by shipping
-    # empty: a number invented at creation is worse than one posted at the first close, with the
-    # corpus in hand.
+    # exists not to make.
+    #
+    # ⚠ This is not the call `[sizes]` makes, and treating them alike is what once shipped that
+    # section empty. The test is whether the missing value is knowable elsewhere: an identity
+    # file's name lives in one place and only its author can say it, so asking is the only honest
+    # move. A threshold on what a reader re-reads at every start holds whatever the project, so it
+    # ships with a value.
     report.note("instance_files = [\"index.md\"] — add the identity file your index declares; only the index knows its name")
     return ["index.md"]
 

@@ -254,10 +254,28 @@ reason is raised to silence the lint; a threshold with its reason gets discussed
 requirement excludes any format without comments, and — combined with the standard-library-only
 constraint — settles the format as TOML and the runtime floor as Python 3.11.
 
-⚠ **A template must declare no number.** A threshold set at creation time, before the workshop
-has any content, is guesswork that will be either ignored or wrong. Observed: 400 lines posted
-for a todo whose natural floor was around 420. What a template documents is the **formula** — a
-todo's floor is roughly *open subjects × lines per subject + header* — not a value.
+⚠ **What a template may declare is a reader's capacity, never a workshop's size.** The two look
+alike and behave nothing alike. What is re-read at every session start bounds what any reader can
+afford, whatever the project — that number ships, generous enough to catch a file that has swollen
+without constraining one still growing. A threshold claiming to describe *this* workshop before it
+has any content is guesswork that will be either ignored or wrong, and that one does not ship.
+
+A shipped threshold therefore says in the same breath that it is the method's default and not a
+measurement of the workshop reading it, and points at the formula that replaces it: a todo's floor
+is roughly *open subjects × cost per subject + header*, measured once there is something to
+measure.
+
+⚠ **This reverses a flat ban on shipping any number, and both halves of why it fell are worth
+keeping.** The template already contradicted it, shipping three — a bootstrap budget, a token
+ratio, a session count — none of which anybody thought wrong, which is the sign a rule is drawn in
+the wrong place. And the measurement invoked against defaults, *400 lines posted for a todo whose
+floor turned out to be around 420*, was taken **in lines**, the unit this contract has since
+rejected on its own evidence. A rule cannot outlive the scheme its proof was gathered under.
+
+⚠ The cost of the ban was measured before it was lifted: on a workshop created and closed by an
+agent that followed every written instruction, the thresholds stayed empty, the per-file guard-rail
+never ran, and the closing left behind an obligation to post them that should never have existed.
+A guard-rail waiting on a gesture nobody makes is a guard-rail that is off.
 
 ## Runtime
 

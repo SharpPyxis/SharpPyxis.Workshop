@@ -143,10 +143,15 @@ resumption. Pruning it is ordinary maintenance, not a chore.
 ## Sizes
 
 Thresholds are declared **per workshop**, because a workshop with eighteen open subjects and
-one with three do not have the same natural floor. Document the **formula**, not a number:
-a todo's floor is roughly *number of open subjects × lines per subject + header*. A threshold
-posted at creation time, before the workshop has any content, is guesswork that will be
-either ignored or wrong.
+one with three do not have the same natural floor. The method ships defaults so the guard-rail is
+armed from the first session rather than waiting on a gesture nobody makes — generous on purpose,
+and the method's numbers rather than yours.
+
+Replace them with measured ones once the workshop has content worth measuring, and write the
+**formula** beside each rather than the number alone: a todo's floor is roughly *open subjects ×
+cost per subject + header*, in characters. A threshold carrying its measurement gets discussed; one
+posted bare gets raised to silence the lint, which is the only outcome a number without a reason
+ever has.
 
 ## Work on a transverse corpus does not belong to a workshop
 

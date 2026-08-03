@@ -45,6 +45,24 @@ thing standing between a corpus and a name that loads nothing elsewhere.
   through: a perfectly descriptive message can still have no business being there, because its
   subject did not exist until a session invented it. What parts them is written now.
 
+### Changed
+
+- **A new workshop ships with size thresholds instead of empty ones.** They were left blank on the
+  principle that a template must declare no number — while the same template shipped three, a
+  bootstrap budget among them, and nobody thought those wrong. The line that actually holds is
+  narrower: a template may declare a **reader's capacity**, never a **workshop's size**. What is
+  re-read at every session start bounds any reader, whatever the project.
+
+  The cost of the old rule was measured rather than argued. On a workshop created and closed by an
+  agent following every written instruction, the thresholds stayed empty, the per-file guard-rail
+  never ran, and the close left behind an obligation to post them that should never have existed.
+  The instruction it followed — *post them at the first session close* — was itself wrong: on a
+  workshop created and closed the same day there is nothing to measure, and a threshold read off an
+  empty workshop is crossed by the second session and raised to silence the lint.
+
+  Existing workshops are untouched. Only the ones created from now on carry the defaults, and each
+  says in its own comment that it holds the method's numbers rather than a measurement of itself.
+
 ### Your `lint.toml`
 
 Workshops created before the installer existed have no `method_version` key, and the new check
