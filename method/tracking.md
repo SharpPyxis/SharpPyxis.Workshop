@@ -170,6 +170,49 @@ Two things follow, and the second is the one that gets forgotten:
   handoff, the delivered narratives — and name the work in plain words where it is only being
   referred to.
 
+## Work found for another workshop
+
+A session finds work belonging to a workshop it is not in: a fix to carry over to a sibling, a
+convention a neighbor has not applied, a page made stale by what was just changed here. It cannot be
+done from here, and it cannot be written into that workshop's framing either — nothing is ever
+written into a neighbor's. Left in the finder's todo, it steers work nobody reading that todo will
+do, and it goes out with the section around it the day that closes.
+
+**It travels as a message**, and the distinction from an item decides the rest: an item is stored
+and maintained; a message is delivered, read once, turned into whatever the receiving workshop
+actually keeps, and deleted. A mailbox that accumulates has become a second todo, which is the state
+this exists to avoid.
+
+The mailbox sits in the instance — the one surface every workshop reads and none owns — and it is
+addressed by name: **one file per target workshop, named exactly as that workshop's folder.** The
+name is the address, so a session opening on `Ledger` looks up `Ledger` and finds a file or finds
+nothing. The instance declares where the mailbox sits, in its index; this method declares what a
+file in it is called, and `organization.md` § *Reading order* when it is looked up.
+
+⚠ **A folder of its own, holding nothing else.** Everywhere else the instance names its files by
+subject; here the names belong to the workshops, and the two name spaces must not share a folder —
+a workshop called `Tooling` would otherwise land beside a convention file of the same name, and
+which of the two a reader is holding would depend on knowing the answer already. Keeping the mailbox
+separate also makes one property true by construction rather than by discipline: everything in it is
+a message, so everything in it is meant to leave.
+
+Three rules, and the first is what keeps the mechanism from turning into storage:
+
+- **the receiving session consumes the message.** It reads it, records in its own framing whatever
+  it decides — an item, an atlas line, or the decision to do nothing — and deletes the file. A
+  message left in place to be read again is an item, sitting where items do not belong;
+- **a message carries a finding, not an instruction.** What becomes of it is the receiving
+  workshop's call, exactly as in `organization.md` § *Perimeter*. What changes is only that the
+  report now outlives the session that wrote it;
+- **it cites rather than copies.** What was found usually already lives somewhere with authority — a
+  convention file, a delivered narrative, an archived entry. A message that summarizes it creates a
+  second version of it, and nobody maintains a copy meant to be deleted.
+
+⚠ **The exact case is a dependency, not a matter of style.** A message addressed to `stellaegis`
+when the folder is `Stellaegis` is delivered to nobody, and it fails silently on the file systems
+that tell them apart. It is checkable, and cheaply: every file in the mailbox must name an existing
+workshop, case for case.
+
 ## Gestures a workshop declares
 
 Some workshops carry an operation that has to happen when something is touched: a folder that must

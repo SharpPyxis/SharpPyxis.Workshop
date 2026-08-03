@@ -181,9 +181,12 @@ the top of this file so that reading the map in order produces the right sequenc
 2. `instance/index.md` and the identity file it declares — before a single line of prose;
 3. **the rest of this file**;
 4. identify the workshop concerned by the request;
-5. its `_workspace/atlas.md` and `_workspace/todo.md`;
-6. the relevant files of `_workspace/memories/`;
-7. only then, the code needed for the work asked.
+5. **any message addressed to it** — the instance's index says where the mailbox is, and a file
+   there is named after the workshop it is for. Usually there is none: a listing, and nothing more.
+   `tracking.md` § *Work found for another workshop* has the rest;
+6. its `_workspace/atlas.md` and `_workspace/todo.md`;
+7. the relevant files of `_workspace/memories/`;
+8. only then, the code needed for the work asked.
 
 ⚠ Steps 1 and 3 were once a single entry, placed second — which had this file being read after
 a list that lives inside it. Harmless to a reader who already knew, and misleading to the only
@@ -211,7 +214,9 @@ Three rules, each of them written after it was got wrong:
   method and the instance are addressed to you.
 - **An incidental discovery is reported, not pursued.** Finding something wrong outside what
   was asked is useful; investigating it is not. Name it in a sentence or two, say what it would
-  take, and carry on with the work asked. Observed: a real defect was found and turned into an
+  take, and carry on with the work asked. When it belongs to another workshop, `tracking.md`
+  § *Work found for another workshop* says where the report goes so that it outlives the session.
+  Observed: a real defect was found and turned into an
   unrequested audit — which spends the session's attention on a problem the developer may
   already know about, and does so silently, since what falls behind is the work asked for.
 - **Reading widely is not working widely.** Reading a workshop's framing is the job.
