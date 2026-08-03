@@ -214,6 +214,20 @@ Three rules, and the first is what keeps the mechanism from turning into storage
   convention file, a delivered narrative, an archived entry. A message that summarizes it creates a
   second version of it, and nobody maintains a copy meant to be deleted.
 
+⚠ **A finding is deposited; a proposal is asked for.** The second rule above treats what a message
+*looks like* and lets its **origin** through — so a perfectly descriptive message can still have no
+business being there, because its subject did not exist until this session invented it. What parts
+them is what each one costs. A finding **was already true before the session opened**: not
+depositing it loses it, and depositing it commits nobody, since the receiving workshop decides what
+to keep. A proposal for content **commissions work from a neighbor**, and that is the developer's to
+give rather than a session's — the mailbox would otherwise be a way to put work on a workshop nobody
+asked. Observed in this rule's first hour, on a real case: a manual drafted for a neighboring site
+by the very session that thought of it.
+
+⚠ This bans no idea. It settles where one goes: an idea for a neighbor is said out loud, in the
+session, and travels only if the developer sends it. What the mailbox carries without asking is
+only what would otherwise be lost.
+
 ⚠ **The address is resolved, never inferred.** A familiar word — *the site*, *the app*, *the back
 end* — is not an address, and a corpus rarely holds only one candidate. Resolve it from the request,
 then from this workshop's own framing, which usually names the neighbors it deals with; confirm the

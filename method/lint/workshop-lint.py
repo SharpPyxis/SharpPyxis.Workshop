@@ -669,6 +669,249 @@ def check_citations(cfg, layout, report) -> None:
             report("OK", "retired names: no occurrence of the %d declared name(s)" % len(retired))
 
 
+# --------------------------------------------------------------------------------------------
+# Index coverage — both directions
+# --------------------------------------------------------------------------------------------
+#
+# corpus.md § *The index is the last gesture*: a file no index names is read by nobody, and an
+# index line no file answers is the same failure mirrored — harder to see, because it fails from
+# the other side. Both have been observed on the corpus this method came from: two genuinely
+# useful files lived outside every index for months, one of them a todo; and a folder declared in
+# the method's own index did not exist.
+#
+# ⚠ Two corpora, shaped differently, and the difference is real rather than convenient. The
+# instance's index IS a file, so it is read whole. The method's index is a SECTION of
+# organization.md — a file carrying five other tables, one of which names atlas.md and todo.md,
+# which do not live in method/. Reading it whole, or reading every table in it, would declare
+# entries that cannot exist and then fail on them. That section therefore carries a marker, and
+# this check refuses to guess where the marker is absent.
+#
+# ⚠ Locating it by its heading was the other candidate, and it has already failed here: a section
+# was cited under its former title and nothing noticed, because a lint checks tags and paths, not
+# prose. A marker survives any rewording of the heading above it.
+
+INDEX_MARKER = "<!-- lint:corpus-index -->"
+
+# ⚠ In the implementation, never in the configuration — the same arbitration as the `[TAG]`
+# metavariable. Left to each workshop, this exemption would have every adopter meet the same
+# false positive on their first run. An index does not declare itself, and a readme is addressed
+# to a reader rather than to a trigger.
+INDEX_EXEMPT = {"index.md", "README.md"}
+
+
+def declared_entries(lines) -> list:
+    """Names declared by the rows of a markdown table: the first cell, backticked, ending in
+    `.md` or `/`.
+
+    ⚠ Prose is deliberately not scanned. An index names neighbouring corpora in its own
+    sentences — the entry point, a rule file, an illustrative message — and taking those for
+    declarations would over-declare, which silences the check instead of failing it. The contract
+    calls that failure worse than no check at all."""
+    names = []
+    for line in lines:
+        if not line.lstrip().startswith("|"):
+            continue
+        cell = line.strip().strip("|").split("|")[0]
+        match = re.search(r"`([^`]+)`", cell)
+        if match and (match.group(1).endswith(".md") or match.group(1).endswith("/")):
+            names.append(match.group(1))
+    return names
+
+
+def marked_section(lines):
+    """The table rows that follow the marker, and nothing else. None if the marker is absent."""
+    start = next((i for i, line in enumerate(lines) if INDEX_MARKER in line), None)
+    if start is None:
+        return None
+    section = []
+    for line in lines[start + 1:]:
+        if line.strip().startswith("|"):
+            section.append(line)
+        elif section:
+            break
+    return section
+
+
+def compare_corpus(folder: Path, declared: list, label: str, report) -> None:
+    """Both directions at once, over one corpus.
+
+    A declared `x/` means the folder is declared whole and its contents are not corpus entries —
+    the messaging folder is exactly that. A declared `x/y.md` means the corpus extends into `x/`,
+    so that folder is walked too. corpus.md foresees prefixes becoming folders past four or five
+    files; this costs nothing today and would cost a re-reading later."""
+    wanted = set(declared) - INDEX_EXEMPT
+    nested = {n.split("/")[0] for n in wanted if "/" in n.rstrip("/")}
+
+    present = set()
+    for child in sorted(folder.iterdir()):
+        if child.name.startswith("."):
+            continue
+        if child.is_dir():
+            present.add(child.name + "/")
+            if child.name in nested:
+                present.update(
+                    child.name + "/" + f.name
+                    for f in sorted(child.iterdir())
+                    if f.suffix == ".md" and not f.name.startswith(".")
+                )
+        elif child.suffix == ".md":
+            present.add(child.name)
+    present -= INDEX_EXEMPT
+
+    covered = set(wanted) | {name + "/" for name in nested}
+
+    for name in sorted(present - covered):
+        report("FAIL", "%s: %s sits on disk and no index line names it — read by nobody" % (label, name))
+
+    for name in sorted(wanted):
+        target = folder / name.rstrip("/")
+        if not target.exists():
+            report("FAIL", "%s index: « %s » declared, nothing answers it" % (label, name))
+        elif not exists_exact_case(target):
+            report("FAIL", "%s index: « %s » declared, case differs from disk" % (label, name))
+
+    if not (present - covered) and all(exists_exact_case(folder / n.rstrip("/")) for n in wanted):
+        report("OK", "%s: %d index entr%s, resolved both ways" % (label, len(wanted), "y" if len(wanted) == 1 else "ies"))
+
+
+def check_index_coverage(cfg, layout, report) -> None:
+    """The instance corpus and the method's own, each against the index that declares it.
+
+    ⚠ No configuration key, and that is a decision rather than an omission. Both corpora are
+    resolved from the meta level by the layout, and their index locations are named by the method
+    — so a key would carry a value that never varies, to be repeated in every workshop and got
+    wrong in one of them."""
+    if layout.instance:
+        index = layout.instance / "index.md"
+        if not index.is_file():
+            report("FAIL", "instance: no index.md — nothing declares what is here, or when it is read")
+        else:
+            compare_corpus(layout.instance, declared_entries(read_lines(index)), "instance", report)
+
+    if layout.method:
+        section = marked_section(read_lines(layout.method / "organization.md"))
+        if section is None:
+            # Silence would be indistinguishable from a check that did not run. WARN rather than
+            # FAIL: the entry point is received, so a copy older than this lint cannot be fixed
+            # by the workshop reading it.
+            report("WARN", "method: %s absent from organization.md — its own corpus is not covered" % INDEX_MARKER)
+        else:
+            compare_corpus(layout.method, declared_entries(section), "method", report)
+
+
+# --------------------------------------------------------------------------------------------
+# The method's version, against the one this framing was set up under
+# --------------------------------------------------------------------------------------------
+
+
+def parse_version(text: str):
+    """The leading numeric components, so that `0.1.0-draft` compares as `0.1.0`."""
+    match = re.match(r"\s*(\d+)(?:\.(\d+))?(?:\.(\d+))?", text)
+    return tuple(int(part or 0) for part in match.groups()) if match else None
+
+
+def check_method_version(cfg, layout, report) -> None:
+    """`setup/CONTRACT.md` promises exactly this: the installer stamps the method's version into
+    every workshop it creates, so a later lint can tell a framing that is merely **old** from one
+    that has **drifted**. The stamp was posted from the first workshop on and nothing read it —
+    which is what a number becomes when no check depends on it. This method's own held
+    `0.1.0-draft` from the initial commit through some forty of them.
+
+    The distinction the promise asks for is the one the readme already publishes: a minor or a
+    patch means copying the new `method/` over yours is enough, a major means something of yours
+    changes by hand. So the major is what separates the two messages.
+
+    ⚠ **WARN throughout, never FAIL.** Being framed under an older method breaks no rule — what to
+    do about it, and when, belongs to the owner, and a FAIL would block the close of a session that
+    has nothing to do with it.
+
+    ⚠ The stamp records what the owner has **reconciled to**, not an archaeological fact. Taking a
+    new version means doing whatever its changelog entry asks and then moving this number: without
+    that, the warning can never be cleared, and an uncleaable warning is the one that gets silenced
+    rather than discussed."""
+    if not layout.method:
+        return
+    path = layout.method / "VERSION"
+    if not path.is_file():
+        report("WARN", "method/VERSION: absent — nothing says which version of the method this corpus is")
+        return
+    current = read_text(path).strip()
+    stamped = cfg.get("workshop", {}).get("method_version")
+
+    if not stamped:
+        report("WARN", "workshop.method_version: not declared — the method is at %s, and nothing says what this framing was set up under" % current)
+        return
+
+    framed, held = parse_version(stamped), parse_version(current)
+    if framed is None or held is None:
+        report("WARN", "method version: « %s » against « %s » — one of the two is not a version" % (stamped, current))
+    elif framed == held:
+        report("OK", "method version: framed under %s, which is what the corpus holds" % stamped)
+    elif framed > held:
+        report("WARN", "method version: framed under %s, the corpus holds %s — this framing is ahead of the method it reads" % (stamped, current))
+    elif framed[0] != held[0]:
+        report("WARN", "method version: framed under %s, the method is at %s — a major apart, so copying is not enough; the changelog entry says what changes by hand" % (stamped, current))
+    else:
+        report("WARN", "method version: framed under %s, the method is at %s — copying the new method/ over yours is enough, then move this number" % (stamped, current))
+
+
+# --------------------------------------------------------------------------------------------
+# The mailbox — every address resolves to a workshop
+# --------------------------------------------------------------------------------------------
+
+
+def check_mailbox(cfg, layout, report) -> None:
+    """`tracking.md` § *Work found for another workshop*: one file per target workshop, named
+    exactly as that workshop's folder. **The name is the address.**
+
+    ⚠ Note which of the two failures this catches. A wrong but existing address is recoverable —
+    whoever opens the file sees it is not theirs. A misspelled one is delivered to nobody, and on
+    a file system that tells case apart it fails without a sound. That second one is why this is
+    worth a machine rather than a proof-reading.
+
+    ⚠ No configuration key, for the same reason as the coverage check: the folder is named by the
+    method, and a workshop is resolved by the test the layout already uses — a child of the root
+    holding a framing folder."""
+    if not layout.instance:
+        return
+    mailbox = layout.instance / "messages"
+    if not mailbox.is_dir():
+        report("WARN", "instance/messages/: absent — the method names this folder, so a finding for a neighbour has nowhere to go")
+        return
+
+    workshops = {
+        child.name
+        for child in sorted(layout.root.iterdir())
+        if child.is_dir() and (child / layout.framing.name).is_dir()
+    }
+    folded = {name.casefold(): name for name in workshops}
+
+    delivered, problems = 0, []
+    for entry in sorted(mailbox.iterdir()):
+        # The published folder ships a readme and no message. It is not an address.
+        if entry.name == "README.md":
+            continue
+        if not entry.is_file() or entry.suffix != ".md":
+            problems.append("« %s » is not an address — the mailbox holds one .md per target workshop" % entry.name)
+        elif entry.stem in workshops:
+            delivered += 1
+        elif entry.stem.casefold() in folded:
+            problems.append("« %s » — the workshop is « %s », and the address is exact or it is nobody's" % (entry.name, folded[entry.stem.casefold()]))
+        else:
+            problems.append("« %s » — no workshop of that name under the root" % entry.name)
+
+    # ⚠ The collision the method's own framing notes rather than treats: a workshop named README
+    # would be addressed by the one file this check has to exempt. Detecting it costs three lines
+    # and imposes no name on anyone — only the case that actually arises needs arbitrating.
+    if "README" in workshops:
+        problems.append("a workshop is named README — its address cannot be told from the mailbox's own readme")
+
+    for problem in problems:
+        report("FAIL", "instance/messages/: %s" % problem)
+    if not problems:
+        report("OK", "instance/messages/: %d message(s) waiting, every address resolves to a workshop" % delivered)
+
+
 # ============================================================================================
 # Checks a workshop declares for itself
 # ============================================================================================
@@ -731,10 +974,18 @@ def check_repositories(cfg, layout, report) -> None:
 
 def exists_exact_case(path: Path) -> bool:
     """A name whose case differs from disk loads nothing on a case-sensitive file system, and
-    works perfectly on the author's machine. That asymmetry is the whole point of the check."""
+    works perfectly on the author's machine. That asymmetry is the whole point of the check.
+
+    ⚠ **Never resolve() the path first.** On Windows and macOS that canonicalises the case
+    *before* the comparison, so the function returns True for exactly the input it exists to
+    reject — and it does so only on the case-insensitive systems where the check is the sole thing
+    standing between the corpus and a name that loads nothing elsewhere. Measured here on
+    2026-08-03: `profile.md` declared against a `Profile.md` on disk passed. The check had been
+    green since it was written, and green meant nothing. `abspath` normalises separators and `..`
+    without touching case, which is all this needs."""
     if not path.exists():
         return False
-    current = path.resolve()
+    current = Path(os.path.abspath(path))
     while True:
         parent = current.parent
         if parent == current:
@@ -875,6 +1126,9 @@ def main(argv) -> int:
     check_external_tags(config, layout, report, tags)
     check_header_dates(config, layout, report)
     check_citations(config, layout, report)
+    check_index_coverage(config, layout, report)
+    check_method_version(config, layout, report)
+    check_mailbox(config, layout, report)
     check_repositories(config, layout, report)
     check_editor_workspaces(config, layout, report)
     check_publication_files(config, layout, report)

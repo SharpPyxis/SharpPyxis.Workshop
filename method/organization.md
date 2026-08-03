@@ -238,6 +238,8 @@ have to be corrected, one by one.**
 
 Almost nothing here is read unconditionally. Each file states its own trigger in its header.
 
+<!-- lint:corpus-index -->
+
 | File | Read when |
 | --- | --- |
 | `organization.md` | Always — this file |

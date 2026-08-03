@@ -141,6 +141,78 @@ than replacing it: the sentence that caused this check to exist did cite an outs
 wording without any path passes straight through. The defect is semantic; this is only its
 mechanical shadow.
 
+**Index coverage — both directions.** Every document of a corpus read by trigger is named by
+that corpus's index, and every index line is answered by something on disk, in exact case. Two
+corpora are covered: the **instance**, and the **method** itself.
+
+⚠ **Both directions fail, and both have been observed.** A file no index names is read by
+nobody — two genuinely useful files lived outside every index for months, one of them a todo. An
+index line no file answers is the same failure mirrored, and harder to see from the other side: a
+folder was declared in the method's index and did not exist. `corpus.md` § *The index is the last
+gesture* carries the rule; this is the check that makes it more than a rule.
+
+What an index declares is read from **table rows** — the first cell, quoted, ending in `.md` or
+`/`. ⚠ Prose is not scanned, and that narrowness is the same one the citation checks need: an
+index names neighbouring corpora in its own sentences, and reading those as declarations
+over-declares, which silences the check rather than failing it.
+
+Two shapes, because the two indexes genuinely differ:
+
+- the **instance's** index is a file, so it is read whole;
+- the **method's** is a *section* of the entry point, which carries other tables — one of them
+  naming the framing documents, which do not live in `method/`. That section is delimited by a
+  marker. ⚠ Locating it by its heading was the other candidate and has already failed in the
+  field: a section was cited under its former title and nothing noticed, because a lint checks
+  tags and paths, not prose. Where the marker is absent the check **says so** rather than
+  passing — silence cannot be told apart from a check that did not run.
+
+Exemptions belong to the implementation, never to the configuration: an index does not declare
+itself, and a readme is addressed to a reader rather than to a trigger. ⚠ Same arbitration as the
+`[TAG]` metavariable — an exemption left to each workshop is a false positive every adopter meets
+on their first run. Files that are not documents are out of scope for the same reason a trigger
+index only indexes documents.
+
+A declared `folder/` is declared whole and its contents are not corpus entries; a declared
+`folder/file.md` extends the corpus into that folder, which is then walked as well.
+
+⚠ **This check has the meta level as its subject, not the workshop** — so every workshop reports
+the same finding until it is fixed. That is the mechanism rather than noise: the corpus is read
+by all of them, so the first session opened anywhere sees it, and one correction clears all of
+them. It takes no configuration key, because both locations are named by the method and a key
+would carry a value that never varies.
+
+**The method's version, against the one this framing was set up under.** `setup/CONTRACT.md`
+promises it: the installer stamps the version into every workshop it creates, so a later check can
+tell a framing that is merely **old** from one that has **drifted**. The separation is the one the
+readme publishes — a minor or a patch means copying the new `method/` over yours is enough, a major
+means something of yours changes by hand — so the major is what parts the two messages.
+
+⚠ **A number no check reads does not move.** This one held `0.1.0-draft` from an initial commit
+through some forty of them, stamped into every workshop meanwhile. The stamp existed, the copies
+existed, and the whole mechanism was inert for want of anything depending on it.
+
+⚠ **The stamp records what the owner has reconciled to, not an archaeological fact.** Taking a new
+version means doing whatever its changelog entry asks and then moving the number. Without that
+second half the warning can never be cleared — and a warning nobody can clear is the one that gets
+silenced rather than discussed.
+
+⚠ **WARN throughout, never FAIL.** Reading an older method breaks no rule; when to update is the
+owner's call, and a FAIL would block the close of a session that has nothing to do with it.
+
+**The mailbox — every address resolves to a workshop.** One file per target workshop, named
+exactly as that workshop's folder. Anything else in the folder is not an address.
+
+⚠ **Note which of the two failures this catches.** A wrong but existing address is recoverable:
+whoever opens the file sees it is not theirs. A misspelled one is delivered to nobody, and on a
+file system that tells case apart it fails without a sound. The second is why this is worth a
+machine rather than a proof-reading, and why the report distinguishes them — a case mismatch names
+the workshop it should have been.
+
+The folder is named by the method, and a workshop is resolved by the test the layout already
+applies. Neither takes a configuration key. ⚠ A mailbox that is absent is **reported**, not passed
+over: the method ships that folder, so its absence means a finding for a neighbour has nowhere to
+go — and silence there would be indistinguishable from an empty one.
+
 ## Checks a workshop declares for itself
 
 Off unless configured. Each exists because a real workshop needed it and another did not.
