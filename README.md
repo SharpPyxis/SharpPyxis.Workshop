@@ -2,6 +2,9 @@
 
 A tracking method for one developer working with AI agents.
 
+**[www.sharppyxis.fr](https://www.sharppyxis.fr)** — the same method in prose: who reads what and
+when, what happens during a session, what the close records. English and French.
+
 > **Opening a session, name the workshop and the entry point.** One sentence, and it never
 > silently fails:
 >
@@ -323,6 +326,19 @@ to read from — and the four steps above were walked end to end on it, day zero
 layout resolves by structure rather than by hardcoded names, which is what makes the copy above
 the whole procedure — but a check that never ran on a second operating system is a hypothesis,
 and case is where a path that works on the author's machine loads nothing at all elsewhere.
+
+## Contributing
+
+**Issues are open** — corrections, questions and reports are welcome.
+
+**Pull requests are restricted to collaborators.** The rules carry the reasons that hold them, but
+the arbitrations behind their exact wording are not published: they live in the framing of this
+repository's own development, which is private like every other `_workspace/`. Weighing a change to
+the text against them is something only the maintainer can do, and an issue is the way to reach
+them.
+
+This is a solo project assisted by an AI agent. Everything that arrives is read; no response time
+is promised.
 
 ## License
 
