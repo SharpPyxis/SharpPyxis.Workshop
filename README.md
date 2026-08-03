@@ -82,7 +82,7 @@ file.
 ## What you have to say
 
 The writing is mostly the agent's; the sentences are yours, and there are few of them. Two in the
-ordinary life of a session, four that come up only when their case does.
+ordinary life of a session, five that come up only when their case does.
 
 None of them is a command or a keyword. They are the facts the corpus cannot know — which workshop,
 that the last session was cut, that we are closing. Everything else fires because a trigger was
@@ -95,10 +95,15 @@ read, which is what keeps this list short.
 
 | When the case arises | |
 | --- | --- |
+| A finding concerns another workshop | *"Drop a note for Ledger about this."* The note is written under the exact name of the target workshop, which serves as the address. The next session opened on `Ledger` reads it, records whatever it decides to keep, and deletes the file — it carries a finding, and nothing in it runs on arrival |
 | Nothing exists yet | *"I have just copied the method here. There is nothing else yet."* — plus the entry point. The agent finds no instance and **offers** to build one |
 | The last session was cut before it recorded anything | Say so. The state is then established from the disk, mechanically, and the trace of that session is looked for before its reasons are called lost. The work is not replayed |
 | A workshop is to be created | *"Create the workshop Ledger, with the repositories ledger.api and ledger.web."* The installer lays it out, so it matches every other one |
 | A repository is to be published | Say so. The private-to-public pass is a procedure rather than a case-by-case call |
+
+Passing a finding to a neighbor comes up whenever a subject overflows the workshop that is open;
+the other four are one-off events. The agent reports what **it** finds outside its perimeter
+without being asked, so the sentence covers what you know belongs elsewhere.
 
 Two more are answers rather than sentences: the agent offers the onboarding interview, and offers
 to install the runtime the checks need. Both stay offers, because the cost falls on your machine
