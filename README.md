@@ -257,8 +257,14 @@ That is what coding agents do; which one is not the method's business, and § *E
 why it refuses to have an opinion.
 
 **1. Choose the root, then copy into it.** The root is the folder that will hold all your
-workshops — whatever your projects already sit under is usually the right answer. Copy this
-repository *inside* it, as `_workshop/` or any name you prefer. A copy, not a clone: see below.
+workshops — whatever your projects already sit under is usually the right answer. **Download the
+archive of the [latest release](https://github.com/SharpPyxis/SharpPyxis.Workshop/releases/latest)**
+and unpack it *inside* that root, as `_workshop/` or any name you prefer.
+
+The archive rather than a clone, and it is not a preference: what you unpack has no `.git`, so it
+has no remote, and no command you could mistype would send your instance anywhere. § *The half you
+write* explains why that boundary matters; the archive is that boundary drawn by structure instead
+of by care.
 
 > ⚠ **The position is the one thing that is not negotiable.** The name is not read, the host is
 > yours, versioning it is optional — but the copy must sit **directly inside that root, beside
@@ -309,7 +315,8 @@ The rule that decides every borderline case:
 ⚠ **A copy rather than a clone, and the difference is the whole safety.** Your copy holds your
 profile and your conventions; this repository is upstream, and nothing travels back. Updating
 is copying a newer `method/` over yours — there is no push, no remote, and therefore no command
-that could publish what you wrote. A boundary drawn by structure holds against a mistyped
+that could publish what you wrote. Downloading a release archive is what makes that structural:
+there is no remote to remove, because there never was one. A boundary drawn by structure holds against a mistyped
 command; one drawn by an entry in a `.gitignore` holds only as long as the entry does.
 
 One thing is deliberately **not** here, and stays that way: the **framing of this repository's
@@ -356,6 +363,28 @@ to read from — and the four steps above were walked end to end on it, day zero
 layout resolves by structure rather than by hardcoded names, which is what makes the copy above
 the whole procedure — but a check that never ran on a second operating system is a hypothesis,
 and case is where a path that works on the author's machine loads nothing at all elsewhere.
+
+## Versions and updates
+
+Releases are tagged, and [`CHANGELOG.md`](CHANGELOG.md) travels inside the archive — a copy has no
+history to consult, so the file has to be there. `method/VERSION` says which one you hold, and the
+installer stamps it into every workshop it creates.
+
+The number answers one question, because it is the only one an update raises here: **can you copy
+the new `method/` over yours and carry on?**
+
+| | |
+| --- | --- |
+| **Patch** | Wording, clarifications. Copy over. |
+| **Minor** | New rules, new files. Copy over — your instance and your workshops are untouched. |
+| **Major** | Copying is not enough: something of yours changes by hand — a file renamed, an index line now required, a folder moved. The changelog entry carries what to do. |
+
+There is no API here, so the usual compatibility contract has nothing to attach to. What a version
+can honestly promise is the cost of taking it, and that is what these three levels measure.
+
+⚠ **Nothing is pushed to you.** Watching *Releases only* on this repository is what tells you a
+newer one exists; a copy cannot find out on its own, and pretending otherwise would be the kind of
+convenience this method does not offer.
 
 ## Contributing
 

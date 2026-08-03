@@ -27,7 +27,7 @@ Three ideas run through everything here:
 | `lint/` | The checks, in one place, with per-workshop thresholds |
 | `setup/` | Creating a workshop: the contract, and the installer |
 | `templates/` | What a new workshop is created with |
-| `VERSION` | Stamped into every workshop the installer creates |
+| `VERSION` | Which version this copy is. Stamped into every workshop the installer creates; what the number promises is in the repository's readme, § *Versions and updates* |
 
 ## Reading it for the first time
 
