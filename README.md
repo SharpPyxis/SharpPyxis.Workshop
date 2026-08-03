@@ -79,6 +79,36 @@ yours. The todo grammar gives each its own mark (⚠, ✅, ❓) so that an agent
 instead of deciding them, and the lint keeps the review cheap: you read a report, not every
 file.
 
+## What you have to say
+
+The writing is mostly the agent's; the sentences are yours, and there are few of them. Two in the
+ordinary life of a session, four that come up only when their case does.
+
+None of them is a command or a keyword. They are the facts the corpus cannot know — which workshop,
+that the last session was cut, that we are closing. Everything else fires because a trigger was
+read, which is what keeps this list short.
+
+| Every session | |
+| --- | --- |
+| Opening | The two lines at the top of this page: the workshop, and the entry point |
+| Closing | *"Let's close the session."* The protocol then runs in order — the todo keeps only what is open, what closed leaves for its story or for the atlas, the handoff is written, the lint runs, one commit per repository touched, and you get the list of what is left to push |
+
+| When the case arises | |
+| --- | --- |
+| Nothing exists yet | *"I have just copied the method here. There is nothing else yet."* — plus the entry point. The agent finds no instance and **offers** to build one |
+| The last session was cut before it recorded anything | Say so. The state is then established from the disk, mechanically, and the trace of that session is looked for before its reasons are called lost. The work is not replayed |
+| A workshop is to be created | *"Create the workshop Ledger, with the repositories ledger.api and ledger.web."* The installer lays it out, so it matches every other one |
+| A repository is to be published | Say so. The private-to-public pass is a procedure rather than a case-by-case call |
+
+Two more are answers rather than sentences: the agent offers the onboarding interview, and offers
+to install the runtime the checks need. Both stay offers, because the cost falls on your machine
+and on your session.
+
+⚠ **These are rules an agent reads, not mechanisms that fire.** A rule read at the start of a
+session loses against a concrete case three hours later, and the method says so about its own. Where
+the cost of missing one is real, a workshop owes itself a check that fails as well — and owes itself
+to know which of the two it is relying on.
+
 ## Where it comes from
 
 It was not designed and then applied. It was extracted, over months of sessions, from the
