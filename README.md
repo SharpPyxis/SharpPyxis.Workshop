@@ -355,8 +355,9 @@ trigger files existed, and not one of them reached the agent.
 
 ## Status
 
-Under construction, and in use. Six workshops read `method/organization.md` at the start of
-every session, from a copy of this repository laid out exactly as described above.
+Under construction, and in use. The repositories it came from run on it — several workshops,
+each with its own framing, reading `method/organization.md` at the start of every session from
+a copy laid out exactly as described above.
 
 The published name is settled: `method/` names its function and stands against `sample/`,
 while the repository above it carries the belonging.
