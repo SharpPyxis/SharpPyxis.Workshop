@@ -7,6 +7,53 @@ This file ships inside the archive, which is the point: a copy has no git histor
 
 ---
 
+## 0.3.0 — a mailbox that answered itself, and a cut that broke what no search could find
+
+**Updating from `0.2.0`**: copy the new `method/` over yours. Nothing in an instance or a workshop
+has to change, and no check behaves differently.
+
+⚠ **Every clause here was produced by using the mechanisms, in one day, and none by re-reading
+them.** Three came from the mailbox and one from re-cutting a corpus of a dozen files into nineteen.
+That is worth knowing before adopting either: both are young, both work, and both had gaps that only
+appeared under real traffic.
+
+⚠ **One clause has an effect you can check today.** If a message is waiting in your mailbox and you
+have renamed anything in the corpus it cites, it is already broken — a message cites rather than
+copies, so its content depends on names it does not control.
+
+### Added
+
+- **`tracking.md` — consuming a message does not entitle you to answer it.** The mailbox had three
+  rules, all describing what a receiving session must *do* and none what it may *produce*. So every
+  consumption was a licence to deposit, and nothing declared an exchange over. The counter-example is
+  the mechanism's own: a workshop received a finding, consumed it, answered; the answering session
+  consumed that answer and deposited its own — emptying the mailbox and refilling it in the same
+  commit. Three hops, with the payload thinning at each. A mailbox whose emptying is simultaneous
+  with its refilling is a channel rather than a deposit, and that defeats the cost the mechanism was
+  accepted on, which was one listing per session. The fourth rule closes it, with a test that is
+  decidable before writing: *would you deposit this if the first message had never existed?*
+- **`tracking.md` — a finding is written in the indicative, never the imperative.** The two existing
+  tests catch what a message says and where it comes from; neither catches its mood. *"The same
+  gesture is still to be done here"* names the gesture. The same information, stated as what is
+  rather than what to do, leaves the conclusion to the reader — which is the whole rule. Mood is
+  mechanically checkable where intent is not.
+- **`corpus.md` — a cut breaks citations that name no file at all.** Splitting a corpus turns
+  *intra*-file references into cross-file ones, and no search for names can find them, because they
+  carry none: *"see § Nullability"* inside an example that leaves for another file, *"skip § Book
+  theme"* in a header whose section becomes a file of its own. Two were measured on a real cut, and
+  both would have shipped.
+
+### Changed
+
+- **`tracking.md` — the mailbox joins the surfaces to sweep when a piece of work moves.** The
+  enumeration listed the todo, the handoff and the delivered narratives. It is the mailbox that is
+  most exposed of the four, and by design, since a message cites rather than copies: a pending one
+  can be broken by a rename it never saw. Measured — a waiting message cited two files that a re-cut
+  renamed, one of them a section that became a file. An enumeration listing three surfaces out of
+  four is more dangerous than one listing none, because it reads as exhaustive.
+
+---
+
 ## 0.2.0 — the checks that were promised, and one that verified nothing
 
 **Updating from `0.1.0`**: copy the new `method/` over yours. Nothing in an instance or a workshop
