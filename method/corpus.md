@@ -92,6 +92,12 @@ cross-reference in every file breaks at once — and so does anything outside th
 named a file, which is the part nobody remembers. Count that cost before starting, and check
 what cites the corpus from outside before renaming anything inside it.
 
+⚠ **Including the citations that name no file at all.** A cut turns *intra*-file references into
+cross-file ones, and no search for names can find them, because they carry none: *"see
+§ Nullability"*, written inside an example that leaves for another file; *"skip § Book theme"*, in a
+header whose section becomes a file of its own. Both measured on a real cut, of twelve files into
+nineteen, and both would have shipped. Read the **pointers**, not only the names.
+
 ## A first index, and what it looks like later
 
 Day one, after `onboarding.md`, an index has one line, and that is a correct index:

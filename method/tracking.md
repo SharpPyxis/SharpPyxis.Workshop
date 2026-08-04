@@ -172,8 +172,14 @@ Two things follow, and the second is the one that gets forgotten:
 - ⚠ **moving a piece of work leaves the same dead citations as closing one**, and they are worse:
   they stay plausible. `organization.md` § *Cite by identity* protects against a corpus that moves,
   not against a tag that does. Sweep every citation of the tag in the same gesture — the todo, the
-  handoff, the delivered narratives — and name the work in plain words where it is only being
-  referred to.
+  handoff, the delivered narratives, **and the mailbox** — and name the work in plain words where it
+  is only being referred to.
+  ⚠ **The mailbox is the most exposed of the four, and by design.** § *Work found for another
+  workshop* requires a message to cite rather than copy, so its content depends entirely on the
+  stability of the names it cites: a pending message can be broken by a rename it never saw.
+  Measured — a message waiting for its workshop cited two files that a corpus re-cut renamed, one of
+  them a section that became a file of its own. **An enumeration listing three surfaces out of four
+  is more dangerous than one listing none**, because it reads as exhaustive.
 
 ## Work found for another workshop
 
@@ -207,7 +213,7 @@ which of the two a reader is holding would depend on knowing the answer already.
 separate also makes one property true by construction rather than by discipline: everything in it is
 a message, so everything in it is meant to leave.
 
-Three rules, and the first is what keeps the mechanism from turning into storage:
+Four rules, and the first is what keeps the mechanism from turning into storage:
 
 - **the receiving session consumes the message.** It reads it, records in its own framing whatever
   it decides — an item, an atlas line, or the decision to do nothing — and deletes the file. A
@@ -217,7 +223,20 @@ Three rules, and the first is what keeps the mechanism from turning into storage
   report now outlives the session that wrote it;
 - **it cites rather than copies.** What was found usually already lives somewhere with authority — a
   convention file, a delivered narrative, an archived entry. A message that summarizes it creates a
-  second version of it, and nobody maintains a copy meant to be deleted.
+  second version of it, and nobody maintains a copy meant to be deleted;
+- **consuming a message does not entitle you to answer it.** A finding travels one way. If consuming
+  one produces a new fact, that fact is deposited as a **new finding**, and it has to stand
+  **without citing the message that prompted it**. The test is decidable before writing:
+  *would you deposit this if the first message had never existed?*
+
+⚠ **The fourth rule was written after the mechanism produced its own counter-example.** A workshop
+received a finding, consumed it, and answered; the answering session consumed that answer and
+deposited its own — **emptying the mailbox and refilling it in the same commit**. Three hops, and the
+payload thinned at each: a real divergence, a real divergence back, then a resolution notice. Nothing
+declared the exchange over, because the three rules above describe what a receiving session must
+*do* and never what it may *produce*. A mailbox whose emptying is simultaneous with its refilling is
+a channel, not a deposit — and that defeats the cost this mechanism was accepted on, which was one
+listing per session.
 
 ⚠ **A finding is deposited; a proposal is asked for.** The second rule above treats what a message
 *looks like* and lets its **origin** through — so a perfectly descriptive message can still have no
@@ -232,6 +251,14 @@ by the very session that thought of it.
 ⚠ This bans no idea. It settles where one goes: an idea for a neighbor is said out loud, in the
 session, and travels only if the developer sends it. What the mailbox carries without asking is
 only what would otherwise be lost.
+
+⚠ **A finding is written in the indicative, never the imperative.** The two tests above catch what a
+message *says* and where it *comes from*; neither catches its **mood**. *"The same gesture is still
+to be done here"* names the gesture — an instruction wearing a finding's clothes. *"The shared part
+is extracted into X, and the site's own charter is reduced to what belongs to it"* carries the same
+information and leaves the conclusion to the reader, which is the whole rule. Mood is mechanically
+checkable where intent is not, and that is what makes this clause cheap. Observed in the mailbox
+that this method's own workshop keeps.
 
 ⚠ **The address is resolved, never inferred.** A familiar word — *the site*, *the app*, *the back
 end* — is not an address, and a corpus rarely holds only one candidate. Resolve it from the request,
