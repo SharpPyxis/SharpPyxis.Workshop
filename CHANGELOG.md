@@ -7,6 +7,62 @@ This file ships inside the archive, which is the point: a copy has no git histor
 
 ---
 
+## 0.4.0 — what a close hands over, one name the mailbox cannot carry, and a copy that can ask
+
+**Updating from `0.3.0`**: copy the new `method/` over yours. Nothing in an instance has to change.
+⚠ **One exception, and it is checkable in a second**: if a workshop of yours is named `README` — in
+any case — the name is now refused, and you have to rename that folder. It could never have worked:
+its address in the mailbox was indistinguishable from the mailbox's own readme, so it received
+nothing, silently. Everything else is a copy.
+
+⚠ **Two of the three clauses came from a mechanism failing against itself**, and the third from a
+neighbouring workshop reading this repository's own readme. None came from re-reading the rules.
+
+### Added
+
+- **`tracking.md` — what the close hands to you is spoken, not recorded.** The closing protocol ends
+  by listing what is left to push, deploy or publish. That list is addressed to someone who acts on
+  it within the hour, so it is already false the next time the handoff is read — and it escapes the
+  pruning rule, because the entry carrying it is the most recent one there is. The test is
+  mechanical: **if the disk can answer it, do not assert it.** A push state, a tag on a remote, a
+  clean tree are re-established in seconds by the next session; a reason, a blocker, an intent are
+  not, and those are what the file is for. Measured here: *"the received copy has 3 unpushed
+  commits"*, written at one close and still read as current two sessions after the commits had gone.
+- **`tracking.md`, the installer and the check — a workshop may not be named `README`.** It would be
+  addressed by exactly the file every reader of the mailbox has to exempt. The refusal falls on the
+  name rather than on the readme, and the asymmetry is the argument: the readme travels into every
+  copy and belongs to the method, the name belongs to one workshop. **Case-folded**, which is the
+  half that matters — where the file system folds case, `Readme.md` and `README.md` are one file, so
+  the exemption swallows the address and nothing reports it.
+- **`corpus.md` — why each file restates a trigger the index already gives.** Four reasons, and the
+  last assumes no agent, no index and no check, which is why it is the one to keep if the others
+  stop holding. With the warning that prevents the wrong reason being read into it: a header saves
+  no context, since a file is paid for the moment it is opened.
+- **`workshop-lint.py --check-updates`** — compares your `method/VERSION` to the latest published
+  release and says whether a newer one exists. A warning and nothing more: no download, no write, no
+  step towards updating. It is the only check that reads a remote, behind a flag so the others stay
+  offline, and **silence is never read as agreement** — no network, a rate limit, a moved repository
+  each end in *could not check*, never in *up to date*.
+
+### Changed
+
+- **The readme situates the method against the layer under it.** A new § *Where it sits* names three
+  layers — the model, the harness, the method — and states that the third adds no capability to act
+  and depends entirely on the second. The opening no longer claims an agent starts every session
+  knowing nothing: agent tooling already keeps a notebook and re-reads an instructions file, and
+  what remains yours is deciding what goes in them and knowing they are reached.
+- **The readme states that workshops are watertight.** A session reads the framing it was opened on
+  and leaves the others closed. The mailbox is the consequence of that boundary rather than a
+  convenience beside it — which was visible in the arithmetic: more situations described than
+  mechanisms answering them, and the one with no answer was a piece of work polluted by a
+  neighbour's conventions.
+- **§ *Status* separates the machine from the operating system.** The four steps have now been
+  walked by somebody other than the author, on their own machine, from an empty root and the
+  published archive. What is still untested is a **case-sensitive file system**: every run so far has
+  been on Windows, where a path whose case is wrong loads anyway.
+
+---
+
 ## 0.3.0 — a mailbox that answered itself, and a cut that broke what no search could find
 
 **Updating from `0.2.0`**: copy the new `method/` over yours. Nothing in an instance or a workshop
