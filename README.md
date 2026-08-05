@@ -398,12 +398,15 @@ The published name is settled: `method/` names its function and stands against `
 while the repository above it carries the belonging.
 
 Both tools have now resolved a second corpus — a separate root, other workshop names, no wiring
-to read from — and the four steps above were walked end to end on it, day zero included.
+to read from — and the four steps above were walked end to end on it, day zero included. Since
+then the same four steps have been walked by **somebody other than the author**, on their own
+machine, starting from an empty root and the published archive.
 
-⚠ What has still **not** been exercised: another machine, and a case-sensitive file system. The
-layout resolves by structure rather than by hardcoded names, which is what makes the copy above
-the whole procedure — but a check that never ran on a second operating system is a hypothesis,
-and case is where a path that works on the author's machine loads nothing at all elsewhere.
+⚠ What has still **not** been exercised is a **case-sensitive file system**. The layout resolves
+by structure rather than by hardcoded names, which is what makes the copy above the whole
+procedure — but every run so far has been on Windows, where a path whose case is wrong loads
+anyway. Case is where a path that works on one machine loads nothing at all on another, and a
+check that has never run there is a hypothesis.
 
 ## Versions and updates
 
