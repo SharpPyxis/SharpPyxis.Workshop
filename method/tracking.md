@@ -136,6 +136,22 @@ the tensed documents. The lint enforces this.
 - **Keep the recent sessions only** — of the order of three to five — and archive the rest in
   a companion file, consulted on explicit request and never re-read at the start of a
   session.
+- ⚠ **What the close hands to the developer does not belong here.** § *Closing a session* ends by
+  listing what is left to push, deploy or publish. That list is addressed to someone who acts on it
+  within the hour, so it is already false the next time this file is read — and it escapes the rule
+  above, because the entry carrying it is the most recent one there is. Record what the **session**
+  leaves in progress; never what the **developer** was handed.
+  The test is mechanical: **if the disk can answer it, do not assert it.** A push state, a tag on a
+  remote, a clean tree are re-established in seconds by the next session, and asserting them buys
+  nothing while risking everything. A reason, a blocker, an intent are not on the disk, and those
+  are what this file is for.
+  What the disk cannot answer — an upload, a page published, anything done off the machine — is
+  written as **unverified** rather than as done, in the wording § *Record what left no trace*
+  already requires for an unanswered proposal.
+  ⚠ Measured: *"the received copy has 3 unpushed commits"*, written at one close and still read as
+  current two sessions after the commits had gone. The entry that wrote it had even argued for it —
+  the workshop had decided against tooling that check, so the line was made to carry it. **A state
+  a rule tells you to say out loud is not thereby a state to write down.**
 
 A file that grows indefinitely damages context uptake, since its volume is re-read at every
 resumption. Pruning it is ordinary maintenance, not a chore.

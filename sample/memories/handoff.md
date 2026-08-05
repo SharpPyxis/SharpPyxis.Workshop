@@ -13,9 +13,9 @@ Rounding, all afternoon, and nothing shipped — deliberately.
 gets wrong, and the comparison turned up a third that nobody had considered and that is worse
 than both. `[ROUNDING]` now cites that document instead of carrying the argument.
 
-**In progress or blocked**: nothing in the working tree. `[ACCOUNTS]` waits on the arbitration
-in `[OPEN]` and has waited a week; it is one branch of code away from done, which is exactly
-why it is worth naming rather than quietly leaving.
+**In progress or blocked**: `[ACCOUNTS]` waits on the arbitration in `[OPEN]` and has waited a
+week; it is one branch of code away from done, which is exactly why it is worth naming rather
+than quietly leaving.
 
 **Next**: the rounding decision, then `[ACCOUNTS]` if the arbitration has landed.
 
