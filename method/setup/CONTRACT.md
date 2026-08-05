@@ -30,6 +30,12 @@ existence of the target is exactly what tells it which side of the rule it is on
 ⚠ And it stops at the skeleton. The installer creates; it does not migrate content, does not open
 the new workshop, and does not continue working in it.
 
+⚠ **One name is refused, case-folded: `README`.** The name of a workshop is its address in the
+mailbox, and that folder also holds the one readme the method ships — so a workshop of that name
+would receive nothing, silently. The refusal belongs here as well as in the check because this is
+where the name is chosen, and a name refused at birth costs a keystroke where one refused later
+costs a rename. `tracking.md` § *Work found for another workshop* carries the reason in full.
+
 ## What must be produced
 
 **A workshop folder**, named as the developer named it, at the corpus root — beside the other

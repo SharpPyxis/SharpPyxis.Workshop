@@ -900,11 +900,21 @@ def check_mailbox(cfg, layout, report) -> None:
         else:
             problems.append("« %s » — no workshop of that name under the root" % entry.name)
 
-    # ⚠ The collision the method's own framing notes rather than treats: a workshop named README
-    # would be addressed by the one file this check has to exempt. Detecting it costs three lines
-    # and imposes no name on anyone — only the case that actually arises needs arbitrating.
-    if "README" in workshops:
-        problems.append("a workshop is named README — its address cannot be told from the mailbox's own readme")
+    # ⚠ The one name the mailbox cannot carry — refused since 2026-08-05, where this used to merely
+    # report the collision and leave the arbitration open. `tracking.md` § *Work found for another
+    # workshop* carries the rule and why the refusal falls on the name rather than on the readme.
+    #
+    # ⚠ Case-folded, and that is the half worth the line. Where the file system folds case,
+    # `Readme.md` and `README.md` are one file: the exemption above swallows the address, the
+    # workshop receives nothing, and no report says so. Comparing exactly would leave that version
+    # of the failure — the silent one — untouched, which is the same mistake `exists_exact_case`
+    # made a few hundred lines from here.
+    collision = sorted(name for name in workshops if name.casefold() == "readme")
+    if collision:
+        problems.append(
+            "a workshop is named « %s » — its address cannot be told from the mailbox's own readme, "
+            "and the name is refused" % collision[0]
+        )
 
     for problem in problems:
         report("FAIL", "instance/messages/: %s" % problem)

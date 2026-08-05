@@ -290,6 +290,17 @@ workshop, case for case. Note which of the two failures that check catches: a wr
 address is recoverable, since whoever opens the file sees it is not theirs; a misspelled one is read
 by nobody, which is why it is the one worth a machine.
 
+⚠ **One workshop name is refused, and it is the only one: `README`.** The mailbox holds one file per
+workshop plus the single readme this method ships there — so a workshop of that name would be
+addressed by exactly the file every reader has to exempt, and its findings would be delivered to
+nobody without a sound. **Case-folded**, because where a file system folds case the two are one
+file, which is the version of the failure that leaves no trace at all. The installer refuses the
+name at creation; the check refuses it afterwards, for a workshop created by hand.
+⚠ The refusal falls on the name rather than on the readme, and the asymmetry is the argument: the
+readme travels into every copy and belongs to the method, while the name belongs to one workshop and
+costs a keystroke to change. Carrying an odd file name everywhere to spare one workshop an ordinary
+name is the wrong way round.
+
 ## Gestures a workshop declares
 
 Some workshops carry an operation that has to happen when something is touched: a folder that must

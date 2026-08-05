@@ -464,6 +464,18 @@ def main() -> int:
     if not name or re.search(r"[\\/:*?\"<>|]", name):
         report.refuse("« %s » is not usable as a folder name" % args.name)
 
+    # ⚠ The one name the mailbox cannot carry. Case-folded, because where the file system folds
+    # case the address and the readme are one file, and the workshop then receives nothing without
+    # a sound. Refused here rather than only by the lint because this is where the name is chosen.
+    if name.casefold() == "readme":
+        report.refuse(
+            "« %s » collides with the mailbox's own readme.\n"
+            "        instance/messages/ holds one file per workshop, named after it, plus the readme the\n"
+            "        method ships there — so this workshop's findings would be delivered to nobody. Any\n"
+            "        other name works. See method/tracking.md § Work found for another workshop."
+            % args.name
+        )
+
     workshop = corpus.root / name
     wiring_file = corpus.root / ("%s.code-workspace" % name)
     for existing in (workshop, wiring_file):
