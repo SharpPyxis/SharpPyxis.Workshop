@@ -426,9 +426,16 @@ the new `method/` over yours and carry on?**
 There is no API here, so the usual compatibility contract has nothing to attach to. What a version
 can honestly promise is the cost of taking it, and that is what these three levels measure.
 
-⚠ **Nothing is pushed to you.** Watching *Releases only* on this repository is what tells you a
-newer one exists; a copy cannot find out on its own, and pretending otherwise would be the kind of
-convenience this method does not offer.
+⚠ **Nothing is pushed to you, and nothing updates itself.** What a copy can do is ask: the lint
+takes `--check-updates`, compares your `method/VERSION` to the latest published release, and says
+whether a newer one exists. It reads and reports — no download, no write, no step taken towards
+updating, which stays the copy described above.
+
+It is the only check that touches the network, and it is behind a flag for that reason: the others
+stay offline so they cannot fail for something that has nothing to do with your framing. **Silence
+is never read as agreement** — no network, a rate limit, a moved repository each end in *could not
+check*, never in *up to date*. Watching *Releases only* on this repository still works and asks
+nothing of you at all.
 
 ## Contributing
 

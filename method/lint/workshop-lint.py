@@ -855,6 +855,62 @@ def check_method_version(cfg, layout, report) -> None:
         report("WARN", "method version: framed under %s, the method is at %s — copying the new method/ over yours is enough, then move this number" % (stamped, current))
 
 
+# The one location this corpus hardcodes, and the only one it can. Everything else cites by
+# identity, because a name survives a move and a path does not — but a copy has no remote and no
+# history, so there is nothing here to resolve a name against. Written once, and the failure it
+# implies is handled below: if this address ever stops answering, the check says it could not look,
+# never that you are up to date.
+LATEST_RELEASE = "https://api.github.com/repos/SharpPyxis/SharpPyxis.Workshop/releases/latest"
+
+
+def check_published_version(cfg, layout, report) -> None:
+    """Whether a newer version has been published. **A warning, and nothing more** — this reads a
+    remote and never writes, downloads nothing, and takes no step towards updating. What to do
+    about a newer version is in the readme, § *Versions and updates*, and it is a copy.
+
+    ⚠ **Behind an explicit flag, and outside the core on purpose.** The rest of these checks are
+    offline, which is what makes them deterministic and fast enough to run at every close. A
+    network call fails or hangs for reasons that have nothing to do with a framing, and a check
+    that does that is a check people stop running.
+
+    ⚠ **Silence is never taken for agreement.** No network, a rate limit, a moved repository, a
+    reply that does not parse — each ends in *could not check*, never in *up to date*. A version
+    check that reassures when it has learned nothing is worse than no check, because it answers a
+    question it did not ask."""
+    if not layout.method:
+        return
+    path = layout.method / "VERSION"
+    if not path.is_file():
+        report("WARN", "method/VERSION: absent — nothing local to compare against what is published")
+        return
+    held = parse_version(read_text(path).strip())
+    if held is None:
+        return
+
+    # Imported here rather than at the top: the network is this one check's business, and a module
+    # that pulls it in unconditionally suggests the rest of the file might use it.
+    import json
+    import urllib.request
+
+    try:
+        request = urllib.request.Request(LATEST_RELEASE, headers={"Accept": "application/vnd.github+json"})
+        with urllib.request.urlopen(request, timeout=5) as answer:
+            tag = json.loads(answer.read().decode("utf-8")).get("tag_name") or ""
+    except Exception as why:  # noqa: BLE001 — every failure means the same thing here
+        report("WARN", "published version: could not check (%s) — this says nothing about whether one exists" % type(why).__name__)
+        return
+
+    latest = parse_version(tag.lstrip("vV"))
+    if latest is None:
+        report("WARN", "published version: « %s » is not a version — could not check" % tag)
+    elif latest <= held:
+        report("OK", "published version: %s is the latest published" % ".".join(str(n) for n in held))
+    elif latest[0] != held[0]:
+        report("WARN", "published version: %s is out, you hold %s — a major apart, so copying is not enough; the changelog entry says what changes by hand" % (tag, ".".join(str(n) for n in held)))
+    else:
+        report("WARN", "published version: %s is out, you hold %s — copying the new method/ over yours is enough" % (tag, ".".join(str(n) for n in held)))
+
+
 # --------------------------------------------------------------------------------------------
 # The mailbox — every address resolves to a workshop
 # --------------------------------------------------------------------------------------------
@@ -1099,6 +1155,8 @@ def main(argv) -> int:
     parser.add_argument("framing", nargs="?", default=".", help="the workshop's framing folder")
     parser.add_argument("--no-color", action="store_true")
     parser.add_argument("--layout", action="store_true", help="print what was resolved, and stop")
+    parser.add_argument("--check-updates", action="store_true",
+                        help="also ask whether a newer version has been published — the only check that reads a remote")
     arguments = parser.parse_args(argv)
 
     framing = Path(arguments.framing).resolve()
@@ -1138,6 +1196,8 @@ def main(argv) -> int:
     check_citations(config, layout, report)
     check_index_coverage(config, layout, report)
     check_method_version(config, layout, report)
+    if arguments.check_updates:
+        check_published_version(config, layout, report)
     check_mailbox(config, layout, report)
     check_repositories(config, layout, report)
     check_editor_workspaces(config, layout, report)

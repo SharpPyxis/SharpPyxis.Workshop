@@ -213,6 +213,34 @@ applies. Neither takes a configuration key. ⚠ A mailbox that is absent is **re
 over: the method ships that folder, so its absence means a finding for a neighbour has nowhere to
 go — and silence there would be indistinguishable from an empty one.
 
+## Asking whether a newer version is published — the only check that reads a remote
+
+**Behind an explicit flag, never in the socle.** It compares the local `method/VERSION` to the
+latest release published by the method's own repository, and reports whether a newer one exists.
+Nothing else: no download, no write, no step towards updating, which stays a copy of `method/` as
+the readme describes it.
+
+Three properties make it safe to add to a corpus whose whole value is that its checks are cheap:
+
+- **the socle stays offline.** A network call fails or hangs for reasons that have nothing to do
+  with a framing, and a check that does that at every close is a check people stop running. The
+  flag is what keeps the two apart;
+- ⚠ **silence is never read as agreement.** No network, a rate limit, a moved repository, a reply
+  that does not parse — each ends in *could not check*, never in *up to date*. A version check that
+  reassures when it has learned nothing is worse than none, because it answers a question it was
+  not asked;
+- **WARN throughout, never FAIL.** Holding an older method breaks no rule. What to do about it, and
+  when, belongs to the owner.
+
+⚠ **It is the one place this corpus hardcodes a location**, and the only one where it can be
+argued: everything else cites by identity, because a name survives a move and an address does not —
+but a copy has no remote and no history, so there is nothing to resolve a name against. The
+implementation writes it once, and the third property above is what makes a dead address harmless.
+
+⚠ The distinction it reports is the readme's own: **a major means copying is not enough**, and the
+changelog entry says what changes by hand. Same separation as the version stamp, asked of the other
+side.
+
 ## Checks a workshop declares for itself
 
 Off unless configured. Each exists because a real workshop needed it and another did not.
