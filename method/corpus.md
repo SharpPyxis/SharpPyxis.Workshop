@@ -133,3 +133,23 @@ Which index is its corpus's own, and nothing else decides it:
 two genuinely useful files lived outside every index for months, one of them a todo. An index line
 no file answers is the same failure mirrored, and harder to see from the other side: a folder was
 declared in the method's index and did not exist.
+
+## Every file restates its own trigger
+
+The index says when each file is read, and each file says it again in its own header. The two are
+held in step by the check above, and four things pay for the repetition:
+
+- **the header is the authority; the index line is a copy.** A copy drifts, and this one drifts in
+  silence — nothing about an index line shows that the file it points at has since changed what it
+  is for;
+- **the check reads both**, which is what makes the copy safe instead of a second source of truth;
+- **a file opened for the wrong reason says so on its first lines.** An agent that arrived by a bad
+  inference meets the trigger it does not satisfy, and the *do not read* half tells it what not to
+  apply — reached at the only moment it can still prevent something;
+- **whoever opens the file to change it reads who it is meant to serve** before changing it. That
+  one assumes no agent, no index and no check, which is why it is the reason to keep if the others
+  ever stop holding.
+
+⚠ **The header saves no context.** Reading a file is atomic: its content is paid for the moment the
+file is opened, header included. What saves the budget is the index, read in place of the files —
+so a header earns its place by what it prevents, never by what it spares.

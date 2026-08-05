@@ -25,10 +25,13 @@ The upkeep is the agent's job. Yours is to review it.
 
 ## The problem it addresses
 
-An agent starts every session knowing nothing. What it reads first decides the quality of
-everything that follows, and that reading is paid again at every start.
+What an agent reads at the start of a session decides the quality of everything that follows,
+and that reading is paid again at every start. Agent tooling already carries part of it: a
+notebook attached to the working folder, an instructions file re-read unconditionally, a piece
+of work tied to a set of folders and documents. What stays yours is deciding what goes in them,
+keeping them worth what they cost to read, and knowing that a file you wrote is reached at all.
 
-The obvious answer — write things down — fails in a specific way, and usually in this
+The obvious answer — write more down — fails in a specific way, and usually in this
 order:
 
 - the notes grow until reading them costs more than they save. Since they are re-read at
@@ -37,10 +40,30 @@ order:
   after, you stop writing them;
 - a decision taken three weeks ago is contradicted by one taken today, and nothing
   notices — you kept the whole picture in your head, and the agent never had it;
+- the conventions of one piece of work follow you into the next, because everything you wrote
+  is in reach at once and nothing says which of it applies here;
 - the conventions file you were certain the agent had read was never within its reach.
 
 None of these is a failure of discipline. They are what happens to notes that have no
 assigned place, no reading budget, and no check.
+
+## Where it sits
+
+Three layers separate a language model from a session that gets work done, and this repository
+is the third:
+
+- **the model** answers;
+- **the harness** — your coding agent — is what lets it read files, run commands, and keep
+  something between sessions: a notebook attached to a folder, an instructions file read at
+  every start, a piece of work tied to the documents it concerns;
+- **the method** decides what those files hold, what is read before anything is produced, and
+  what a session leaves behind.
+
+The third layer adds no capability to act. Everything below is a file an agent reads and a file
+an agent writes, which is what makes it portable across tools — and what makes it entirely
+dependent on the layer under it. If your agent cannot be pointed at a set of folders and told
+to read a file, none of this reaches it; § *Entry point* is where that dependency is stated
+rather than hidden.
 
 ## What it gives you
 
@@ -52,6 +75,11 @@ assigned place, no reading budget, and no check.
   map. Everything else is reached by a trigger stated in the file's own header: conventions
   before writing that kind of code, the closing protocol before closing. Your framing can
   grow; your start-up cost does not.
+- **One workshop at a time.** A session reads the framing of the workshop it was opened on and
+  leaves the others closed, so what you wrote for one piece of work cannot quietly steer
+  another — and the cost of a start stays independent of how many workshops you keep. What that
+  isolation costs is that a finding for a neighbor has to travel: it is deposited as a note
+  addressed to that workshop, read once by the next session opened there, and deleted.
 - **A session that ends in a defined state.** A closing protocol says what to record, where,
   and in what order — so the next session starts from something written rather than from a
   reconstruction.
@@ -142,6 +170,13 @@ A **workshop** is a unit of work that owns its framing. It may hold one product 
 several repositories, or a single independent library. Each workshop carries a `_workspace/`
 folder holding its atlas, its todo and its handoff. This repository defines what workshops
 are, and how one developer and their agents work inside them.
+
+It is also the perimeter of a session. What is opened is that workshop's repositories and its
+framing, plus the method and your own instance; a neighbor's framing is not read, and nothing
+is ever written into it. Two things follow from that boundary rather than from a preference:
+the mailbox described in § *What you have to say* exists because a finding cannot be filed into
+the workshop it concerns, and an agent that finds something outside its perimeter reports it
+instead of pursuing it.
 
 ## The layout, in full
 
