@@ -1,6 +1,7 @@
 # SharpPyxis.Workshop
 
-A tracking method for one developer working with AI agents.
+A tracking method for one developer working with AI agents, on the seam between **agent memory**
+and **context engineering**.
 
 **[www.sharppyxis.fr](https://www.sharppyxis.fr)** — the same method in prose: who reads what and
 when, what happens during a session, what the close records. English and French.
@@ -18,8 +19,8 @@ when, what happens during a session, what the close records. English and French.
 > **Arriving for the first time?** That sentence is not yours yet — it names a workshop, and you
 > have none. Start at § *Getting started*: a copy, a folder, and one conversation.
 
-Its subject is narrow on purpose: **what an agent must read before it can be useful, and
-what a session must leave behind so the next one starts informed.**
+Its subject is that seam, and it is narrow on purpose: **what an agent must read before it can
+be useful, and what a session must leave behind so the next one starts informed.**
 
 The upkeep is the agent's job. Yours is to review it.
 
