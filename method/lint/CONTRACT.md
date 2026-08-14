@@ -100,13 +100,25 @@ and the prefixes reserved for other tenses are refused outright — an item mark
 todo is an item nobody moved to the atlas or to the delivered narrative.
 
 **Delivered narratives — named by tag, and cited without dangling.** One file per `[TAG]`, named
-after it. Every reference from the todo to such a file must resolve.
+after it. Every reference to such a file must resolve, **from anywhere in the framing** — the
+long-form folder cites them most, and a reference stranded there by a deletion dangles exactly as
+one in the todo does.
 
 **Cited tags exist.** ⚠ Any `[TAG]` cited anywhere in the framing must exist as a section of the
 todo or as a delivered narrative. Citing by identity protects a reference against a corpus that
 *moves*; it does nothing against one that *closes*. A tag does not go stale visibly — it stays
 readable, plausible and wrong. Observed: three citations of a tag survived its closure, and two
 of them announced a blocker that had been lifted, one of them gating a publication.
+
+**And a citation that names a location resolves against that location.** `todo.md § [X]` asserts
+that `X` is a piece of work in the todo; the check above sees only that the tag exists somewhere,
+so the citation goes on resolving while `X` lives on in the delivered narrative alone. **A rename
+produces that state mechanically** — the todo is corrected, the narrative keeps its original name,
+and every citation of the old address survives it. ⚠ `FAIL` rather than `WARN`, unlike a bare tag:
+the form is unambiguous, so it cannot be a turn of phrase. Observed: two such citations outlived a
+rename by fifteen days, through a pass that was hunting for exactly that residue and found four
+others; what finally surfaced them was the narrative being deleted, which made the tag stop
+existing — at a moment when the rename that caused them had nothing to do with the work in hand.
 
 **Header dates.** A document whose declared date lags well behind its last modification is a
 document whose header no longer describes it. ⚠ `WARN` only: modification times do not survive a

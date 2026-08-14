@@ -456,13 +456,19 @@ def check_delivered(cfg, layout, report) -> set:
     if not bad:
         report("OK", "%s/: named by tag (%d file(s))" % (folder.name, len(files)))
 
-    text = "\n".join(read_text(layout.framing / n) for n in todo_names(cfg))
-    cited = sorted(set(re.findall(r"%s/([A-Z0-9-]+\.md)" % re.escape(folder.name), text)))
-    dead = [c for c in cited if not (folder / c).is_file()]
-    for name in dead:
-        report("FAIL", "todo: dangling reference to %s/%s" % (folder.name, name))
+    # Every framing document, not just the todo: a narrative deleted or renamed leaves the same
+    # dangling reference wherever it was cited, and the long-form folder cites them most.
+    cited, dead = set(), {}
+    for document in framing_documents(cfg, layout):
+        for index, line in enumerate(read_lines(document)):
+            for name in re.findall(r"%s/([A-Z0-9-]+\.md)" % re.escape(folder.name), line):
+                cited.add(name)
+                if not (folder / name).is_file():
+                    dead.setdefault(name, []).append("%s:%d" % (document.name, index + 1))
+    for name, places in sorted(dead.items()):
+        report("FAIL", "dangling reference to %s/%s — %s" % (folder.name, name, ", ".join(places[:4])))
     if not dead:
-        report("OK", "todo: %d reference(s) to %s/ resolved" % (len(cited), folder.name))
+        report("OK", "framing: %d reference(s) to %s/ resolved" % (len(cited), folder.name))
     return delivered
 
 
@@ -487,9 +493,29 @@ def check_cited_tags(cfg, layout, report, tags, delivered) -> None:
                 orphans.setdefault(tag, []).append("%s:%d" % (path.name, index + 1))
     if not orphans:
         report("OK", "cited tags: all resolve to an open piece of work or a delivered narrative")
-        return
     for tag, places in sorted(orphans.items()):
         report("WARN", "cited tag [%s] exists nowhere — %s" % (tag, ", ".join(places[:4])))
+
+    # A citation that names a location asserts the tag lives THERE, and the union above cannot
+    # see it: `todo.md § [X]` resolves while X lives only in the delivered narrative. A rename
+    # produces that state mechanically — the todo is corrected, the narrative keeps its original
+    # name, and every citation of the old address goes on resolving. FAIL rather than WARN: the
+    # form is unambiguous, so unlike a bare tag it cannot be a turn of phrase.
+    names = "|".join(re.escape(name) for name in todo_names(cfg))
+    addressed = re.compile(r"`?(?:%s)`?\s*§\s*`?\[([A-Z][A-Z0-9-]*)\]`?" % names)
+    counted, misplaced = 0, {}
+    for path in framing_documents(cfg, layout):
+        for index, line in enumerate(read_lines(path)):
+            for tag in addressed.findall(line):
+                if tag in excluded or not shaped.match(tag):
+                    continue
+                counted += 1
+                if tag not in tags:
+                    misplaced.setdefault(tag, []).append("%s:%d" % (path.name, index + 1))
+    for tag, places in sorted(misplaced.items()):
+        report("FAIL", "[%s] cited as a section of the todo, where it is no longer one — %s" % (tag, ", ".join(places[:4])))
+    if not misplaced:
+        report("OK", "addressed tags: %d citation(s) naming the todo, all open there" % counted)
 
 
 def check_header_dates(cfg, layout, report) -> None:

@@ -3,6 +3,9 @@
 > **Read when** deciding where a fact should be stored, or wiring a second tool or surface to
 > a workshop.
 > **Do not read** to write a handoff — that is `tracking.md`.
+>
+> ⚠ Its unconditional half is in `organization.md` § *Precedence*, which no trigger can carry: a
+> memory that answers first is what stops the question from being asked.
 
 ---
 

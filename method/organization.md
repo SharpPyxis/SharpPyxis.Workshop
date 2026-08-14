@@ -21,8 +21,9 @@ after it.
 This method declares the slot and its timing. It does not declare the content: a published
 method that hardcoded a language or a name would be wrong everywhere it was not written.
 
-⚠ This is the one instruction that is **not** behind a trigger. Everything else in the
-method is read when a condition is met; this is read always, first, unconditionally.
+⚠ This and the section that follows are the only instructions **not** behind a trigger.
+Everything else in the method is read when a condition is met; these two are read always,
+first, unconditionally.
 
 **If there is no instance, or it holds no index** — the case on a fresh copy, since the
 repository ships `instance/` empty — read `onboarding.md`. It turns the absence into a short
@@ -34,6 +35,21 @@ sentence, offer, and wait — then either write the instance or carry on without
 plainly that you are working without the identity rules. This is the same discipline as
 offering to install a missing runtime, and for the same reason: the cost falls on someone
 else's machine.
+
+## Precedence — what you already remember does not decide here
+
+If you carry a memory of your own — a private store, a project note, a fact recalled from an
+earlier session — **the corpus overrides it.** Where the two disagree, what you remembered is an
+observation to re-verify against the files, never a fact to apply. And write nothing durable into
+it: such a store is keyed by the session's root rather than by workshop, so what you put there
+working on one is recalled working on another.
+
+⚠ **This cannot live behind a trigger of its own.** A trigger fires when a question is asked, and
+a memory that answers first is exactly what stops the question from being asked — so the cost is
+not the duplicate, it is the file you never open. Same argument as § *Step 0*, against a different
+failure: that one protects the order of reading, this one a source that removes the reading.
+
+`memory.md` has the rest.
 
 ## Vocabulary
 
@@ -177,7 +193,8 @@ its own status header.
 Before substantial work. The first three interleave, and that is by design — § *Step 0* sits at
 the top of this file so that reading the map in order produces the right sequence:
 
-1. **this file, as far as § *Step 0*** — its opening lines;
+1. **this file, as far as § *Precedence*** — its two opening sections, the only ones read
+   unconditionally;
 2. `instance/index.md` and the identity file it declares — before a single line of prose;
 3. **the rest of this file**;
 4. identify the workshop concerned by the request;

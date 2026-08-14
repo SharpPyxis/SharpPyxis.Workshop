@@ -125,6 +125,13 @@ the tensed documents. The lint enforces this.
   changed.
 - **One entry per session.** Enriching the current entry as the session goes is correct;
   opening a second one for the same session is not.
+- ⚠ **If an entry carries a date, that date comes from the repository, never from the entry above
+  it.** A corpus dated a day ahead reads as a sequence to be continued: the next session extends
+  the drift rather than contradict it, and every session after inherits it. The `git log` settles
+  it — the day the work happened is the day its commits carry — and several sessions in one day
+  are **numbered**, never spread over consecutive ones. Measured: two consecutive entries a day
+  ahead of every commit they described, the second written by a session that had noticed the
+  contradiction with the clock, said so, and extended the sequence anyway.
 - ⚠ **It may state that work has moved; it may not say where the session goes.** "The method is
   now developed in another workshop" is a fact, and belongs here. "That is where the follow-up
   is steered, not here" is an instruction — and the next agent will obey it, after the map and

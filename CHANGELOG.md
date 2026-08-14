@@ -7,6 +7,51 @@ This file ships inside the archive, which is the point: a copy has no git histor
 
 ---
 
+## 0.5.0 — a memory that answers before the question is asked
+
+**Updating from `0.4.0`**: copy the new `method/` over yours. Nothing in an instance has to change.
+⚠ **Two checks are stricter, so a framing that was green may now FAIL** — in both cases on a real
+defect rather than a new demand: a `[TAG]` cited as a section of the todo while it lives on in the
+delivered narrative alone, and a reference to a narrative that no longer exists, now caught wherever
+it is cited rather than in the todo only. Correct the citation; nothing else moves.
+
+⚠ **The three clauses came from one workshop's mechanisms failing against themselves**, and reached
+this one as findings. None came from re-reading the rules.
+
+### Added
+
+- **`organization.md` § *Precedence* — what you already remember does not decide.** An agent that
+  carries a memory of its own is told, unconditionally, that the corpus overrides it and that
+  nothing durable is written there. ⚠ **It is the second section of the whole method to sit outside
+  a trigger**, and what earns that place is narrow: not that a rule is important, but that a
+  competing source **removes the condition** under which its file would be read. `memory.md` held
+  the rule already, behind *deciding where a fact should be stored* — which is exactly the question
+  a cache that answers first stops anyone from asking. Measured on one such store: three rules
+  applied from it without the corpus being opened once, one of them a convention the corpus carried
+  better, two of them missing from it and seen by nobody.
+- **`tracking.md` — a handoff entry is dated from the repository, never from the entry above it.** A
+  corpus dated a day ahead reads as a sequence to be continued, so the next session extends the
+  drift rather than contradict it, and every session after inherits it. The `git log` settles it,
+  and several sessions in one day are numbered. Measured: two consecutive entries a day ahead of
+  every commit they described, the second written by a session that had noticed the contradiction
+  with the clock, said so, and extended the sequence anyway.
+- **The check — a citation that names a location resolves against that location.** `todo.md § [X]`
+  asserts that `X` is a piece of work in the todo; only the tag's existence was verified, so the
+  citation went on resolving while `X` lived on in the delivered narrative alone. **A rename produces
+  that state mechanically** — the todo is corrected, the narrative keeps its original name, and every
+  citation of the old address survives it. Measured: two such citations outlived a rename by fifteen
+  days, through a pass hunting for exactly that residue which found four others.
+
+### Changed
+
+- **The check — references to a delivered narrative are verified across the whole framing**, not
+  from the todo alone. The long-form folder is where they are cited most, and a reference stranded
+  there by a deletion dangles exactly as one in the todo does.
+- **`memory.md` says where its unconditional half went.** Its trigger is unchanged and still right;
+  what no trigger can carry now sits in the map.
+
+---
+
 ## 0.4.0 — what a close hands over, one name the mailbox cannot carry, and a copy that can ask
 
 **Updating from `0.3.0`**: copy the new `method/` over yours. Nothing in an instance has to change.
