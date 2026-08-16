@@ -837,16 +837,21 @@ def parse_version(text: str):
     return tuple(int(part or 0) for part in match.groups()) if match else None
 
 
-def declared_template_keys(text: str) -> set:
-    """The `section.key` pairs the reference `lint.toml` declares, read as text rather than
-    parsed as TOML: the template still carries unsubstituted `{{PLACEHOLDER}}` values — invalid
-    TOML on its own — until `workshop-setup.py` fills them in.
+def parse_lint_toml_template(text: str) -> list:
+    """Every field the reference `lint.toml` declares, in order: its section, key, and the
+    literal right-hand side exactly as written — the comment above it is deliberately not
+    carried: it is English prose, and a workshop's own `lint.toml` is free to be written (and
+    often is) in the owner's language, so copying it in would plant the exact drift
+    `tracking.md` warns a duplicated rule becomes. The reason for a value stays in one place —
+    this template, `CONTRACT.md` — and a workshop cites it rather than repeats it. Read as text
+    rather than parsed as TOML: the template still carries unsubstituted `{{PLACEHOLDER}}`
+    values — invalid TOML on its own — until `workshop-setup.py` fills them in.
 
     `[sizes]` is excluded on purpose: its keys are the workshop's own tracked filenames, not a
-    fixed vocabulary the template dictates, so diffing them would flag every workshop whose
-    tracked files simply differ from the template's."""
+    fixed vocabulary the template dictates, so diffing or writing them would act on every
+    workshop whose tracked files simply differ from the template's."""
     section = None
-    keys = set()
+    fields = []
     for line in text.splitlines():
         stripped = line.strip()
         if not stripped or stripped.startswith("#"):
@@ -855,10 +860,16 @@ def declared_template_keys(text: str) -> set:
         if heading:
             section = heading.group(1)
             continue
-        entry = re.match(r"^([\w.-]+)\s*=", stripped)
+        entry = re.match(r"^([\w.-]+)\s*=\s*(.+)$", stripped)
         if entry and section and section != "sizes":
-            keys.add("%s.%s" % (section, entry.group(1)))
-    return keys
+            fields.append({"section": section, "key": entry.group(1), "value": entry.group(2)})
+    return fields
+
+
+def declared_template_keys(text: str) -> set:
+    """The `section.key` pairs `parse_lint_toml_template` finds, without the value or comment —
+    what `report_lint_toml_drift` diffs against an already-parsed `lint.toml`."""
+    return {"%s.%s" % (f["section"], f["key"]) for f in parse_lint_toml_template(text)}
 
 
 def declared_config_keys(cfg: dict) -> set:
@@ -873,6 +884,53 @@ def declared_config_keys(cfg: dict) -> set:
     return keys
 
 
+def fixable_lint_toml_fields(cfg, layout) -> list:
+    """The `report_lint_toml_drift` gap, narrowed to what `--fix` can actually write: a missing
+    field whose template value is a literal, not an unresolved `{{PLACEHOLDER}}`. A placeholder
+    carries workshop-specific data — `name`, `repositories`, `instance_files` — that only
+    `workshop-setup.py` has, at the one moment it is free to choose it: creating a wiring is a
+    right, changing one is not, and a value this cannot know is not this check's to invent."""
+    if not layout.method:
+        return []
+    template = layout.method / "templates" / "workshop" / "_workspace" / "lint.toml"
+    if not template.is_file():
+        return []
+    have = declared_config_keys(cfg)
+    return [f for f in parse_lint_toml_template(read_text(template))
+            if "%s.%s" % (f["section"], f["key"]) not in have and "{{" not in f["value"]]
+
+
+def apply_lint_toml_fix(fields: list, path: Path, report) -> None:
+    """Additive only: inserts each field at the end of its `[section]` block, bare — never
+    rewrites a key already present, since `fields` never contains one (`fixable_lint_toml_fields`
+    only names what is missing). A blank line follows the insertion when another `[section]`
+    comes after, matching the template's own spacing rather than fusing the new line onto the
+    next heading. Writes once, after every section is placed, so a `[section]` this cannot find
+    leaves the file untouched rather than half written."""
+    if not fields:
+        return
+    text = read_text(path)
+    by_section = {}
+    for field in fields:
+        by_section.setdefault(field["section"], []).append(field)
+
+    for section, section_fields in by_section.items():
+        heading = re.search(r"^\[%s\]\s*$" % re.escape(section), text, re.M)
+        if not heading:
+            report("WARN", "lint.toml: [%s] absent — cannot place %s automatically"
+                   % (section, ", ".join(f["key"] for f in section_fields)))
+            continue
+        next_heading = re.search(r"^\[\w+\]\s*$", text[heading.end():], re.M)
+        insert_at = heading.end() + (next_heading.start() if next_heading else len(text) - heading.end())
+        block = "".join("%s = %s\n" % (f["key"], f["value"]) for f in section_fields)
+        if next_heading:
+            block += "\n"
+        text = text[:insert_at] + block + text[insert_at:]
+        report.detail("lint.toml: added [%s] %s" % (section, ", ".join(f["key"] for f in section_fields)))
+
+    path.write_text(text, encoding="utf-8")
+
+
 def report_lint_toml_drift(cfg, layout, report) -> None:
     """Whether copying the new `method/` over this workshop's is enough for `lint.toml` too, not
     only for the prose: a minor can add a structural key — `handoff_session_heading` did, in the
@@ -880,12 +938,14 @@ def report_lint_toml_drift(cfg, layout, report) -> None:
     own, since nothing re-runs the installer against it. Lists what the reference template
     (`templates/workshop/_workspace/lint.toml`) declares and this framing's `lint.toml` does not,
     so the WARN above says what an intelligent update adds, not only that one is due."""
-    template = layout.method / "templates" / "workshop" / "_workspace" / "lint.toml"
-    if not template.is_file():
+    template = layout.method / "templates" / "workshop" / "_workspace" / "lint.toml" if layout.method else None
+    if not template or not template.is_file():
         return
     missing = sorted(declared_template_keys(read_text(template)) - declared_config_keys(cfg))
     if missing:
-        report.detail("lint.toml: missing %s — present in the reference template, absent here" % ", ".join(missing))
+        fixable = {f["key"] for f in fixable_lint_toml_fields(cfg, layout)}
+        note = " — run with --fix to add %s" % ", ".join(sorted(fixable)) if fixable else ""
+        report.detail("lint.toml: missing %s — present in the reference template, absent here%s" % (", ".join(missing), note))
 
 
 def check_method_version(cfg, layout, report) -> None:
@@ -1243,6 +1303,8 @@ def main(argv) -> int:
     parser.add_argument("--layout", action="store_true", help="print what was resolved, and stop")
     parser.add_argument("--check-updates", action="store_true",
                         help="also ask whether a newer version has been published — the only check that reads a remote")
+    parser.add_argument("--fix", action="store_true",
+                        help="write the lint.toml keys report_lint_toml_drift finds missing — additive only, see CONTRACT.md")
     arguments = parser.parse_args(argv)
 
     framing = Path(arguments.framing).resolve()
@@ -1259,6 +1321,14 @@ def main(argv) -> int:
         return 0
 
     config = load_config(framing, report)
+
+    if arguments.fix:
+        fields = fixable_lint_toml_fields(config, layout)
+        if fields:
+            apply_lint_toml_fix(fields, framing / "lint.toml", report)
+            config = load_config(framing, report)
+        else:
+            report.detail("lint.toml: nothing to fix")
 
     if layout.method is None:
         report("WARN", "method entry point not found by layout — reading-chain checks are partial")

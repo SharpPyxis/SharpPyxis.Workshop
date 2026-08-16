@@ -226,6 +226,17 @@ did), and nothing re-runs the installer against a workshop already framed: copyi
 template declares and this framing's `lint.toml` does not turns *an update is due* into *these keys
 are missing* — the part of the reconciliation that does not need the changelog to be found.
 
+⚠ **`--fix` closes what it safely can, on its own — the rest still asks.** Same shape as
+`propagate-copy.py --apply`: report by default, write only on the flag. It adds a missing key
+bare, without the template's own commentary — that prose is English, and a workshop's own
+`lint.toml` is free to be written in the owner's language, so copying it in would plant the exact
+drift a duplicated rule becomes. A key whose template value is still an unresolved
+`{{PLACEHOLDER}}` — `name`, `repositories`, `instance_files` — is never written this way: that
+value is workshop-specific data, and only `workshop-setup.py`, at the one moment it is free to
+choose it, has a right to it. **Additive only**, in both senses of the word: it appends the field
+to the end of its `[section]`, and it never rewrites a key already present — the same asymmetry
+`setup/CONTRACT.md` draws between creating a wiring and changing one.
+
 **The mailbox — every address resolves to a workshop.** One file per target workshop, named
 exactly as that workshop's folder. Anything else in the folder is not an address.
 
