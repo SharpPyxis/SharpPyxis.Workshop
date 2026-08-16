@@ -928,7 +928,10 @@ def apply_lint_toml_fix(fields: list, path: Path, report) -> None:
         text = text[:insert_at] + block + text[insert_at:]
         report.detail("lint.toml: added [%s] %s" % (section, ", ".join(f["key"] for f in section_fields)))
 
-    path.write_text(text, encoding="utf-8")
+    # newline="\n": read_text already normalized every line ending to "\n" on the way in: writing
+    # back with the platform default would re-derive CRLF on Windows, exactly the drift
+    # check_repositories's own `line_endings` check exists to catch — on the file this just wrote.
+    path.write_text(text, encoding="utf-8", newline="\n")
 
 
 def report_lint_toml_drift(cfg, layout, report) -> None:
