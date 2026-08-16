@@ -837,6 +837,57 @@ def parse_version(text: str):
     return tuple(int(part or 0) for part in match.groups()) if match else None
 
 
+def declared_template_keys(text: str) -> set:
+    """The `section.key` pairs the reference `lint.toml` declares, read as text rather than
+    parsed as TOML: the template still carries unsubstituted `{{PLACEHOLDER}}` values — invalid
+    TOML on its own — until `workshop-setup.py` fills them in.
+
+    `[sizes]` is excluded on purpose: its keys are the workshop's own tracked filenames, not a
+    fixed vocabulary the template dictates, so diffing them would flag every workshop whose
+    tracked files simply differ from the template's."""
+    section = None
+    keys = set()
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        heading = re.match(r"^\[(\w+)\]$", stripped)
+        if heading:
+            section = heading.group(1)
+            continue
+        entry = re.match(r"^([\w.-]+)\s*=", stripped)
+        if entry and section and section != "sizes":
+            keys.add("%s.%s" % (section, entry.group(1)))
+    return keys
+
+
+def declared_config_keys(cfg: dict) -> set:
+    """The same `section.key` pairs, read from an already-parsed `lint.toml` — real TOML, so no
+    text scanning needed. `[sizes]` excluded for the same reason as `declared_template_keys`."""
+    keys = set()
+    for section, body in cfg.items():
+        if section == "sizes" or not isinstance(body, dict):
+            continue
+        for key in body:
+            keys.add("%s.%s" % (section, key))
+    return keys
+
+
+def report_lint_toml_drift(cfg, layout, report) -> None:
+    """Whether copying the new `method/` over this workshop's is enough for `lint.toml` too, not
+    only for the prose: a minor can add a structural key — `handoff_session_heading` did, in the
+    version this check was written for — that an already-framed workshop never receives on its
+    own, since nothing re-runs the installer against it. Lists what the reference template
+    (`templates/workshop/_workspace/lint.toml`) declares and this framing's `lint.toml` does not,
+    so the WARN above says what an intelligent update adds, not only that one is due."""
+    template = layout.method / "templates" / "workshop" / "_workspace" / "lint.toml"
+    if not template.is_file():
+        return
+    missing = sorted(declared_template_keys(read_text(template)) - declared_config_keys(cfg))
+    if missing:
+        report.detail("lint.toml: missing %s — present in the reference template, absent here" % ", ".join(missing))
+
+
 def check_method_version(cfg, layout, report) -> None:
     """`setup/CONTRACT.md` promises exactly this: the installer stamps the method's version into
     every workshop it creates, so a later lint can tell a framing that is merely **old** from one
@@ -855,7 +906,12 @@ def check_method_version(cfg, layout, report) -> None:
     ⚠ The stamp records what the owner has **reconciled to**, not an archaeological fact. Taking a
     new version means doing whatever its changelog entry asks and then moving this number: without
     that, the warning can never be cleared, and an uncleaable warning is the one that gets silenced
-    rather than discussed."""
+    rather than discussed.
+
+    ⚠ A stale stamp also drives `report_lint_toml_drift`: a WARN naming a version gap is a fact
+    the owner still has to turn into an action by hand, re-reading the changelog to find what
+    moved. Attaching the missing `lint.toml` keys to it is what makes the update mechanical for
+    the part that can be — the changelog still carries whatever else a given version asks for."""
     if not layout.method:
         return
     path = layout.method / "VERSION"
@@ -867,6 +923,7 @@ def check_method_version(cfg, layout, report) -> None:
 
     if not stamped:
         report("WARN", "workshop.method_version: not declared — the method is at %s, and nothing says what this framing was set up under" % current)
+        report_lint_toml_drift(cfg, layout, report)
         return
 
     framed, held = parse_version(stamped), parse_version(current)
@@ -878,8 +935,10 @@ def check_method_version(cfg, layout, report) -> None:
         report("WARN", "method version: framed under %s, the corpus holds %s — this framing is ahead of the method it reads" % (stamped, current))
     elif framed[0] != held[0]:
         report("WARN", "method version: framed under %s, the method is at %s — a major apart, so copying is not enough; the changelog entry says what changes by hand" % (stamped, current))
+        report_lint_toml_drift(cfg, layout, report)
     else:
         report("WARN", "method version: framed under %s, the method is at %s — copying the new method/ over yours is enough, then move this number" % (stamped, current))
+        report_lint_toml_drift(cfg, layout, report)
 
 
 # The one location this corpus hardcodes, and the only one it can. Everything else cites by

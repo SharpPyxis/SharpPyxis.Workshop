@@ -218,6 +218,14 @@ silenced rather than discussed.
 ⚠ **WARN throughout, never FAIL.** Reading an older method breaks no rule; when to update is the
 owner's call, and a FAIL would block the close of a session that has nothing to do with it.
 
+⚠ **A stale stamp also compares `lint.toml` against the reference template, key for key** —
+`[sizes]` excepted, since those keys are the workshop's own filenames rather than a fixed
+vocabulary. A minor can add a structural key the same way it adds a rule (`handoff_session_heading`
+did), and nothing re-runs the installer against a workshop already framed: copying the new
+`method/` over does not by itself carry a new key into an existing `lint.toml`. Listing what the
+template declares and this framing's `lint.toml` does not turns *an update is due* into *these keys
+are missing* — the part of the reconciliation that does not need the changelog to be found.
+
 **The mailbox — every address resolves to a workshop.** One file per target workshop, named
 exactly as that workshop's folder. Anything else in the folder is not an address.
 
