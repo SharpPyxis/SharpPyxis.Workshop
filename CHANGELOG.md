@@ -7,6 +7,30 @@ This file ships inside the archive, which is the point: a copy has no git histor
 
 ---
 
+## 0.7.0 — a stale-version WARN that only said an update was due, now writes what it can
+
+**Updating from `0.6.0`**: copy the new `method/` over yours. If `workshop-lint.py` warns your
+`method_version` stamp is behind, run it with `--fix` afterward — it writes whatever `lint.toml`
+keys the reference template declares and your framing lacks, then move the stamp by hand.
+
+⚠ **Found on real workshops, not from re-reading the rules — including the one `0.6.0` itself
+shipped.** Five downstream workshops had copied `method/` exactly as that entry asked and still
+lacked `handoff_session_heading`: the key lives in `lint.toml`, which `method/` never touches, so
+nothing carried it there on its own.
+
+### Added
+
+- **`workshop-lint.py` — a stale `method_version` now names the missing `lint.toml` keys, and
+  `--fix` can write them.** `report_lint_toml_drift` compares the framing's `lint.toml` against
+  `templates/workshop/_workspace/lint.toml`, key for key — `[sizes]` excepted, since those keys
+  are the workshop's own tracked filenames rather than a fixed vocabulary — and lists what is
+  missing whenever the version stamp is behind or undeclared. `--fix` writes the ones it safely
+  can: additive only (never a key already present), bare (no template commentary carried over, so
+  a workshop's own language is never overwritten with English prose), and never a field whose
+  template value is an unresolved `{{PLACEHOLDER}}` — `name`, `repositories`, `instance_files`
+  carry workshop-specific data only `workshop-setup.py` has a right to choose. Same shape as
+  `propagate-copy.py --apply`: reports by default, writes only on the flag.
+
 ## 0.6.0 — a session count a check assumed instead of declared
 
 **Updating from `0.5.0`**: copy the new `method/` over yours. Nothing in an instance has to change.
