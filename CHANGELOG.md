@@ -7,6 +7,24 @@ This file ships inside the archive, which is the point: a copy has no git histor
 
 ---
 
+## 0.6.0 — a session count a check assumed instead of declared
+
+**Updating from `0.5.0`**: copy the new `method/` over yours. Nothing in an instance has to change.
+
+⚠ **The defect came from a mechanism failing against itself, on a real workshop's framing** — the
+same provenance this changelog has recorded before, not from re-reading the rules.
+
+### Added
+
+- **`workshop-lint.py` — the handoff heading is workshop-declared, not assumed.** `check_handoff`
+  matched entries on a literal `^## Session` regex (the space after it included), with no key in
+  `lint.toml` — unlike `[todo] statuses` and `item_prefixes`, which a workshop can already translate.
+  A framing whose title form diverged was silently counted as **zero sessions** instead of failing:
+  a green that meant nothing. Measured on a real workshop whose entries did not match the hard-coded
+  pattern. `handoff_session_heading` now carries the recognized prefix, declared in the template and
+  read by the check; `CONTRACT.md` documents the full form, including the numbering for a second
+  session on the same day.
+
 ## 0.5.0 — a memory that answers before the question is asked
 
 **Updating from `0.4.0`**: copy the new `method/` over yours. Nothing in an instance has to change.
