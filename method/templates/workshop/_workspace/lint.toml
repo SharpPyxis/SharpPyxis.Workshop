@@ -23,6 +23,14 @@ dated_files = ["atlas.md", "todo.md"]
 # The handoff carries a few sessions of volatile context, never a journal: the atlas holds the
 # consolidated state, the todo the open, and the git log the factual record.
 handoff_sessions = 5
+# The literal heading the lint matches at the start of a line to count one entry. `tracking.md`
+# § `memories/handoff.md` requires one entry per session, and requires several sessions on the
+# same day to be numbered rather than spread over consecutive ones: "## Session <date>", and
+# "## Session <date> (2)" for a second session that day. Only the fixed prefix below is matched —
+# the date and the optional "(N)" are free text and need no key of their own. A workshop whose
+# title form diverges (language, wording, punctuation) declares its own value here rather than
+# being silently read as zero sessions.
+handoff_session_heading = "## Session "
 
 [sizes]
 # In CHARACTERS, never in lines: a consolidation pass was measured removing 15 % of a file's

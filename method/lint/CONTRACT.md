@@ -58,7 +58,14 @@ intent produces `WARN`, never `FAIL`.
 ## The socle — every workshop, no exception
 
 **Handoff — bounded number of sessions.** The volatile file is re-read at every start; one that
-grows without bound damages exactly what it exists to help.
+grows without bound damages exactly what it exists to help. Counting a session means recognizing
+its entry heading, and that heading is **workshop-declared, never assumed**: a cadrage whose
+title form diverges from the reference implementation's default must still be caught, not read as
+empty. `tracking.md` § `memories/handoff.md` requires one entry per session and requires several
+sessions on the same day to be numbered rather than spread over consecutive ones — the form
+`## Session <date>`, and `## Session <date> (2)` for a second session that day — but only the
+fixed part before the date is what a check matches on; the date and the optional `(N)` are free
+text.
 
 **Todo — nothing finished left in place.** A closed item leaves: notable ones become a line in
 the atlas, minor ones disappear. A todo crowded with closed items loses its steering value.

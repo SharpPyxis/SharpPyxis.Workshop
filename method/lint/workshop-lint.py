@@ -211,7 +211,8 @@ def check_handoff(cfg, layout, report) -> None:
     if not path.is_file():
         report("FAIL", "%s: missing — the volatile tense has no file" % relative)
         return
-    sessions = len(re.findall(r"^## Session ", read_text(path), re.M))
+    heading = section.get("handoff_session_heading", "## Session ")
+    sessions = len(re.findall(r"^%s" % re.escape(heading), read_text(path), re.M))
     if sessions <= maximum:
         report("OK", "%s: %d session(s), max %d" % (relative, sessions, maximum))
     else:
