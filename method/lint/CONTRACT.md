@@ -78,6 +78,29 @@ text and rewards a wall. Characters are deterministic, need no dependency, and t
 roughly 3.5:1 — closer to 3 on passages dense in identifiers, which is why words are worse
 still: they undercount precisely the passages that cost the most.
 
+**Growth without pruning — a report, never a verdict.** A framing document that has only ever
+grown has never been pruned, and that is measurable where the drift behind it is not. Measure it
+over a declared window of the recent commits that touched the file: **per piece of work for the
+todo**, keyed on the `[TAG]`, which this method already defines as a stable key reused by commit
+messages and delivered narratives; **per file for the atlas**, whose headings are prose and are
+renamed often enough that a per-section history would reset on the very sections that were just
+reworked.
+
+Two guards, and both are what keep it usable: report only above a declared floor, so a young piece
+of work stays quiet until it has something to prune; and report a **WARN**, never a FAIL. False
+positives are expected — a subject can legitimately grow for months — so the output is a report
+someone reads, which is the model this contract uses wherever judgment cannot be mechanised.
+
+⚠ **What it stands in for.** `tracking.md` § *Closing a session*, step 3, asks the session to name
+what it renders false before writing. That is a rule, it fires when attention is lowest, and it
+loses against the concrete case like every rule read early. The semantic half of the drift — a new
+line that contradicts an old one — cannot be detected by a machine at all. **A file that only grows
+can.** This check is that half, and claiming more for it would be dishonest: it says a document was
+never pruned, never that it is wrong.
+
+⚠ **No stored state.** The history is in the repository; a check that kept its own measurements
+between runs would be a second source of truth for something git already holds exactly.
+
 **Bootstrap load — the sum.** The per-file thresholds are a distribution guard-rail; the number
 that actually constrains a session is the **total** re-read at every start, before a line of
 code is opened: the method's map, the instance index and the identity file it declares, and the
@@ -105,6 +128,19 @@ documents.
 drawn from a **closed vocabulary**. Tags are unique. Item prefixes come from the declared set,
 and the prefixes reserved for other tenses are refused outright — an item marked done inside the
 todo is an item nobody moved to the atlas or to the delivered narrative.
+
+⚠ **The declared set is a whitelist, and the reserved list does not stand in for it.** An
+implementation that only hunts the reserved prefixes passes anything nobody thought to reserve,
+while its own success line names the declared set — asserting what it never looked at. Measured:
+a sixth prefix in use thirty-nine times across a workshop, reported green as *prefixes within the
+vocabulary*. Refusing an undeclared sign is also what fixes its **code point**: a prefix nobody
+declared has no identity, and one of two look-alikes (U+29D7 against U+23F3) silently defeated a
+rewriting script, which dropped the items carrying the other. The two failures are the same
+omission seen twice.
+
+⚠ **A workshop that reserves nothing still gets a line.** Returning in silence when the reserved
+list is empty cannot be told apart from a check that did not run — the same argument as the
+long-form folder above, and the reason the declared set has to be what drives the check.
 
 **Delivered narratives — named by tag, and cited without dangling.** One file per `[TAG]`, named
 after it. Every reference to such a file must resolve, **from anywhere in the framing** — the

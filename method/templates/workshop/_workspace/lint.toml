@@ -72,7 +72,14 @@ statuses = ["active", "on hold", "blocked"]
 item_prefixes = ["⬜", "⚠", "❓", "💡"]
 # ✅ is a transition, not a resting state: an item left checked in the todo is one nobody moved
 # to the atlas or to the delivered narrative.
-forbidden_prefixes = ["✅"]
+#
+# ⚠ `item_prefixes` above is the whitelist and it is what the check enforces; this list only
+# lets an undeclared sign be REFUSED BY NAME, which is worth doing for one that has been seen in
+# use — the message can then say what to use instead, and the sign gets a fixed code point. ⧗
+# (U+29D7, "noted, not yet triaged") is refused because it means "I have not chosen": of thirty-nine
+# uses measured in one workshop, seven of the nine in its todo fell on a prefix already declared.
+# `tracking.md` § *Grammar* carries the reasoning, and the clause added to ❓ covers what remained.
+forbidden_prefixes = ["✅", "⧗"]
 
 [references]
 # ⚠ Narrow on purpose, and empty until this workshop has locations worth checking. Declare only
@@ -88,3 +95,26 @@ line_ending_files = [".gitattributes", ".editorconfig"]
 # method unreadable, in silence — and a name whose case differs from disk loads nothing at all
 # on a case-sensitive file system while working perfectly on the author's machine.
 editor_workspaces = true
+
+# A framing document that has only ever grown has never been pruned. The check reports it; it
+# never fails on it, because a subject can legitimately grow for months. `method/lint/CONTRACT.md`
+# § *Growth without pruning* carries what it does and does not claim.
+#
+# ⚠ These are the METHOD'S defaults, like [sizes] above, and the check is armed without them:
+# a guard-rail waiting on a gesture nobody makes is not a guard-rail.
+# ⚠ Flat keys inside [checks], not a [checks.growth] table: the drift report that tells a stale
+# workshop which keys an update adds reads one level down, so a nested table would report keys a
+# complete configuration already holds. The limitation is the report's, not TOML's.
+#
+# How many of the recent commits touching a file are sampled. Twenty spans months of ordinary
+# framing work, which is the scale a pruning pass happens on — a shorter window reports every
+# subject that simply had an active fortnight.
+growth_window = 20
+# Below this many characters a piece of work stays quiet: it has nothing to prune yet, and a
+# report that names young subjects is one nobody finishes reading. Set against [sizes]"todo.md"
+# divided by the number of subjects a todo of that size holds.
+growth_floor = 4000
+# Measured per file rather than per section. The todo's own files are measured per piece of work,
+# keyed on the [TAG] the method already defines as stable; an atlas heading is prose, renamed
+# often enough that a per-section history would reset on exactly the sections just reworked.
+growth_whole_file = ["atlas.md"]

@@ -49,6 +49,7 @@ import os
 import re
 import subprocess
 import tomllib
+import unicodedata
 from datetime import date, datetime
 from pathlib import Path
 
@@ -254,6 +255,130 @@ def check_sizes(cfg, layout, report) -> None:
             )
 
 
+def git_blobs(repository: Path, path: str, window: int) -> list:
+    """The last `window` revisions of one file, oldest first, as decoded text.
+
+    Two subprocess calls whatever the window: `git log` for the revisions, then a single
+    `git cat-file --batch` fed every `<rev>:<path>` at once. Reading them one `git show` at a
+    time costs one process per revision, which is what makes a history check the slowest thing
+    in a lint that is otherwise instant.
+
+    ⚠ The batch output interleaves a text header with raw bytes, and the header's size is in
+    BYTES while the caller measures CHARACTERS. Slicing has to happen on the bytes, before the
+    decode — slicing the decoded string works on ASCII and silently truncates the moment a
+    framing document holds an accent or an item marker, which every one of them does."""
+    done = git(repository, "log", "--format=%H", "-n", str(window), "--", path)
+    if done is None or done.returncode != 0 or not done.stdout.strip():
+        return []
+    revisions = list(reversed(done.stdout.split()))
+
+    query = "".join("%s:%s\n" % (rev, path) for rev in revisions)
+    try:
+        batch = subprocess.run(
+            ["git", "cat-file", "--batch"],
+            cwd=str(repository),
+            input=query.encode("utf-8"),
+            capture_output=True,
+        )
+    except FileNotFoundError:
+        return []
+    if batch.returncode != 0:
+        return []
+
+    blobs, data, offset = [], batch.stdout, 0
+    while offset < len(data):
+        end = data.find(b"\n", offset)
+        if end == -1:
+            break
+        header = data[offset:end].split()
+        if len(header) < 3:
+            offset = end + 1
+            continue
+        size = int(header[2])
+        body = data[end + 1 : end + 1 + size]
+        blobs.append(body.decode("utf-8", errors="replace"))
+        offset = end + 1 + size + 1
+    return blobs
+
+
+def todo_section_sizes(text: str) -> dict:
+    """Characters per piece of work, keyed on the `[TAG]` — which this method defines as a stable
+    key reused by commit messages and delivered narratives, and which is therefore the only section
+    name in a framing folder that survives being rewritten."""
+    sizes, tag = {}, None
+    for line in text.splitlines(keepends=True):
+        heading = re.match(r"^## \[([A-Z0-9-]+)\]", line)
+        if heading:
+            tag = heading.group(1)
+            sizes[tag] = 0
+        elif tag:
+            sizes[tag] += len(line)
+    return sizes
+
+
+def check_growth(cfg, layout, report) -> None:
+    """A framing document that has only ever grown has never been pruned.
+
+    ⚠ What this stands in for, and what it must not claim. `tracking.md` § *Closing a session*
+    step 3 asks the session to name what it renders false before writing — a rule, fired when
+    attention is lowest, which loses against the concrete case like every rule read early. The
+    semantic half of that drift (a new line contradicting an old one) cannot be detected by a
+    machine at all. A file that only grows can. So this reports that a document was never pruned,
+    never that it is wrong — hence WARN, never FAIL."""
+    section = cfg.get("checks", {})
+    window = section.get("growth_window", 20)
+    floor = section.get("growth_floor", 4000)
+    whole = section.get("growth_whole_file", ["atlas.md"])
+    sampled, flagged = 0, 0
+
+    def never_shrank(series: list) -> bool:
+        return all(b >= a for a, b in zip(series, series[1:]))
+
+    for name in whole:
+        path = layout.framing / name
+        if not path.is_file():
+            continue
+        history = git_blobs(layout.framing, name, window)
+        if len(history) < 3:
+            report("OK", "%s: %d revision(s) sampled — too little history to judge pruning" % (name, len(history)))
+            continue
+        sampled += 1
+        series = [len(blob) for blob in history] + [len(read_text(path))]
+        if series[-1] >= floor and never_shrank(series):
+            flagged += 1
+            report(
+                "WARN",
+                "%s: %d characters and never shorter across %d commits — grown without ever being pruned"
+                % (name, series[-1], len(history)),
+            )
+
+    for name in todo_names(cfg):
+        path = layout.framing / name
+        if not path.is_file():
+            continue
+        history = git_blobs(layout.framing, name, window)
+        if len(history) < 3:
+            report("OK", "%s: %d revision(s) sampled — too little history to judge pruning" % (name, len(history)))
+            continue
+        past = [todo_section_sizes(blob) for blob in history]
+        current = todo_section_sizes(read_text(path))
+        for tag, size in sorted(current.items()):
+            sampled += 1
+            series = [snapshot[tag] for snapshot in past if tag in snapshot] + [size]
+            if len(series) < 3 or size < floor:
+                continue
+            if never_shrank(series):
+                flagged += 1
+                report(
+                    "WARN",
+                    "%s [%s]: %d characters and never shorter across %d commits — grown without ever being pruned"
+                    % (name, tag, size, len(series) - 1),
+                )
+
+    if sampled and not flagged:
+        report("OK", "growth: %d subject(s) sampled, each pruned at least once" % sampled)
+
+
 def check_bootstrap_load(cfg, layout, report) -> None:
     """The sum re-read at every start. The per-file thresholds guard its distribution; this
     guards the budget itself."""
@@ -402,23 +527,55 @@ def check_todo_grammar(cfg, layout, report) -> dict:
     return tags
 
 
+MARKER_CATEGORIES = ("So", "Sm")
+"""What counts as an item marker rather than as prose.
+
+A bullet may legitimately open on a word, on `**bold**`, on a backtick or on a quotation mark, so
+requiring a declared prefix on every bullet would fail on ordinary lists — the same flood of false
+failures an early citation check produced by resolving every token that looked like a path. What
+separates a marker is its Unicode category: `So` (symbol, other) covers the emoji and the geometric
+signs, `Sm` (symbol, math) the rest. `Sk` is deliberately absent: the backtick lives there.
+
+⚠ **`Sm` is not optional, and leaving it out is the plausible mistake.** ⧗ — the sign that made
+this check be rewritten — is U+29D7 BLACK HOURGLASS, category **Sm**. Its look-alike ⏳ is `So`.
+An implementation reading "a marker is an emoji" would therefore have been green on precisely the
+prefix it was written to catch, which is the failure this check already had once."""
+
+
 def check_item_prefixes(cfg, layout, report) -> None:
-    """A prefix reserved for another tense inside the todo is an item nobody moved."""
+    """The declared set is a WHITELIST; an undeclared marker fails whether or not anyone reserved it.
+
+    ⚠ The earlier implementation only hunted `forbidden_prefixes`, so anything nobody had thought
+    to reserve passed — while the success line named `item_prefixes`, asserting what it had never
+    looked at. Measured: a sixth prefix in use thirty-nine times across a workshop, reported green.
+    `forbidden_prefixes` survives for one job only: naming a sign that has been seen in use, so the
+    failure can say what to use instead."""
     section = cfg.get("todo", {})
     allowed = section.get("item_prefixes", [])
     forbidden = section.get("forbidden_prefixes", [])
-    if not forbidden:
+    if not allowed:
+        report("WARN", "todo items: no item_prefixes declared — nothing to check the vocabulary against")
         return
-    pattern = re.compile(r"^\s*-\s*(%s)" % "|".join(re.escape(p) for p in forbidden))
+
+    bullet = re.compile(r"^\s*[-*]\s+(\S)")
     bad = 0
     for name in todo_names(cfg):
         for index, line in enumerate(read_lines(layout.framing / name)):
-            match = pattern.match(line)
-            if match:
-                report("FAIL", "%s l.%d: prefix « %s » forbidden (vocabulary: %s — what is done leaves the todo)" % (name, index + 1, match.group(1), " ".join(allowed)))
-                bad += 1
+            match = bullet.match(line)
+            if not match:
+                continue
+            marker = match.group(1)
+            if marker in allowed or unicodedata.category(marker) not in MARKER_CATEGORIES:
+                continue
+            reason = "reserved" if marker in forbidden else "undeclared"
+            report(
+                "FAIL",
+                "%s l.%d: prefix « %s » (U+%04X) %s — the vocabulary is %s"
+                % (name, index + 1, marker, ord(marker), reason, " ".join(allowed)),
+            )
+            bad += 1
     if bad == 0:
-        report("OK", "todo items: prefixes within the vocabulary (%s)" % " ".join(allowed))
+        report("OK", "todo items: every marker within the declared vocabulary (%s)" % " ".join(allowed))
 
 
 def check_roadmap(cfg, layout, report, tags) -> None:
@@ -901,12 +1058,24 @@ def fixable_lint_toml_fields(cfg, layout) -> list:
 
 
 def apply_lint_toml_fix(fields: list, path: Path, report) -> None:
-    """Additive only: inserts each field at the end of its `[section]` block, bare — never
-    rewrites a key already present, since `fields` never contains one (`fixable_lint_toml_fields`
-    only names what is missing). A blank line follows the insertion when another `[section]`
-    comes after, matching the template's own spacing rather than fusing the new line onto the
-    next heading. Writes once, after every section is placed, so a `[section]` this cannot find
-    leaves the file untouched rather than half written."""
+    """Additive only: inserts each field after the last **declaration** of its `[section]`,
+    bare — never rewrites a key already present, since `fields` never contains one
+    (`fixable_lint_toml_fields` only names what is missing). Writes once, after every section is
+    placed, so a `[section]` this cannot find leaves the file untouched rather than half written.
+
+    ⚠ **After the last declaration, not at the end of the block.** In this corpus a comment sits
+    above the key it documents, so the comment run closing a section belongs to whatever comes
+    next. Appending past it files the new key under someone else's explanation — legible, plausible
+    and wrong, which is the failure mode this method spends most of its rules on.
+
+    ⚠ **The end of a `[section]` is the next table header of ANY shape, dotted ones included.**
+    Matching only `[word]` walks straight past a sub-table — `[checks.publication_files]` here — and
+    lands the new key inside it, where it belongs to the wrong table. That is not a cosmetic
+    misplacement: the sub-table's own check then reads a key it never expected and the lint stops on
+    a type error, so `--fix` would hand back a configuration that cannot be loaded. Measured on
+    2026-09-04, adding a `[checks]` key to the one framing whose `[checks]` is followed by a
+    sub-table — the case had simply never come up, every earlier missing key belonging to a section
+    with nothing nested under it."""
     if not fields:
         return
     text = read_text(path)
@@ -920,11 +1089,13 @@ def apply_lint_toml_fix(fields: list, path: Path, report) -> None:
             report("WARN", "lint.toml: [%s] absent — cannot place %s automatically"
                    % (section, ", ".join(f["key"] for f in section_fields)))
             continue
-        next_heading = re.search(r"^\[\w+\]\s*$", text[heading.end():], re.M)
-        insert_at = heading.end() + (next_heading.start() if next_heading else len(text) - heading.end())
-        block = "".join("%s = %s\n" % (f["key"], f["value"]) for f in section_fields)
-        if next_heading:
-            block += "\n"
+        next_heading = re.search(r"^\[[^\]]+\]\s*$", text[heading.end():], re.M)
+        end = heading.end() + (next_heading.start() if next_heading else len(text) - heading.end())
+        region = text[heading.end():end].split("\n")
+        while region and (region[-1].startswith("#") or not region[-1].strip()):
+            region.pop()
+        insert_at = heading.end() + len("\n".join(region))
+        block = "".join("\n%s = %s" % (f["key"], f["value"]) for f in section_fields)
         text = text[:insert_at] + block + text[insert_at:]
         report.detail("lint.toml: added [%s] %s" % (section, ", ".join(f["key"] for f in section_fields)))
 
@@ -1341,6 +1512,7 @@ def main(argv) -> int:
     check_handoff(config, layout, report)
     check_todo_closed(config, layout, report)
     check_sizes(config, layout, report)
+    check_growth(config, layout, report)
     check_bootstrap_load(config, layout, report)
     check_planning(config, layout, report)
     check_root_files(config, layout, report)

@@ -69,12 +69,26 @@ is active, on hold, or blocked, and by what.
 | --- | --- |
 | ⬜ | To do |
 | ⚠ | A guard-rail, or a fact that must be read before acting |
-| ❓ | An open decision, deliberately not guessed |
+| ❓ | An open decision, deliberately not guessed — including *whether this becomes work at all* |
 | 💡 | An idea, not committed to |
 | ✅ | Done — and therefore on its way out of this file |
 
 ⚠ ✅ is a transition, not a resting state. An item that stays checked in the todo is an item
 nobody moved to the atlas or the delivered narrative.
+
+⚠ **The vocabulary is closed, and that is what it is for.** A sixth prefix meaning *noted, not yet
+triaged* was found in use in a workshop, thirty-nine times. Measured against the four above, its uses
+**scattered**: of the nine in the todo, four were open decisions, two were guard-rails, one was work
+with its carrier already named, and two were observed defects nobody had costed. A vocabulary missing
+a value produces uses that **cluster** on the value; writing that never re-opens the table produces
+uses that scatter — and one of those nine sat on wording the table carried word for word. Choosing
+among four is a confrontation; inventing a fifth sign is an insertion, which is the cheaper of the
+two under a degraded memory of the table.
+
+⚠ **Refusing the sign closes the visible way out, not the drift behind it.** Denied a prefix of its
+own, the same session files the item under a declared but wrong one — a ⬜ that is not work, a ⚠ that
+is finished work — and no check can see that. What the refusal buys is that the lint stops reporting
+a vocabulary it never verified; the drift itself is § *Closing a session*, step 3.
 
 ## `done/` — what is finished
 
@@ -363,14 +377,32 @@ In order:
 2. **Write the session's handoff entry** — volatile only: what was done in brief with
    pointers, what is in progress, blocked, or next. Reference the commits; do not paraphrase
    them. Then prune the handoff per the workshop's rule.
-3. **Update the atlas** if notable work closed; refresh the header dates of the files
-   touched.
+3. **Name what this session makes false**, then update the atlas if notable work closed and
+   refresh the header dates of the files touched. Before a line goes into the atlas or the todo,
+   say which **existing** lines this session renders wrong, superseded, or redundant. *None* is a
+   valid answer; it is not a valid silence.
 4. **Run the workshop's lint**; fix every FAIL before committing.
 5. **Commit each repository touched**, then list what is left to push.
 
 ⚠ If a workshop's atlas defines a more precise closing checklist, **it prevails** — it adds
 the local specifics: tooling, sites, scripts. What belongs there is what is genuinely due *at the
 close*; anything due earlier is declared under § *Gestures a workshop declares*.
+
+⚠ **Step 3 asks for an artifact because vigilance was already tried.** "Update the atlas" is an
+**insertion**, and an insertion is achievable without confronting anything: the atlas was read at
+start-up, far back in the context and outweighed by every hour of work since, so what the session
+holds of it is a degraded memory rather than a view. Lines then get added that are each correct on
+their own and jointly redundant — sometimes contradictory — with what is already there. Measured: a
+framing folder re-read in full turned up redundancies and contradictions **spread evenly** across it,
+and the session that had written them found each one at once when asked to *examine* instead of to
+*write*. Naming the lines changes which task is being performed, and it cannot be produced without
+reading. Adding "re-read before writing" would not: that is a vigilance instruction, and this method
+says everywhere what a vigilance instruction is worth against the concrete case.
+
+⚠ **It is a better rule, not a mechanism**, and it fires at exactly the moment § *Gestures a
+workshop declares* warns about — work finished, attention low. The half that depends on nobody
+remembering is the lint's: a framing file, or a piece of work inside it, that only ever grows.
+`lint/CONTRACT.md` carries what that check measures.
 
 ### ⚠ Record what left no trace
 
