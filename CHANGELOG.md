@@ -7,6 +7,67 @@ This file ships inside the archive, which is the point: a copy has no git histor
 
 ---
 
+## 0.8.0 — a vocabulary check that never checked the vocabulary, and the close that lets a document only grow
+
+**Updating from `0.7.0`**: copy the new `method/` over yours. Two things may then turn red that
+were green before, and both are the checks finally doing what they always claimed. If your todo
+uses an item marker outside `[todo] item_prefixes`, the lint now **fails** on it — either declare
+it or move those items onto a declared prefix; ❓ has been widened to cover *whether something
+becomes work at all*, which is what most undeclared markers turn out to mean. And a framing
+document that has never been pruned now draws a **WARN**, never a FAIL. Running with `--fix` adds
+the three new `lint.toml` keys, all of which have defaults, so the check is armed either way.
+
+⚠ **Both defects were found by using the tools, not by re-reading the rules** — one of them in
+`--fix`, shipped by `0.7.0` itself.
+
+### Added
+
+- **`tracking.md` § *Grammar* — the item vocabulary is stated to be closed, and ❓ says so.**
+  ❓ now reads *an open decision, deliberately not guessed — including whether this becomes work at
+  all*. A sixth prefix meaning *noted, not yet triaged* was measured in use thirty-nine times in one
+  workshop; of the nine in its todo, seven fell on a prefix already declared, spread over three of
+  the four values. A vocabulary missing a value produces uses that cluster on it; writing that never
+  re-opens the table produces uses that scatter. The section also records what refusing a sign does
+  **not** buy: the same session then files the item under a declared but wrong prefix, which no
+  check can see.
+- **`lint/CONTRACT.md` § *Growth without pruning*, and `check_growth` implementing it.** A framing
+  document that has only ever grown has never been pruned — measurable where the drift behind it is
+  not. Per piece of work for the todo, keyed on the `[TAG]` this method already defines as stable;
+  per file for the atlas, whose headings are prose and get renamed. WARN only, above a declared
+  floor, over a declared window of recent commits. No stored state: the history is in the
+  repository. New `[checks]` keys `growth_window`, `growth_floor`, `growth_whole_file`, all with
+  defaults.
+
+### Changed
+
+- **`tracking.md` § *Closing a session*, step 3 — name what this session makes false, before
+  writing.** "Update the atlas" is an **insertion**, achievable without confronting anything: the
+  atlas was read at start-up, far back in the context and outweighed by every hour of work since.
+  Lines then get added that are each correct on their own and jointly redundant, or contradictory,
+  with what is already there. Measured on a framing folder re-read in full — and the session that
+  had written them found each one at once when asked to *examine* instead of to *write*. The step
+  now asks for an artifact: *none* is a valid answer, not a valid silence. ⚠ The entry states
+  plainly that this is a better rule, not a mechanism; `check_growth` is the half that depends on
+  nobody remembering.
+- **`lint/CONTRACT.md` § *Todo grammar* — the declared set is a whitelist, and the reserved list
+  does not stand in for it.** `check_item_prefixes` only hunted `forbidden_prefixes`, so anything
+  nobody had thought to reserve passed while the success line named `item_prefixes` — asserting what
+  it had never looked at. A marker is now recognised by its Unicode category, `So` **and** `Sm`.
+  ⚠ `Sm` is not optional: the sign that prompted the rewrite is U+29D7, category `Sm`, and its
+  look-alike U+23F3 is `So` — an implementation reading "a marker is an emoji" would have been green
+  on exactly the prefix it was written to catch.
+
+### Fixed
+
+- **`--fix` could write a `lint.toml` the lint can no longer load.** It located the end of a
+  `[section]` with `^\[\w+\]`, which does not match a dotted table header such as
+  `[checks.publication_files]` — so the new key was inserted past the sub-table and became one of
+  its own. That table's check then read an integer where it expects a list and the run stopped on a
+  type error. Any table header now ends a section.
+- **`--fix` filed a new key under the comment block of the next table.** In this corpus a comment
+  sits above the key it documents, so a comment run closing a section belongs to what comes next.
+  Insertion now happens after the last **declaration** of the section.
+
 ## 0.7.0 — a stale-version WARN that only said an update was due, now writes what it can
 
 **Updating from `0.6.0`**: copy the new `method/` over yours. If `workshop-lint.py` warns your
