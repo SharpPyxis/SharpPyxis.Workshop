@@ -579,15 +579,20 @@ def check_item_prefixes(cfg, layout, report) -> None:
 
 
 def check_roadmap(cfg, layout, report, tags) -> None:
+    """⚠ A key declared and a heading found nowhere is a configuration that has drifted from its
+    todo — the roadmap removed, or renamed — and it is reported rather than skipped. Skipping it
+    made the check vanish from the report, which cannot be told apart from a check that passed."""
     heading = cfg.get("todo", {}).get("roadmap_heading")
     if not heading:
         return
     dormant = set(cfg.get("todo", {}).get("dormant_statuses", []))
+    found = False
     for name in todo_names(cfg):
         lines = read_lines(layout.framing / name)
         start = next((i for i, l in enumerate(lines) if re.match(heading, l)), None)
         if start is None:
             continue
+        found = True
         end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
         cited = sorted({m for line in lines[start:end] for m in re.findall(r"\[([A-Z0-9-]+)\]", line)})
         stale = [t for t in cited if t not in tags or tags[t]["status"] in dormant]
@@ -596,6 +601,12 @@ def check_roadmap(cfg, layout, report, tags) -> None:
                 report("WARN", "roadmap: [%s] closed or dormant — the snapshot is stale" % tag)
         else:
             report("OK", "roadmap: %d tag(s) cited, all still open" % len(cited))
+    if not found:
+        report(
+            "WARN",
+            "roadmap: heading « %s » declared but found in no todo — restore the roadmap or remove todo.roadmap_heading"
+            % heading,
+        )
 
 
 def check_delivered(cfg, layout, report) -> set:
@@ -1465,6 +1476,30 @@ def check_publication_files(cfg, layout, report) -> None:
             report("OK", "%s: publication files present" % repository)
 
 
+DECLARED_CHECKS = [
+    ("repository state", ("workshop", "repositories")),
+    ("editor workspace", ("checks", "editor_workspaces")),
+    ("publication files", ("checks", "publication_files")),
+    ("roadmap", ("todo", "roadmap_heading")),
+    ("echoed items", ("todo", "echo_prefixes")),
+    ("external tags", ("checks", "external_tags")),
+    ("status fields", ("todo", "required_fields")),
+]
+
+
+def report_declared_off(cfg, report) -> None:
+    """The checks a workshop declares for itself are off unless configured, and that stays so.
+
+    ⚠ What changes is that being off is said. Each of them returns at once when its key is
+    absent, so removing a key made the check disappear from the report — and a check that
+    returns in silence cannot be told apart from one that did not run, the same argument that
+    has the long-form folder reported when absent. One line for the whole family rather than
+    one per check: what it has to show is that a key went missing, not to grow the report."""
+    off = [label for label, (section, key) in DECLARED_CHECKS if not cfg.get(section, {}).get(key)]
+    if off:
+        report("OK", "declared checks off: %s" % ", ".join(off))
+
+
 # ============================================================================================
 # Entry point
 # ============================================================================================
@@ -1533,6 +1568,7 @@ def main(argv) -> int:
     check_repositories(config, layout, report)
     check_editor_workspaces(config, layout, report)
     check_publication_files(config, layout, report)
+    report_declared_off(config, report)
 
     print("")
     counts = report.counts

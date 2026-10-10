@@ -319,6 +319,13 @@ side.
 
 Off unless configured. Each exists because a real workshop needed it and another did not.
 
+⚠ **Off is reported, in one line for the whole family.** Each of these returns at once when its key
+is absent, so removing a key used to make the check vanish from the report — the silence the
+long-form folder is already reported against, and more common here, since a workshop that drops a
+roadmap it no longer needs is legitimate, not lagging. And where a key is declared but what it names
+is not found — a roadmap heading no todo carries — that is a configuration drifting from its framing,
+and it is a `WARN`, never a skip.
+
 **Repository state.** For every repository the workshop frames: the line-ending files present,
 no file drifted back to the other convention on disk, a tracking remote, and the count of
 commits not yet pushed. ⚠ A commit that is never pushed protects nothing.
