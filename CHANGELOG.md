@@ -7,6 +7,52 @@ This file ships inside the archive, which is the point: a copy has no git histor
 
 ---
 
+## 0.9.0 — checks that went quiet without saying so
+
+**Updating from `0.8.0`**: copy the new `method/` over yours. If you import `workshop-lint.py` as a
+module, also take the repository's root `.gitignore` from the archive. Running the lint with
+`--fix` adds the one new `lint.toml` key, `growth_min_cut`; it has a default, so the check is armed
+either way. Two new lines appear in every report — the declared checks that are off, and the meta
+level's line endings — and two WARNs may appear that were silent before, both the checks saying
+what they used to skip.
+
+⚠ **All four were found by using the lint on real workshops**, not by re-reading the contract —
+and the first is a defect the contract already condemned in its own words.
+
+### Added
+
+- **A declared check that is off says so.** The checks a workshop declares for itself stay off
+  unless configured, but each returned at once when its key was absent, so removing a key made the
+  check vanish from the report — the silence `lint/CONTRACT.md` already rejects for the long-form
+  folder. One `OK` line now names the ones that are off.
+- **The meta level's line endings are checked**, when it is a Git repository, under the existing
+  `line_endings` key. It belongs to no workshop, so no workshop declares it among its repositories
+  and nothing ever looked: five of its files were measured CRLF on disk for five weeks, git silent
+  throughout since it normalises at staging. A meta level that is not versioned says so in one line.
+  Its push state stays out on purpose — declaring it among a workshop's repositories would make one
+  workshop the owner of what belongs to none.
+- **The root `.gitignore` ignores `__pycache__/`.** Importing the lint as a module, to reuse its
+  measuring logic, makes Python write its cache beside the source. The header said *nothing is
+  ignored here*; what it meant, and now says, is that nothing **private** is. The entry takes effect
+  in every copy, which is where the folder was first seen.
+
+### Changed
+
+- **Pruning has a declared minimum: `growth_min_cut`, 200 characters by default.** Any decrease
+  used to count, and a thirteen-character trim of a section heading was measured silencing
+  `check_growth` with nothing pruned. The default sits just under the smallest item measured in a
+  real todo (229 characters, median 448). Absolute rather than relative: what pruning removes is an
+  item, and an item's size does not scale with its piece of work. The WARN now states the minimum
+  instead of claiming *never shorter*.
+- **`lint/CONTRACT.md` § *Growth without pruning* states the two limits that stay**: a renamed tag
+  restarts its series, and the sliding window lets in a subject nobody touched. Both make the
+  report noisy rather than wrong, and a reader tells them apart at a glance.
+
+### Fixed
+
+- **A roadmap heading declared but found in no todo was skipped in silence.** It is a
+  configuration drifting from its framing, and is now a WARN naming the key to restore or remove.
+
 ## 0.8.0 — a vocabulary check that never checked the vocabulary, and the close that lets a document only grow
 
 **Updating from `0.7.0`**: copy the new `method/` over yours. Two things may then turn red that
