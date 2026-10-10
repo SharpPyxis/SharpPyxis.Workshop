@@ -2,7 +2,8 @@
 # says WHY it is ignored — a readable .gitignore prevents case-by-case judgement, by
 # a human as much as by an agent.
 #
-# Nothing is ignored here, and that is deliberate on both counts.
+# Nothing private is ignored here, and that is deliberate on both counts. The one entry
+# below is a build artefact, which is a different category altogether.
 #
 # Nothing private is ignored, because nothing private is here. What is private lives in
 # a *copy* of this repository, downstream, on the machine that uses it — never in this
@@ -14,3 +15,11 @@
 # copy, where the folder is full — silently un-versioning the one corpus its owner
 # most wants kept. An ignore rule written against this tree would then decide, at a
 # distance, about a tree it has never seen.
+
+# Python's bytecode cache. This repository ships a Python script, and importing it as a
+# module — to reuse the lint's measuring logic rather than rewrite it — makes Python
+# write its cache beside the source. Nothing in it is worth versioning anywhere.
+# ⚠ This entry takes effect inside every copy too, which is where the folder was first
+# seen appearing. That is intended, and it is the exact reverse of the `instance/`
+# argument above: a cache holds nothing anyone wants kept, in this tree or in a copy.
+__pycache__/
