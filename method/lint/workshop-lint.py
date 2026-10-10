@@ -1329,6 +1329,18 @@ def git(repository: Path, *args):
     return done
 
 
+def report_crlf_drift(path: Path, label: str, report) -> None:
+    """Tracked files whose working copy is CRLF. Git normalises at staging, so `git status` and
+    `git diff` stay silent about it — the disk has to be read."""
+    done = git(path, "ls-files", "--eol")
+    if done and done.returncode == 0:
+        drifted = len([l for l in done.stdout.splitlines() if re.search(r"\sw/crlf\s", l)])
+        if drifted == 0:
+            report("OK", "%s: no file drifted to CRLF on disk" % label)
+        else:
+            report("WARN", "%s: %d file(s) CRLF on disk — an editor re-derived them" % (label, drifted))
+
+
 def check_repositories(cfg, layout, report) -> None:
     """Every repository the workshop frames. A commit that is never pushed protects nothing."""
     repositories = cfg.get("workshop", {}).get("repositories", [])
@@ -1353,13 +1365,7 @@ def check_repositories(cfg, layout, report) -> None:
                 report("OK", "%s: line-ending files present" % name)
 
         if cfg.get("checks", {}).get("line_endings"):
-            done = git(path, "ls-files", "--eol")
-            if done and done.returncode == 0:
-                drifted = len([l for l in done.stdout.splitlines() if re.search(r"\sw/crlf\s", l)])
-                if drifted == 0:
-                    report("OK", "%s: no file drifted to CRLF on disk" % name)
-                else:
-                    report("WARN", "%s: %d file(s) CRLF on disk — an editor re-derived them" % (name, drifted))
+            report_crlf_drift(path, name, report)
 
         done = git(path, "log", "--oneline", "@{u}..HEAD")
         if done is None:
@@ -1372,6 +1378,22 @@ def check_repositories(cfg, layout, report) -> None:
                 report("OK", "%s: nothing waiting to be pushed" % name)
             else:
                 report("WARN", "%s: %d commit(s) waiting to be pushed" % (name, pending))
+
+
+def check_meta_line_endings(cfg, layout, report) -> None:
+    """The meta level's line endings, which no workshop declares among its repositories.
+
+    ⚠ It belongs to no workshop, by design, so `check_repositories` never reached it — and it is
+    the one surface every session reads. Five of its files were measured CRLF on disk for five
+    weeks, with git silent throughout. It is checked here for line endings ONLY: its push state
+    is said aloud at the close rather than tooled, and declaring it among a workshop's
+    repositories was considered and refused for that reason. Do not extend this check to it."""
+    if not cfg.get("checks", {}).get("line_endings") or layout.meta is None:
+        return
+    if not (layout.meta / ".git").exists():
+        report("OK", "meta level: not a Git repository — line endings not checked")
+        return
+    report_crlf_drift(layout.meta, "meta level", report)
 
 
 def exists_exact_case(path: Path) -> bool:
@@ -1483,6 +1505,7 @@ def check_publication_files(cfg, layout, report) -> None:
 
 DECLARED_CHECKS = [
     ("repository state", ("workshop", "repositories")),
+    ("line endings", ("checks", "line_endings")),
     ("editor workspace", ("checks", "editor_workspaces")),
     ("publication files", ("checks", "publication_files")),
     ("roadmap", ("todo", "roadmap_heading")),
@@ -1571,6 +1594,7 @@ def main(argv) -> int:
         check_published_version(config, layout, report)
     check_mailbox(config, layout, report)
     check_repositories(config, layout, report)
+    check_meta_line_endings(config, layout, report)
     check_editor_workspaces(config, layout, report)
     check_publication_files(config, layout, report)
     report_declared_off(config, report)

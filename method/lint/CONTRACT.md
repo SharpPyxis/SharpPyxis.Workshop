@@ -351,6 +351,13 @@ and it is a `WARN`, never a skip.
 no file drifted back to the other convention on disk, a tracking remote, and the count of
 commits not yet pushed. ⚠ A commit that is never pushed protects nothing.
 
+⚠ **The meta level is checked too, for line endings only**, when it is a repository. It belongs to
+no workshop, so no workshop declares it, and it is the one surface every session reads: its files
+were measured CRLF on disk for five weeks, git silent throughout since it normalises at staging.
+Every workshop's run reports it, which is redundant and costs a line. Its push state stays out — an
+owner who versions the meta level knows where it goes, and declaring it among a workshop's
+repositories would make one workshop the owner of what belongs to none.
+
 **Editor workspace.** The folder list an agent is actually given must resolve, **in exact case**.
 ⚠ Both halves have failed in the field. Three folder paths were changed and the lint stayed
 green — a wrong path there breaks nothing visible, it only makes the method unreadable, in
