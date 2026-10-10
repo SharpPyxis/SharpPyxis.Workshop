@@ -91,6 +91,27 @@ of work stays quiet until it has something to prune; and report a **WARN**, neve
 positives are expected — a subject can legitimately grow for months — so the output is a report
 someone reads, which is the model this contract uses wherever judgment cannot be mechanised.
 
+⚠ **Pruning has a declared minimum.** A decrease counts only if it removes at least a declared
+number of characters, set just under the size of the smallest item. Any decrease used to count, and
+a thirteen-character trim of a section's heading was measured silencing the check with nothing
+pruned. The minimum is absolute rather than relative because what pruning removes is an item, and
+an item's size does not scale with the piece of work that carries it.
+
+⚠ **Two limits are known and kept, and both make the report noisy rather than wrong.** Measured on
+a real todo the day the check went into service:
+
+- **renaming a tag resets its series.** The check keys on the `[TAG]` because the method defines it
+  as stable — and it is, except on the day a scope turns out to be wrong. That day the history
+  starts again under the new name, and a subject is reported over the life of its name rather than
+  of its work. Following renames would need a declared old → new mapping; the retired-names list
+  carries free text, not a target tag;
+- **the window slides.** A subject nobody touched can enter the report because the commits that
+  carried its last pruning have aged out of the window. Widening the window moves the edge without
+  removing it.
+
+Neither is fixed mechanically, and that is consistent with what the check claims: a report someone
+reads tells these cases apart in a glance, which is cheaper than a rule that tries to.
+
 ⚠ **What it stands in for.** `tracking.md` § *Closing a session*, step 3, asks the session to name
 what it renders false before writing. That is a rule, it fires when attention is lowest, and it
 loses against the concrete case like every rule read early. The semantic half of the drift — a new

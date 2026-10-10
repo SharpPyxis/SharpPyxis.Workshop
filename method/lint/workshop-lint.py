@@ -329,10 +329,15 @@ def check_growth(cfg, layout, report) -> None:
     window = section.get("growth_window", 20)
     floor = section.get("growth_floor", 4000)
     whole = section.get("growth_whole_file", ["atlas.md"])
+    cut = section.get("growth_min_cut", 200)
     sampled, flagged = 0, 0
 
-    def never_shrank(series: list) -> bool:
-        return all(b >= a for a, b in zip(series, series[1:]))
+    def never_pruned(series: list) -> bool:
+        # ⚠ A step counts as pruning only if it removed at least `cut` characters. Any decrease
+        # used to count, and a thirteen-character trim of a section heading was measured
+        # silencing the check with nothing pruned. Absolute rather than relative: pruning removes
+        # an item, and an item's size does not scale with the piece of work that carries it.
+        return not any(a - b >= cut for a, b in zip(series, series[1:]))
 
     for name in whole:
         path = layout.framing / name
@@ -344,12 +349,12 @@ def check_growth(cfg, layout, report) -> None:
             continue
         sampled += 1
         series = [len(blob) for blob in history] + [len(read_text(path))]
-        if series[-1] >= floor and never_shrank(series):
+        if series[-1] >= floor and never_pruned(series):
             flagged += 1
             report(
                 "WARN",
-                "%s: %d characters and never shorter across %d commits — grown without ever being pruned"
-                % (name, series[-1], len(history)),
+                "%s: %d characters, never cut by %d or more across %d commits — grown without ever being pruned"
+                % (name, series[-1], cut, len(history)),
             )
 
     for name in todo_names(cfg):
@@ -367,12 +372,12 @@ def check_growth(cfg, layout, report) -> None:
             series = [snapshot[tag] for snapshot in past if tag in snapshot] + [size]
             if len(series) < 3 or size < floor:
                 continue
-            if never_shrank(series):
+            if never_pruned(series):
                 flagged += 1
                 report(
                     "WARN",
-                    "%s [%s]: %d characters and never shorter across %d commits — grown without ever being pruned"
-                    % (name, tag, size, len(series) - 1),
+                    "%s [%s]: %d characters, never cut by %d or more across %d commits — grown without ever being pruned"
+                    % (name, tag, size, cut, len(series) - 1),
                 )
 
     if sampled and not flagged:

@@ -114,6 +114,11 @@ growth_window = 20
 # report that names young subjects is one nobody finishes reading. Set against [sizes]"todo.md"
 # divided by the number of subjects a todo of that size holds.
 growth_floor = 4000
+# The smallest decrease that counts as pruning, in characters. Pruning removes an item, so this
+# sits just under the smallest one: measured on a todo of fifteen items, the smallest held 229
+# characters and the median 448. Below it, a cosmetic trim passes for a pruning pass — thirteen
+# characters, a heading's prefix, were measured silencing the check with nothing pruned.
+growth_min_cut = 200
 # Measured per file rather than per section. The todo's own files are measured per piece of work,
 # keyed on the [TAG] the method already defines as stable; an atlas heading is prose, renamed
 # often enough that a per-section history would reset on exactly the sections just reworked.
