@@ -309,7 +309,7 @@ class Conventions:
                 if target == corpus.meta.resolve():
                     meta_labels.append(label)
                 elif target.name == corpus.framing_name and target.parent.parent == corpus.root.resolve():
-                    # « 🗂️ CraftNorma - Workspace » against workshop CraftNorma gives the pattern;
+                    # « 🗂️ Ledger - Workspace » against workshop Ledger gives the pattern;
                     # a label that never names its workshop is a constant, and stays one.
                     framing_patterns.append(label.replace(target.parent.name, "{}"))
 
