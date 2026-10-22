@@ -52,27 +52,40 @@ framing document holds inside a node, file for file.
 ## The index: `nodes.md`
 
 The root carries a `nodes.md`, present **only in a workshop that has nodes**, and read at every
-session start with the root's atlas, todo and handoff. A table, one row per node:
+session start with the root's atlas, todo and handoff. It is a little more than an index: one
+**card** per node, each on the same template, carrying what a session needs in order to decide
+whether to open the node — and nothing it would read once inside.
 
 ```markdown
-| Node | What it is | State | Open it when |
-| --- | --- | --- | --- |
-| `billing/` | the invoicing module — its own package, published | published | the work touches an invoice, a rate or a payment |
-| `catalog/` | the product catalog, being extracted from the platform | in extraction | the work touches a product, a price list or the catalog API |
+## `billing/` — invoices, rates and payments, and nothing else
+
+| | |
+| --- | --- |
+| Packages | `Ledger.Billing`, `.PostgreSQL`, `.AspNetCore` — 3.2.0 |
+| Depends on | `Ledger.Core` (`.Hosting`, `.Data`) |
+| Consumed by | the platform's billing host; the partner API |
+| Owns | the `billing` schema, the `/invoices` routes, two events |
+| State | published; `[NEXT]` on hold until a real case |
+| Open when | the work touches an invoice, a rate, a payment or the billing routes |
 ```
 
-The first cell is the node's folder, quoted and ending in `/`; the last cell is its **trigger**.
-This is the same shape as the instance's `index.md`, one level down: *the name says what, the
-index says when*. An agent already reads an index of this shape at every start to decide what to
-read; this one is the same gesture for the nodes, and it has to be enough to decide on.
+The heading is the node's folder, quoted and ending in `/`, then one sentence saying what it is.
+The method fixes two rows, because they are what the reading decision needs: **State** — the
+node's durable state, and the status of what is open there — and **Open when**, the node's
+**trigger**, written as the instance's index writes one: a situation in the work, decidable before
+anything is opened. The other rows are the workshop's, the same for every node of the workshop,
+declared once in its `lint.toml` so that the checks see a card missing one. A family of packages
+carries *Packages*, *Depends on*, *Consumed by* and *Owns*; a family of sites carries other rows.
 
-⚠ **An index carries no content.** One row, one pointer. An index that summarizes a node's state is
-a copy of that node's atlas, and a copy drifts in silence — this was measured on an earlier attempt
-at several atlases inside one workshop, before the lint existed. What is open in a node has its
-source in that node's todo, one file away.
+⚠ **A card carries what decides the opening, never what is read once inside.** No rule, no
+invariant, no decision: those are the node's atlas, one file away, and a card that summarizes them
+is a copy that drifts in silence — measured on an earlier attempt at several atlases inside one
+workshop, before the lint existed. A version and a state drift too, and that is accepted: they are
+what steers, they cost a line each to keep, and the checks can hold part of it — a version against
+what the repository declares, a state against the todo's status line.
 
 **A line deposited for a node not opened.** A session that has something to say to a node it did
-not open writes it as a line under that node's row — a finding, in the indicative, as the mailbox
+not open writes it as a line under that node's card — a finding, in the indicative, as the mailbox
 requires. The next session that opens the node **consumes** it: reads it once, turns it into what
 the node keeps, deletes it. It stays inside the framing, in the same commit, and it spares opening
 a node for one sentence. ⚠ A line left in place to be read again is an item sitting where items do
@@ -80,7 +93,7 @@ not belong, exactly as in `tracking.md` § *Work found for another workshop*.
 
 **Nodes are declared, never discovered.** The framing's `lint.toml` lists them, and the checks hold
 three things in step: the declaration, the index, and the folders on disk. A folder nobody declared,
-a row no folder answers, a declared node with no row — each is a failure, so the index cannot fall
+a card no folder answers, a declared node with no card — each is a failure, so the index cannot fall
 behind the tree in silence.
 
 ## Reading: the root always, a node when the work calls for it
@@ -101,7 +114,7 @@ work is.
 
 ⚠ **Naming a node steers; it does not bound.** The perimeter stays the workshop. A rejected
 design had a session open *on* a node, with a wiring file and a perimeter of its own, writing in
-its node and in its index row and nowhere else. It would have rebuilt, inside one workshop, the
+its node and in its index card and nowhere else. It would have rebuilt, inside one workshop, the
 very fragmentation the node exists to undo.
 
 ⚠ **The node comes from the developer's sentence, never from a document.** The root's handoff says
@@ -147,7 +160,7 @@ list is out of reach (`bootstrap.md`).
 ## Adding a node
 
 A node is added to an **existing** workshop, from a session of that workshop: the folder from the
-template, the code repository beside the others, the row in the index, the declaration in
+template, the code repository beside the others, the card in the index, the declaration in
 `lint.toml`. The installer does it (`setup/CONTRACT.md`), and refuses a node whose folder already
 exists, as it refuses to write over anything that exists. The wiring entry for the new repository is
 the one thing it prints rather than writes: a wiring is changed last, after the handover

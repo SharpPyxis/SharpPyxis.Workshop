@@ -200,23 +200,26 @@ resumption. Pruning it is ordinary maintenance, not a chore.
 ## `nodes.md` — which nodes exist, and when to open each
 
 Only in a workshop with nodes, at the root of the framing, read at every start with the three
-documents above. A table, one row per node: its folder, what it is in one sentence, its durable
-state, and when to open it. `tree.md` § *The index* carries the shape and an example.
+documents above. One **card** per node, on one template: the folder and what it is in one
+sentence, the rows the workshop declares for all its nodes, and the two the method fixes — the
+state, and when to open it. `tree.md` § *The index* carries the template and an example.
 
-- **Changes slowly.** A row enters when a node is born, leaves when it closes, and its state moves
-  a few times in the node's life. The tense is the atlas's, one level up.
-- **It is not content.** A row is a pointer and a trigger. An index that summarizes a node is a
-  copy of that node's atlas, and it drifts in silence — measured on an earlier attempt at several
-  atlases inside one workshop, before the lint existed. What is open in a node has its source in
-  that node's todo, one file away.
-- **It is not a todo.** The lines deposited under a row — for a node the session did not open —
+- **Changes slowly.** A card enters when a node is born, leaves when it closes, and its state and
+  version move a few times in the node's life. The tense is the atlas's, one level up.
+- **It carries what decides the opening, never what is read inside.** A card holds the facts
+  that steer — what the node publishes, what it depends on, what it owns, its state, its trigger —
+  and no rule, no invariant, no decision: those are the node's atlas, and a card that summarizes
+  them is a copy that drifts in silence — measured on an earlier attempt at several atlases inside
+  one workshop, before the lint existed. What is open in a node has its source in that node's
+  todo, one file away.
+- **It is not a todo.** The lines deposited under a card — for a node the session did not open —
   are **messages, not items**: the four rules of § *Work found for another workshop* apply to them
   word for word, and the next session that opens the node consumes them, which is read once, turned
   into what the node keeps, and deleted. ⚠ A line that survives two openings is an item sitting
   where items do not belong, and the index has started becoming a second todo.
-- **Declared, never discovered.** The framing's `lint.toml` lists the nodes, and the checks hold
-  the declaration, the rows and the folders in step — so the index cannot fall behind the tree
-  without a failure saying so.
+- **Declared, never discovered.** The framing's `lint.toml` lists the nodes and the rows every card
+  carries, and the checks hold the declaration, the cards and the folders in step — so the index
+  cannot fall behind the tree without a failure saying so.
 
 ## Sizes
 
@@ -285,7 +288,7 @@ repository ships the folder with its readme and no message in it.
 
 ⚠ **Inside a workshop with nodes, a finding for a node the session did not open does not go
 through the mailbox.** The mailbox is for the outside — another workshop, the meta level. Inside,
-the finding is a line deposited under that node's row in `nodes.md`, under the same four rules
+the finding is a line deposited under that node's card in `nodes.md`, under the same four rules
 below; it travels in the same commit and is read at the next start by whoever opens the framing.
 A message that comes from outside and concerns a node is still addressed to the workshop, and
 names the node in its text: the address is the workshop's folder, and nothing inside it.
