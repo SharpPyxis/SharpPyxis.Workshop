@@ -111,7 +111,7 @@ file.
 ## What you have to say
 
 The writing is mostly the agent's; the sentences are yours, and there are few of them. Two in the
-ordinary life of a session, five that come up only when their case does.
+ordinary life of a session, six that come up only when their case does.
 
 None of them is a command or a keyword. They are the facts the corpus cannot know — which workshop,
 that the last session was cut, that we are closing. Everything else fires because a trigger was
@@ -119,7 +119,7 @@ read, which is what keeps this list short.
 
 | Every session | |
 | --- | --- |
-| Opening | The two lines at the top of this page: the workshop, and the entry point |
+| Opening | The two lines at the top of this page: the workshop, and the entry point. When the workshop has nodes and you know which one the work is in, name it too — *"we are working on Ledger today, in billing"*. It steers the reading; it does not narrow the perimeter |
 | Closing | *"Let's close the session."* The protocol then runs in order — the todo keeps only what is open, what closed leaves for its story or for the atlas, the handoff is written, the lint runs, one commit per repository touched, and you get the list of what is left to push |
 
 | When the case arises | |
@@ -128,10 +128,11 @@ read, which is what keeps this list short.
 | Nothing exists yet | *"I have just copied the method here. There is nothing else yet."* — plus the entry point. The agent finds no instance and **offers** to build one |
 | The last session was cut before it recorded anything | Say so. The state is then established from the disk, mechanically, and the trace of that session is looked for before its reasons are called lost. The work is not replayed |
 | A workshop is to be created | *"Create the workshop Ledger, with the repositories ledger.api and ledger.web."* The installer lays it out, so it matches every other one |
+| A node is to be added | *"Add the node billing to Ledger, with its repository."* The installer lays it out inside the existing framing, adds its card and its declaration, and prints the folder to add to the wiring — which you add last, after the handover |
 | A repository is to be published | Say so. The private-to-public pass is a procedure rather than a case-by-case call |
 
 Passing a finding to a neighbor comes up whenever a subject overflows the workshop that is open;
-the other four are one-off events. The agent reports what **it** finds outside its perimeter
+the other five are one-off events. The agent reports what **it** finds outside its perimeter
 without being asked, so the sentence covers what you know belongs elsewhere.
 
 Two more are answers rather than sentences: the agent offers the onboarding interview, and offers
@@ -171,6 +172,11 @@ A **workshop** is a unit of work that owns its framing. It may hold one product 
 several repositories, or a single independent library. Each workshop carries a `_workspace/`
 folder holding its atlas, its todo and its handoff. This repository defines what workshops
 are, and how one developer and their agents work inside them.
+
+A workshop too large for one framing splits it into **nodes**: the same documents once per part,
+and an index at the root saying when to open each. The root is read at every session, a node
+only when the work calls for it — which is what one large framing could not afford and a dozen
+small workshops lost: the whole, always at hand, and the detail on demand.
 
 It is also the perimeter of a session. What is opened is that workshop's repositories and its
 framing, plus the method and your own instance; a neighbor's framing is not read, and nothing
@@ -215,9 +221,11 @@ projects/                        THE ROOT — you choose it. Not a repository, n
 │       ├── todo.md                  what is open
 │       ├── done/                    what is finished — one file per [TAG]
 │       ├── _planning/               the long form, at any stage — status in each header
-│       └── memories/
-│           ├── handoff.md           what is volatile — one entry per session
-│           └── shared/              stable facts, reachable from an index
+│       ├── memories/
+│       │   ├── handoff.md           what is volatile — one entry per session
+│       │   └── shared/              stable facts, reachable from an index
+│       ├── nodes.md                 only when the framing is split: which nodes exist, when to open each
+│       └── billing/                 a node — the same documents again, for one part of the workshop
 │
 └── TinyParse/                   ANOTHER WORKSHOP — a single independent library
     ├── tinyparse/                 one repository is enough
@@ -242,6 +250,10 @@ projects/                        THE ROOT — you choose it. Not a repository, n
   a tracking tool; the tracking is the files.
 - **Several repositories, one workshop, as long as they serve one framing.** Two sets with
   independent framing are two workshops, however tempting it is to keep them together.
+- **A node is a folder inside `_workspace/` holding an atlas of its own** — one part of a
+  workshop too large for one framing, declared in the framing's `nodes.md`. It is not a
+  workshop, and the test above does not see it: the root is read at every start, a node when
+  the work calls for it. `method/tree.md` has the rest.
 
 ### What the layout is designed to prevent
 
@@ -402,6 +414,9 @@ Both tools have now resolved a second corpus — a separate root, other workshop
 to read from — and the four steps above were walked end to end on it, day zero included. Since
 then the same four steps have been walked by **somebody other than the author**, on their own
 machine, starting from an empty root and the published archive.
+
+⚠ **Nodes** — a framing split in one level — are written, checked and installed, on a simulated
+workshop only: no real workshop runs on them yet, and they are not released until one does.
 
 ⚠ What has still **not** been exercised is a **case-sensitive file system**. The layout resolves
 by structure rather than by hardcoded names, which is what makes the copy above the whole
