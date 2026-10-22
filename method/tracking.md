@@ -8,6 +8,10 @@ Four tenses and one format. An item lives in exactly one **tense**; the format i
 anything too long for a line goes, whatever its tense. Most drift in a framing folder is one
 document quietly taking on the job of another.
 
+A workshop split into **nodes** carries all of them once per node, plus one index at the root —
+`nodes.md`, below. What a node is, what is read and what is written there is `tree.md`'s; this file
+says only what the documents become inside one.
+
 ---
 
 ## `atlas.md` — what exists and works
@@ -65,6 +69,12 @@ Work is grouped under a `[TAG]` in capitals — a stable key, reused by the deli
 narrative and by commit messages. Each group opens with a `> status:` line saying whether it
 is active, on hold, or blocked, and by what.
 
+⚠ **In a workshop with nodes, a tag is unique within its node**, and a citation that leaves its
+node is **qualified**: `billing:[RELEASE]` names the node, `:[RELEASE]` names the root. A bare
+citation resolves where it is written. Two nodes each closing a `[RELEASE]` is the ordinary case,
+not a collision — the key is stable *per node* — and the qualifier is what keeps a citation from
+resolving against the wrong one in silence, which a bare tag would do without a sound.
+
 | Prefix | Means |
 | --- | --- |
 | ⬜ | To do |
@@ -98,6 +108,11 @@ that way, what was tried, what was rejected. That belongs in `done/<TAG>.md` —
 
 The atlas keeps the consolidated result in a few lines; the narrative keeps the account. The
 todo keeps neither.
+
+In a workshop with nodes, `done/` is **per node**. A narrative cited from another node is cited by
+its path from the framing root — `billing/done/RELEASE.md` — so that it resolves from anywhere in
+the framing. A narrative is a location, and this is the one citation where the path *is* the
+identity: the same tag closes in two nodes, and only the folder tells the two stories apart.
 
 ## `_planning/` — the long form, at any stage
 
@@ -157,6 +172,11 @@ the tensed documents. The lint enforces this.
 - **Keep the recent sessions only** — of the order of three to five — and archive the rest in
   a companion file, consulted on explicit request and never re-read at the start of a
   session.
+- **In a workshop with nodes, two handoffs record the same work.** The root's entry lists the
+  nodes the session touched; each node touched gets an entry of its own, saying what was done
+  there. ⚠ A session that opens that node later must not learn from the `git log` what the root
+  changed under it: the history is the record, and the handoff is what lets it stay unread. A
+  node left without its entry is the node the next session reopens blind.
 - ⚠ **What the close hands to the developer does not belong here.** § *Closing a session* ends by
   listing what is left to push, deploy or publish. That list is addressed to someone who acts on it
   within the hour, so it is already false the next time this file is read — and it escapes the rule
@@ -177,6 +197,27 @@ the tensed documents. The lint enforces this.
 A file that grows indefinitely damages context uptake, since its volume is re-read at every
 resumption. Pruning it is ordinary maintenance, not a chore.
 
+## `nodes.md` — which nodes exist, and when to open each
+
+Only in a workshop with nodes, at the root of the framing, read at every start with the three
+documents above. A table, one row per node: its folder, what it is in one sentence, its durable
+state, and when to open it. `tree.md` § *The index* carries the shape and an example.
+
+- **Changes slowly.** A row enters when a node is born, leaves when it closes, and its state moves
+  a few times in the node's life. The tense is the atlas's, one level up.
+- **It is not content.** A row is a pointer and a trigger. An index that summarizes a node is a
+  copy of that node's atlas, and it drifts in silence — measured on an earlier attempt at several
+  atlases inside one workshop, before the lint existed. What is open in a node has its source in
+  that node's todo, one file away.
+- **It is not a todo.** The lines deposited under a row — for a node the session did not open —
+  are **messages, not items**: the four rules of § *Work found for another workshop* apply to them
+  word for word, and the next session that opens the node consumes them, which is read once, turned
+  into what the node keeps, and deleted. ⚠ A line that survives two openings is an item sitting
+  where items do not belong, and the index has started becoming a second todo.
+- **Declared, never discovered.** The framing's `lint.toml` lists the nodes, and the checks hold
+  the declaration, the rows and the folders in step — so the index cannot fall behind the tree
+  without a failure saying so.
+
 ## Sizes
 
 Thresholds are declared **per workshop**, because a workshop with eighteen open subjects and
@@ -189,6 +230,11 @@ Replace them with measured ones once the workshop has content worth measuring, a
 cost per subject + header*, in characters. A threshold carrying its measurement gets discussed; one
 posted bare gets raised to silence the lint, which is the only outcome a number without a reason
 ever has.
+
+In a workshop with nodes the thresholds hold **per file, in every node**, under the same keys; a
+node that has measured its own may override them. What the budget measures is the root alone — the
+sum re-read at every start — and a node is bounded file by file so that opening one stays
+affordable.
 
 ## Work on a transverse corpus does not belong to a workshop
 
@@ -236,6 +282,13 @@ and it is addressed by name: **one file per target workshop, named exactly as th
 folder.** The name is the address, so a session opening on `Ledger` looks up `Ledger` and finds a
 file or finds nothing. `organization.md` § *Reading order* says when it is looked up. The published
 repository ships the folder with its readme and no message in it.
+
+⚠ **Inside a workshop with nodes, a finding for a node the session did not open does not go
+through the mailbox.** The mailbox is for the outside — another workshop, the meta level. Inside,
+the finding is a line deposited under that node's row in `nodes.md`, under the same four rules
+below; it travels in the same commit and is read at the next start by whoever opens the framing.
+A message that comes from outside and concerns a node is still addressed to the workshop, and
+names the node in its text: the address is the workshop's folder, and nothing inside it.
 
 ⚠ **The method names this one, and it is the second name it fixes inside the instance.** Everything
 else there is the owner's, declared through `index.md` — but three readers have to find the mailbox
@@ -383,6 +436,10 @@ In order:
    valid answer; it is not a valid silence.
 4. **Run the workshop's lint**; fix every FAIL before committing.
 5. **Commit each repository touched**, then list what is left to push.
+
+⚠ **In a workshop with nodes, steps 1 to 3 apply to the root and to every node the session
+opened**, and the root's handoff entry names them — § `memories/handoff.md`. The lint of step 4
+runs once, from the root, over all of them.
 
 ⚠ If a workshop's atlas defines a more precise closing checklist, **it prevails** — it adds
 the local specifics: tooling, sites, scripts. What belongs there is what is genuinely due *at the
