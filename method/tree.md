@@ -44,7 +44,9 @@ else is.
 - **A node is named after its code repository** when it has one, and the framing's tree then
   mirrors the workshop's. A repository without a node is ordinary — it is part of the main
   project; a node without a repository is allowed — a transverse subject that deserves a framing
-  and no code.
+  and no code. A node may also cover several repositories: it then takes a name of its own, its
+  card lists them, and its `lint.toml` declaration carries no `repository` key — the repositories
+  are declared with the workshop's, which is what checks them.
 - **The main project is the root.** What everything else revolves around has no sub-folder: its
   framing is the workshop's own. In a family of packages around a platform, the platform is the
   root and every package is a node — the foundation package included, which underlies everything
