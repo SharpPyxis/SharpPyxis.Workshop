@@ -160,6 +160,10 @@ declared has no identity, and one of two look-alikes (U+29D7 against U+23F3) sil
 rewriting script, which dropped the items carrying the other. The two failures are the same
 omission seen twice.
 
+⚠ **A prefix is recognized by its Unicode category — `So` and `Sm` both.** ⧗ is U+29D7, category
+`Sm`: an implementation that reads "a prefix is an emoji", or tests `So` alone, is green on the very
+sign that made this check a whitelist. `Sk` stays out: the backtick lives there.
+
 ⚠ **A workshop that reserves nothing still gets a line.** Returning in silence when the reserved
 list is empty cannot be told apart from a check that did not run — the same argument as the
 long-form folder above, and the reason the declared set has to be what drives the check.
