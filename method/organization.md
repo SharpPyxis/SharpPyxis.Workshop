@@ -59,7 +59,7 @@ failure: that one protects the order of reading, this one a source that removes 
 | **`_workspace/`** | The folder holding a workshop's framing documents. One per workshop, outside every code repository. |
 | **project** | Keeps its ordinary technical meaning — a `.csproj`, an npm package. Do not confuse it with a workshop. |
 | **instance** | One owner's profile, transverse conventions and notebooks. Private, and never part of this method. |
-| **node** | One part of a workshop, carrying a framing of its own inside the workshop's framing, which is then the **root**. Only in a workshop too large for one — `nodes.md`. |
+| **node** | One part of a workshop, carrying a framing of its own inside the workshop's framing, which is then the **root**. Only in a workshop too large for one — `tree.md`. |
 
 > **Two sets with independent framing are two workshops.** A workshop may hold several
 > repositories as long as they serve **one** framing.
@@ -90,7 +90,7 @@ workshop — and a half-rename is worse than none.
 │       ├── done/                          what is finished — one file per [TAG]
 │       ├── _planning/                     the long form, at any stage — status in each header
 │       ├── memories/handoff.md            what is volatile — one entry per session
-│       ├── index.md                       only with nodes: which exist, and when to open each
+│       ├── nodes.md                       only with nodes: which exist, and when to open each
 │       └── <node>/                        a node — the same documents, for one part of the workshop
 └── <OtherWorkshop>/             WORKSHOP  a single library is still a workshop
     ├── <repo>/                  REPO
@@ -137,8 +137,8 @@ depth, or how important it looks.
    `git log` for the factual record, which is what lets the handoff stay short. Keep it
    private (§ *Never*, below); `git.md` has the rest.
    A folder **inside it** that holds an `atlas.md` is a **node** of that framing — one part of
-   the workshop with framing documents of its own, declared by the framing's `index.md`. It is
-   not a workshop, and the test above does not see it. `nodes.md` has the rest.
+   the workshop with framing documents of its own, declared by the framing's `nodes.md`. It is
+   not a workshop, and the test above does not see it. `tree.md` has the rest.
 4. **Holds `method/organization.md` and `instance/`** → it is the **meta level**. That pair is
    the whole test, and nothing depends on what the folder is called.
 5. **Contains workshops and nothing else of interest** → it is the **root**. Read nothing
@@ -191,9 +191,9 @@ narrative per tag, out of the todo), and `_planning/` — the **long form**, whe
 whose reasoning does not fit on a line lives at any stage of its life, each document carrying
 its own status header.
 
-A workshop split into **nodes** carries the same documents once per node, and an `index.md` at
+A workshop split into **nodes** carries the same documents once per node, and a `nodes.md` at
 the root saying when to open each. The root is read always, a node when the work calls for it —
-`nodes.md`.
+`tree.md`.
 
 > Read `tracking.md` before writing in any of these files, and before closing a session.
 > It holds their life cycle, the todo grammar, and the closing protocol.
@@ -213,9 +213,9 @@ the top of this file so that reading the map in order produces the right sequenc
    workshop* has the rest;
 6. its `_workspace/atlas.md` and `_workspace/todo.md`;
 7. the relevant files of `_workspace/memories/`;
-8. **if the framing holds an `index.md`, the nodes the work calls for** — the one the request
+8. **if the framing holds a `nodes.md`, the nodes the work calls for** — the one the request
    named, or those the index points at, settled with the developer — and their own documents.
-   `nodes.md` has the rule;
+   `tree.md` has the rule;
 9. only then, the code needed for the work asked.
 
 ⚠ Steps 1 and 3 were once a single entry, placed second — which had this file being read after
@@ -234,7 +234,7 @@ selection are signals of intent; they do not define the perimeter of the work.
 The request names a workshop. **That workshop is the perimeter of the session**: its
 repositories, its `_workspace/`, plus `method/` and `instance/`. Nothing else is opened
 without the developer asking for it. The request may also name a node: that steers the
-reading, and does not narrow the perimeter (`nodes.md`).
+reading, and does not narrow the perimeter (`tree.md`).
 
 Three rules, each of them written after it was got wrong:
 
@@ -277,7 +277,7 @@ Almost nothing here is read unconditionally. Each file states its own trigger in
 | `onboarding.md` | There is no instance, or it holds no index — fires at most once per machine |
 | `corpus.md` | Adding a file to a corpus read by trigger, or splitting or renaming one |
 | `tracking.md` | Writing in a framing document, closing a session, or resuming one that was cut |
-| `nodes.md` | The framing opened holds an `index.md`, or its atlas says it is a node of a root — the workshop has nodes |
+| `tree.md` | The framing opened holds a `nodes.md`, or its atlas says it is a node of a root — the workshop has nodes |
 | `bootstrap.md` | Setting up a workshop, or diagnosing why an agent read nothing |
 | `memory.md` | Deciding where a fact should be stored |
 | `git.md` | Creating a repository, drawing a versioned / local boundary, preparing a publication |

@@ -1,6 +1,6 @@
 # Nodes — a workshop whose framing is split
 
-> **Read when** the framing you opened holds an `index.md`, or its atlas says in its header that
+> **Read when** the framing you opened holds a `nodes.md`, or its atlas says in its header that
 > it is a node of a root.
 > **Do not read** in a workshop without nodes: nothing here applies there, and one framing is the
 > ordinary case. A workshop without nodes is exactly the workshop the rest of the method describes.
@@ -49,9 +49,9 @@ framing document holds inside a node, file for file.
 - Each node's atlas says in its header that it is a node of this root, so a file opened on its own
   says where it belongs.
 
-## The index: `index.md`
+## The index: `nodes.md`
 
-The root carries an `index.md`, present **only in a workshop that has nodes**, and read at every
+The root carries a `nodes.md`, present **only in a workshop that has nodes**, and read at every
 session start with the root's atlas, todo and handoff. A table, one row per node:
 
 ```markdown
