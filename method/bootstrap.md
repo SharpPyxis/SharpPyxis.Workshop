@@ -78,8 +78,15 @@ Each workshop's editor workspace declares three kinds of folder:
 | Folder | Why |
 | --- | --- |
 | the meta level | **One entry, the copy itself** — not `method/` and `instance/` separately. It carries the entry point and the identity read at step 0 |
-| the workshop's repositories | The work itself |
-| the workshop's `_workspace/` | Its framing |
+| the workshop's repositories | The work itself — the repositories of its nodes included, in a workshop that has them |
+| the workshop's `_workspace/` | Its framing, root and nodes: one folder, since it is one repository |
+
+⚠ **A workshop with nodes has one wiring, not one per node.** It lists every node's repository,
+because a folder absent from the list is out of reach: a node whose repository is missing is a node
+the session can read about and never open. What bounds the *reading* is not this list but the
+root's `nodes.md` and the request — declaring twelve repositories does not mean reading twelve
+framings (`tree.md`). A rejected design had one wiring per node, which would have rebuilt inside one
+workshop the fragmentation the node exists to undo.
 
 **One entry rather than two, because the copy is a local tool and its composition is not the
 method's to fix.** `method/` is not improved there — that happens upstream, and arrives as a new
@@ -129,6 +136,10 @@ what the tool read to open the session; rewriting it while that session runs can
 reload and end it — with the work done and unrecorded, the one state this method exists to avoid.
 Observed twice in a single day on the workshop where this method is written; one of those sessions
 had to be replayed by hand the next day.
+
+**Adding a node to a workshop adds a repository to an existing wiring**, and that is a change, not
+a creation: it is done last, from the workshop's own session, by the developer. An installer that
+adds a node therefore prints the entry rather than writing it (`setup/CONTRACT.md`).
 
 So: commit, write the handover, **then** change the wiring — never in the middle of the work it
 belongs to. A workshop may instead decide the file is the developer's alone to edit, which removes
@@ -219,6 +230,12 @@ splitting by **reading temporality**:
 
 - what is read *always* is a map — structure, vocabulary, index, reading order;
 - everything else is reached by a trigger stated in its own header.
+
+In a workshop with nodes the budget is the root's — the map, the instance's unconditional files,
+the root's documents and its `nodes.md` — because that is what every session reads. A node is not
+in the sum: it is read when the work calls for it, and bounded file by file so that opening one
+stays affordable (`tree.md`). The lever is the same one: what every session reads stays a map,
+and the nodes are what sits behind its triggers.
 
 This is why the rule that makes a todo self-sufficient — an item carries its meaning or cites
 the document that does — deliberately makes it grow, and why that growth is not fought.

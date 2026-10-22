@@ -36,6 +36,16 @@ It is a repository **of its own**, never a folder inside a code repository. Othe
 framing rides along in code commits, its history mixes with releases, and it is invisible to
 anyone working from a sibling repository of the same workshop.
 
+**And it is one repository for the whole framing, nodes included.** A node is a folder inside it,
+never a repository of its own (`tree.md`): a decision that touches the root and three nodes is then
+one commit, and the framing's `git log` stays the one factual record for the whole tree. ⚠ Measured
+the other way: a family framed as thirteen repositories paid one decision of doctrine with three
+commits in three framing repositories, and nothing tied the three together. A commit that touches a
+node **names it** in its message, the way a message names a `[TAG]` — `billing: …` — so that the
+history reads per node without a path filter; a commit spanning several nodes names them all. A
+node's code repository, when it has one, is a repository of the workshop like any other, listed
+with the others in the framing's configuration.
+
 ⚠ **A remote is optional; keeping it private is not.** Where a framing is pushed, or whether it
 is pushed at all, is the owner's decision — an installer that guessed a host would be guessing
 about a person. But a framing document carries names, decisions and session context belonging to
