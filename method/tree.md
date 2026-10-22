@@ -41,7 +41,8 @@ framing document holds inside a node, file for file.
 - **The main project is the root.** What everything else revolves around has no sub-folder: its
   framing is the workshop's own. In a family of packages around a platform, the platform is the
   root and every package is a node — the foundation package included, which underlies everything
-  and is the center of nothing.
+  and is the center of nothing. In a product made of a site, an API and an application, the product
+  is the root and each of the three is a node.
 - **A small part has no node.** It is a paragraph of the root's atlas and a section of its todo.
   It earns a node the day the paragraph stops being enough, and loses it when it closes.
 - **One framing repository for the root and its nodes.** A transverse decision is then one commit,
@@ -63,19 +64,31 @@ whether to open the node — and nothing it would read once inside.
 | --- | --- |
 | Packages | `Ledger.Billing`, `.PostgreSQL`, `.AspNetCore` — 3.2.0 |
 | Depends on | `Ledger.Core` (`.Hosting`, `.Data`) |
-| Consumed by | the platform's billing host; the partner API |
 | Owns | the `billing` schema, the `/invoices` routes, two events |
 | State | published; `[NEXT]` on hold until a real case |
 | Open when | the work touches an invoice, a rate, a payment or the billing routes |
+
+## `docs/` — the product's documentation site
+
+| | |
+| --- | --- |
+| Stack | Hugo, Book theme; deployed from `main` |
+| Published at | the product's documentation address |
+| Owns | the user manual, the release notes, the reference pages |
+| State | online; `[SEARCH]` active |
+| Open when | the work changes a page, a menu, the build, or what a release note must say |
 ```
 
 The heading is the node's folder, quoted and ending in `/`, then one sentence saying what it is.
 The method fixes two rows, because they are what the reading decision needs: **State** — the
 node's durable state, and the status of what is open there — and **Open when**, the node's
 **trigger**, written as the instance's index writes one: a situation in the work, decidable before
-anything is opened. The other rows are the workshop's, the same for every node of the workshop,
-declared once in its `lint.toml` so that the checks see a card missing one. A family of packages
-carries *Packages*, *Depends on*, *Consumed by* and *Owns*; a family of sites carries other rows.
+anything is opened. The other rows are the node's own: what steers towards *this* node, and
+nothing else. A package names what it publishes and what it depends on; a site its stack and its
+address; a transverse subject what it governs. ⚠ Nodes of one kind share their rows by discipline,
+not by rule — the checks read the heading and the two fixed rows, and leave the rest to whoever
+writes the card. A rule here would assume what a node is, and a node is whatever a workshop is
+made of: a package, a site, an application, a subject with no code at all.
 
 ⚠ **A card carries what decides the opening, never what is read once inside.** No rule, no
 invariant, no decision: those are the node's atlas, one file away, and a card that summarizes them

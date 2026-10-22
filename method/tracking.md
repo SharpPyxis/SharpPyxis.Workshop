@@ -200,14 +200,15 @@ resumption. Pruning it is ordinary maintenance, not a chore.
 ## `nodes.md` — which nodes exist, and when to open each
 
 Only in a workshop with nodes, at the root of the framing, read at every start with the three
-documents above. One **card** per node, on one template: the folder and what it is in one
-sentence, the rows the workshop declares for all its nodes, and the two the method fixes — the
-state, and when to open it. `tree.md` § *The index* carries the template and an example.
+documents above. One **card** per node: the folder and what it is in one sentence, the two rows
+the method fixes — the state, and when to open it — and the rows that steer towards this node,
+chosen for what it is. `tree.md` § *The index* carries the template and an example.
 
 - **Changes slowly.** A card enters when a node is born, leaves when it closes, and its state and
   version move a few times in the node's life. The tense is the atlas's, one level up.
 - **It carries what decides the opening, never what is read inside.** A card holds the facts
-  that steer — what the node publishes, what it depends on, what it owns, its state, its trigger —
+  that steer — what it is made of, what it depends on and who depends on it, what it owns, be it a
+  schema, routes, pages or an address, its state, its trigger —
   and no rule, no invariant, no decision: those are the node's atlas, and a card that summarizes
   them is a copy that drifts in silence — measured on an earlier attempt at several atlases inside
   one workshop, before the lint existed. What is open in a node has its source in that node's
@@ -217,8 +218,8 @@ state, and when to open it. `tree.md` § *The index* carries the template and an
   word for word, and the next session that opens the node consumes them, which is read once, turned
   into what the node keeps, and deleted. ⚠ A line that survives two openings is an item sitting
   where items do not belong, and the index has started becoming a second todo.
-- **Declared, never discovered.** The framing's `lint.toml` lists the nodes and the rows every card
-  carries, and the checks hold the declaration, the cards and the folders in step — so the index
+- **Declared, never discovered.** The framing's `lint.toml` lists the nodes, and the checks hold the
+  declaration, the cards — heading and the two fixed rows — and the folders in step — so the index
   cannot fall behind the tree without a failure saying so.
 
 ## Sizes
