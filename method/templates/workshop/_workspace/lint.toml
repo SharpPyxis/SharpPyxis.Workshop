@@ -123,3 +123,14 @@ growth_min_cut = 200
 # keyed on the [TAG] the method already defines as stable; an atlas heading is prose, renamed
 # often enough that a per-section history would reset on exactly the sections just reworked.
 growth_whole_file = ["atlas.md"]
+
+# A workshop too large for one framing declares its nodes here — `method/tree.md`. Declared, never
+# discovered: a sub-folder holding an atlas that this list does not name is a failure, and so is a
+# name without its folder or without its card in nodes.md. Each node is checked with the keys above;
+# one that has measured its own thresholds overrides them in [nodes.<name>.sizes]. The two rows every
+# card carries are named here when the framing is written in another language.
+# [nodes]
+# names = ["billing", "docs"]
+# card_rows = ["State", "Open when"]
+# [nodes.billing]
+# repository = "billing"

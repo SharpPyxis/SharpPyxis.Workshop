@@ -45,6 +45,7 @@ if sys.version_info < (3, 11):
     raise SystemExit(2)
 
 import argparse
+import copy
 import os
 import re
 import subprocess
@@ -92,6 +93,29 @@ class Report:
         print("        " + message)
 
 
+class NodeReport:
+    """The same report, seen from one node: every line it prints names the node first, and the
+    counts stay the root's — one report, one exit code, whatever the number of nodes."""
+
+    def __init__(self, report: Report, node: str) -> None:
+        self.report = report
+        self.prefix = node + "/"
+
+    def __call__(self, level: str, message: str) -> None:
+        self.report(level, self.prefix + message)
+
+    def detail(self, message: str) -> None:
+        self.report.detail(message)
+
+    @property
+    def failed(self) -> bool:
+        return self.report.failed
+
+    @property
+    def counts(self) -> dict:
+        return self.report.counts
+
+
 # ============================================================================================
 # Layout — resolved by disposition, never by name
 # ============================================================================================
@@ -115,6 +139,23 @@ class Layout:
         self.instance = (self.meta / "instance") if self.meta else None
         self.method_is_working_copy = self._method_inside_workshop() is not None
         self.method = self._find_method()
+        # tree.md: a framing split into nodes. The framing the checks are pointed at is always
+        # the root — the folder holding lint.toml — and a node is seen through `for_node`.
+        self.node = None
+        self.root_framing = framing
+        self.nodes = []    # declared node folders, skipped when the root's documents are walked
+        self.family = []   # declared node names, visible from every scope
+
+    def for_node(self, name: str):
+        """The same corpus seen from one node. The framing becomes the node's folder — every
+        check that reads `layout.framing` then reads the node — while the root stays reachable
+        for what resolves against it: a bare citation falls back to the root, a narrative of a
+        sibling is cited by its path from the root."""
+        inner = copy.copy(self)
+        inner.framing = self.framing / name
+        inner.node = name
+        inner.nodes = []
+        return inner
 
     def _find_meta(self):
         """The meta level holds the method and the instance: a folder containing both
@@ -272,7 +313,12 @@ def git_blobs(repository: Path, path: str, window: int) -> list:
         return []
     revisions = list(reversed(done.stdout.split()))
 
-    query = "".join("%s:%s\n" % (rev, path) for rev in revisions)
+    # ⚠ `git log -- path` reads the path from the current folder; `cat-file --batch` reads
+    # `<rev>:<path>` from the REPOSITORY ROOT. Run from a node, the second would silently fetch
+    # the root's file of the same name — the root's todo in place of the node's.
+    prefix = git(repository, "rev-parse", "--show-prefix")
+    inside = prefix.stdout.strip() if prefix and prefix.returncode == 0 else ""
+    query = "".join("%s:%s%s\n" % (rev, inside, path) for rev in revisions)
     try:
         batch = subprocess.run(
             ["git", "cat-file", "--batch"],
@@ -384,6 +430,135 @@ def check_growth(cfg, layout, report) -> None:
         report("OK", "growth: %d subject(s) sampled, each pruned at least once" % sampled)
 
 
+# --------------------------------------------------------------------------------------------
+# Nodes — a framing split in one level (tree.md)
+# --------------------------------------------------------------------------------------------
+
+
+def node_folders(framing: Path) -> list:
+    """Sub-folders of the framing that hold an atlas — what disposition says is a node."""
+    return sorted(
+        p.name for p in framing.iterdir()
+        if p.is_dir() and not p.name.startswith((".", "_")) and (p / "atlas.md").is_file()
+    )
+
+
+def node_cards(lines) -> dict:
+    """The cards of nodes.md: one per level-2 heading opening on the node's folder in backticks,
+    with the lines under it."""
+    cards, current = {}, None
+    for line in lines:
+        match = re.match(r"^## `([^`/]+)/`", line)
+        if match:
+            current = match.group(1)
+            cards[current] = []
+        elif line.startswith("## "):
+            current = None
+        elif current is not None:
+            cards[current].append(line)
+    return cards
+
+
+def node_config(cfg: dict, name: str) -> dict:
+    """The root's configuration, seen from one node: the same keys — the method's defaults or the
+    workshop's measured ones — with the node's own `[nodes.<name>.sizes]` on top, if it measured."""
+    own = cfg.get("nodes", {}).get(name, {})
+    inner = dict(cfg)
+    if isinstance(own, dict) and isinstance(own.get("sizes"), dict):
+        inner["sizes"] = dict(cfg.get("sizes", {}), **own["sizes"])
+    return inner
+
+
+def check_nodes(cfg, layout, report) -> list:
+    """Three things held in step: the declaration in `lint.toml`, the cards in `nodes.md`, the
+    folders on disk. Declared, never discovered — a folder nobody declared, a card no folder
+    answers, a declared node with no card: each is a FAIL, so the index cannot fall behind the
+    tree in silence. Returns the nodes the per-node checks will run on.
+
+    ⚠ A workshop without nodes gets a line too. Silence cannot be told apart from a check that
+    did not run — and a `nodes.md` or a sub-folder holding an atlas that nothing declares is
+    exactly the case this check exists for."""
+    section = cfg.get("nodes")
+    index = layout.framing / "nodes.md"
+    folders = node_folders(layout.framing)
+
+    if not section:
+        problems = []
+        if index.is_file():
+            problems.append("nodes.md sits on disk and no [nodes] declares it")
+        for name in folders:
+            problems.append("%s/ holds an atlas and no [nodes] declares it" % name)
+        for problem in problems:
+            report("FAIL", "nodes: %s — declared, never discovered" % problem)
+        if not problems:
+            report("OK", "nodes: none declared — one framing, the ordinary case")
+        return []
+
+    names = list(section.get("names", []))
+    layout.nodes = names
+    layout.family = names
+    rows = section.get("card_rows", ["State", "Open when"])
+    failures = 0
+
+    if index.is_file():
+        cards = node_cards(read_lines(index))
+    else:
+        cards = {}
+        report("FAIL", "nodes: nodes.md absent while %d node(s) are declared — nothing says when to open them" % len(names))
+        failures += 1
+    for name in names:
+        if name not in cards and cards:
+            report("FAIL", "nodes: %s declared, no card in nodes.md" % name)
+            failures += 1
+        if name not in folders:
+            report("FAIL", "nodes: %s declared, no folder holding an atlas" % name)
+            failures += 1
+    for name in cards:
+        if name not in names:
+            report("FAIL", "nodes: nodes.md carries a card for %s, which [nodes] does not declare" % name)
+            failures += 1
+    for name in folders:
+        if name not in names:
+            report("FAIL", "nodes: %s/ holds an atlas and [nodes] does not declare it" % name)
+            failures += 1
+    for name, block in cards.items():
+        missing = [row for row in rows if not any(re.match(r"^\|\s*%s\s*\|" % re.escape(row), line) for line in block)]
+        if missing:
+            report("FAIL", "nodes: card %s lacks the row(s) %s — they decide the reading" % (name, ", ".join(missing)))
+            failures += 1
+
+    # A node's code repository is a repository of the workshop like any other.
+    declared = set(cfg.get("workshop", {}).get("repositories", []))
+    for name in names:
+        own = section.get(name, {})
+        repository = own.get("repository") if isinstance(own, dict) else None
+        if not repository:
+            continue
+        if not (layout.workshop / repository).is_dir():
+            report("FAIL", "nodes: %s names the repository %s, absent from the workshop" % (name, repository))
+            failures += 1
+        elif repository not in declared:
+            report("WARN", "nodes: repository %s of %s is not in [workshop] repositories — its line endings and push state go unchecked" % (repository, name))
+
+    live = [name for name in names if name in folders]
+    if failures == 0:
+        report("OK", "nodes: %d declared, each with its card and its folder; cards carry %s" % (len(names), " / ".join(rows)))
+
+    # What opening the heaviest costs, on top of the root's budget — information, not a verdict.
+    bootstrap = cfg.get("bootstrap", {})
+    files = bootstrap.get("framing_files", list(cfg.get("sizes", {}).keys()))
+    ratio = bootstrap.get("chars_per_token", 3.5)
+    costs = {
+        name: sum(len(read_text(layout.framing / name / f)) for f in files if (layout.framing / name / f).is_file())
+        for name in live
+    }
+    if costs:
+        heaviest = max(costs, key=costs.get)
+        report("OK", "nodes: opening %s costs %d characters (~%d tokens), the heaviest — on top of the root's budget"
+               % (heaviest, costs[heaviest], round(costs[heaviest] / ratio)))
+    return live
+
+
 def check_bootstrap_load(cfg, layout, report) -> None:
     """The sum re-read at every start. The per-file thresholds guard its distribution; this
     guards the budget itself."""
@@ -403,6 +578,9 @@ def check_bootstrap_load(cfg, layout, report) -> None:
             chain.append(layout.instance / name)
     for name in section.get("framing_files", list(cfg.get("sizes", {}).keys())):
         chain.append(layout.framing / name)
+    if cfg.get("nodes"):
+        # The index of the nodes is read at every start, with the root's three documents.
+        chain.append(layout.framing / "nodes.md")
 
     found = [p for p in chain if p.is_file()]
     missing = [p for p in chain if not p.is_file()]
@@ -451,6 +629,11 @@ def check_planning(cfg, layout, report) -> None:
         return
 
     todo_text = "\n".join(read_text(layout.framing / n) for n in todo_names(cfg))
+    if layout.node:
+        # The root is the family's common ground: its pieces of work are citable from every node.
+        todo_text += "\n" + "\n".join(
+            read_text(layout.root_framing / n) for n in todo_names(cfg) if (layout.root_framing / n).is_file()
+        )
     for path in documents:
         head = read_lines(path)[:8]
         status = next((l for l in head if re.match(r"^> [Ss]tatut ?:|^> [Ss]tatus ?:", l)), None)
@@ -469,6 +652,8 @@ def check_planning(cfg, layout, report) -> None:
 def check_root_files(cfg, layout, report) -> None:
     known = set(cfg.get("framing", {}).get("root_files", []))
     known.add("lint.toml")
+    if layout.node is None and cfg.get("nodes"):
+        known.add("nodes.md")
     strays = [p for p in sorted(layout.framing.glob("*.md")) if p.name not in known]
     if not strays:
         report("OK", "framing root: no parallel document")
@@ -633,23 +818,47 @@ def check_delivered(cfg, layout, report) -> set:
     # Every framing document, not just the todo: a narrative deleted or renamed leaves the same
     # dangling reference wherever it was cited, and the long-form folder cites them most.
     cited, dead = set(), {}
+    pattern = re.compile(r"(?:(?<![\w/.])([\w][\w-]*)/)?%s/([A-Z0-9-]+\.md)" % re.escape(folder.name))
     for document in framing_documents(cfg, layout):
         for index, line in enumerate(read_lines(document)):
-            for name in re.findall(r"%s/([A-Z0-9-]+\.md)" % re.escape(folder.name), line):
-                cited.add(name)
-                if not (folder / name).is_file():
-                    dead.setdefault(name, []).append("%s:%d" % (document.name, index + 1))
-    for name, places in sorted(dead.items()):
-        report("FAIL", "dangling reference to %s/%s — %s" % (folder.name, name, ", ".join(places[:4])))
+            for owner, name in pattern.findall(line):
+                # `billing/done/X.md` is a narrative of the node `billing`, resolved there from
+                # anywhere in the framing; `done/X.md` is one of the current scope, then of the
+                # root — the family's common ground, visible from every node. A prefix naming no
+                # node is read as before: a bare reference, resolved here.
+                if owner and owner in layout.family:
+                    label = "%s/%s/%s" % (owner, folder.name, name)
+                    found = (layout.root_framing / owner / folder.name / name).is_file()
+                else:
+                    label = "%s/%s" % (folder.name, name)
+                    found = (folder / name).is_file() or (
+                        layout.node is not None and (layout.root_framing / folder.name / name).is_file()
+                    )
+                cited.add(label)
+                if not found:
+                    dead.setdefault(label, []).append("%s:%d" % (document.name, index + 1))
+    for label, places in sorted(dead.items()):
+        report("FAIL", "dangling reference to %s — %s" % (label, ", ".join(places[:4])))
     if not dead:
         report("OK", "framing: %d reference(s) to %s/ resolved" % (len(cited), folder.name))
     return delivered
 
 
-def check_cited_tags(cfg, layout, report, tags, delivered) -> None:
+def check_cited_tags(cfg, layout, report, tags, delivered, family=None) -> None:
     """Citing by identity protects a reference against a corpus that moves; nothing protects
-    it against one that closes. A dead tag stays readable, plausible, and wrong."""
+    it against one that closes. A dead tag stays readable, plausible, and wrong.
+
+    In a workshop with nodes a tag is unique within its node, so a citation says which node it
+    means: `billing:[RELEASE]` names a node, `:[RELEASE]` the root, and a bare `[RELEASE]` is read
+    in the scope where it is written, then in the root — the family's common ground, visible from
+    every node; a sibling's tags are not. A qualified citation that resolves nowhere FAILS, like an
+    addressed one below: the form is unambiguous, so it cannot be a turn of phrase. A bare one
+    stays a WARN, as everywhere else."""
+    family = family or {"": (tags, delivered)}
+    root_tags, root_delivered = family.get("", (tags, delivered))
     known = set(tags) | set(delivered)
+    if layout.node:
+        known |= set(root_tags) | set(root_delivered)
     # A framing that talks about the method writes the placeholder rather than a tag. Leaving
     # it to each workshop's configuration would mean every adopter meets the same false
     # positive and declares the same exception.
@@ -658,23 +867,48 @@ def check_cited_tags(cfg, layout, report, tags, delivered) -> None:
     # written in prose — `[A-Z0-9-]` — reads as a tag named "A-Z0-9-" and is reported as an
     # orphan. The check would then punish a document for explaining a pattern.
     shaped = re.compile(r"^[A-Z][A-Z0-9]*(-[A-Z0-9]+)*$")
-    orphans = {}
+    bare = re.compile(r"(?<!:)\[([A-Z][A-Z0-9-]{2,})\]")
+    qualified = re.compile(r"(?<![\w\]])([\w][\w-]*)?:\[([A-Z][A-Z0-9-]{2,})\]")
+    orphans, unresolved, counted_q = {}, {}, 0
     for path in framing_documents(cfg, layout):
+        card = None
         for index, line in enumerate(read_lines(path)):
-            for tag in re.findall(r"\[([A-Z][A-Z0-9-]{2,})\]", line):
-                if tag in known or tag in excluded or not shaped.match(tag):
+            where = "%s:%d" % (path.name, index + 1)
+            # A card of nodes.md belongs to its node: a bare tag written there is that node's.
+            if layout.node is None and path.name == "nodes.md":
+                heading = re.match(r"^## `([^`/]+)/`", line)
+                if heading:
+                    card = family.get(heading.group(1))
+            local = known | ((set(card[0]) | set(card[1])) if card else set())
+            for tag in bare.findall(line):
+                if tag in local or tag in excluded or not shaped.match(tag):
                     continue
-                orphans.setdefault(tag, []).append("%s:%d" % (path.name, index + 1))
+                orphans.setdefault(tag, []).append(where)
+            for owner, tag in qualified.findall(line):
+                if tag in excluded or not shaped.match(tag):
+                    continue
+                counted_q += 1
+                scope = family.get(owner)
+                key = "%s:[%s]" % (owner, tag)
+                if scope is None:
+                    unresolved.setdefault(key, []).append("%s (no node « %s »)" % (where, owner))
+                elif tag not in scope[0] and tag not in scope[1]:
+                    unresolved.setdefault(key, []).append(where)
     if not orphans:
         report("OK", "cited tags: all resolve to an open piece of work or a delivered narrative")
     for tag, places in sorted(orphans.items()):
         report("WARN", "cited tag [%s] exists nowhere — %s" % (tag, ", ".join(places[:4])))
+    for key, places in sorted(unresolved.items()):
+        report("FAIL", "qualified citation %s resolves nowhere — %s" % (key, ", ".join(places[:4])))
+    if len(family) > 1 and not unresolved:
+        report("OK", "qualified citations: %d, each resolving in the node it names" % counted_q)
 
     # A citation that names a location asserts the tag lives THERE, and the union above cannot
     # see it: `todo.md § [X]` resolves while X lives only in the delivered narrative. A rename
     # produces that state mechanically — the todo is corrected, the narrative keeps its original
     # name, and every citation of the old address goes on resolving. FAIL rather than WARN: the
     # form is unambiguous, so unlike a bare tag it cannot be a turn of phrase.
+    open_tags = set(tags) | (set(root_tags) if layout.node else set())
     names = "|".join(re.escape(name) for name in todo_names(cfg))
     addressed = re.compile(r"`?(?:%s)`?\s*§\s*`?\[([A-Z][A-Z0-9-]*)\]`?" % names)
     counted, misplaced = 0, {}
@@ -684,7 +918,7 @@ def check_cited_tags(cfg, layout, report, tags, delivered) -> None:
                 if tag in excluded or not shaped.match(tag):
                     continue
                 counted += 1
-                if tag not in tags:
+                if tag not in open_tags:
                     misplaced.setdefault(tag, []).append("%s:%d" % (path.name, index + 1))
     for tag, places in sorted(misplaced.items()):
         report("FAIL", "[%s] cited as a section of the todo, where it is no longer one — %s" % (tag, ", ".join(places[:4])))
@@ -723,6 +957,10 @@ def framing_documents(cfg, layout) -> list:
     documents = []
     for path in sorted(layout.framing.rglob("*.md")):
         if ".git" in path.parts:
+            continue
+        # A node's documents are checked from the node, with its own tags and narratives; read
+        # from the root they would be cited tags that exist nowhere.
+        if layout.nodes and path.relative_to(layout.framing).parts[0] in layout.nodes:
             continue
         if any(path.match(pattern) for pattern in excluded):
             continue
@@ -1572,22 +1810,37 @@ def main(argv) -> int:
     if layout.instance is None:
         report("WARN", "instance not found by layout — the identity slot cannot be measured")
 
-    check_handoff(config, layout, report)
-    check_todo_closed(config, layout, report)
-    check_sizes(config, layout, report)
-    check_growth(config, layout, report)
-    check_bootstrap_load(config, layout, report)
-    check_planning(config, layout, report)
-    check_root_files(config, layout, report)
-    tags = check_todo_grammar(config, layout, report)
-    check_item_prefixes(config, layout, report)
-    check_roadmap(config, layout, report, tags)
-    delivered = check_delivered(config, layout, report)
-    check_cited_tags(config, layout, report, tags, delivered)
-    check_echoed_items(config, layout, report)
-    check_external_tags(config, layout, report, tags)
-    check_header_dates(config, layout, report)
-    check_citations(config, layout, report)
+    # tree.md: the root first, then each declared node with the same checks and the same keys,
+    # its lines prefixed by its name. Citations come last, once every scope's tags are known —
+    # the root may cite a node's, a node the root's.
+    nodes = check_nodes(config, layout, report)
+    scopes = [(config, layout, report)] + [
+        (node_config(config, name), layout.for_node(name), NodeReport(report, name)) for name in nodes
+    ]
+    family = {}
+    for cfg, lay, rep in scopes:
+        check_handoff(cfg, lay, rep)
+        check_todo_closed(cfg, lay, rep)
+        check_sizes(cfg, lay, rep)
+        check_growth(cfg, lay, rep)
+        if lay.node is None:
+            check_bootstrap_load(cfg, lay, rep)
+        check_planning(cfg, lay, rep)
+        check_root_files(cfg, lay, rep)
+        tags = check_todo_grammar(cfg, lay, rep)
+        check_item_prefixes(cfg, lay, rep)
+        if lay.node is None:
+            check_roadmap(cfg, lay, rep, tags)
+        delivered = check_delivered(cfg, lay, rep)
+        family[lay.node or ""] = (tags, delivered)
+    for cfg, lay, rep in scopes:
+        tags, delivered = family[lay.node or ""]
+        check_cited_tags(cfg, lay, rep, tags, delivered, family)
+        if lay.node is None:
+            check_echoed_items(cfg, lay, rep)
+            check_external_tags(cfg, lay, rep, tags)
+        check_header_dates(cfg, lay, rep)
+        check_citations(cfg, lay, rep)
     check_index_coverage(config, layout, report)
     check_method_version(config, layout, report)
     if arguments.check_updates:

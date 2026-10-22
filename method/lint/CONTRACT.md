@@ -29,6 +29,7 @@ method under other names.
 | the meta level | the folder under the root holding **`method/organization.md` and `instance/`** — that pair is the whole test |
 | the instance | `instance/` inside the meta level |
 | the method | `method/` inside the meta level — **except** in a workshop that contains the method itself, where the working copy prevails |
+| a node | a declared sub-folder of the framing holding an atlas (`tree.md`); the framing the checks are pointed at is always the root, the one holding `lint.toml` |
 
 ⚠ The meta-level rule used to read *"the workshop that also hosts the instance"*, and it was
 wrong in a way only another machine could reveal. It was inferred from the one corpus where the
@@ -307,6 +308,61 @@ The folder is named by the method, and a workshop is resolved by the test the la
 applies. Neither takes a configuration key. ⚠ A mailbox that is absent is **reported**, not passed
 over: the method ships that folder, so its absence means a finding for a neighbour has nowhere to
 go — and silence there would be indistinguishable from an empty one.
+
+## Nodes — a framing split in one level
+
+`tree.md` lets a workshop too large for one framing split it into **nodes**, each a sub-folder of
+the framing holding the same documents, with a `nodes.md` at the root saying when to open each. The
+checks are pointed at the root — the folder holding `lint.toml` — and they see the nodes from there.
+
+**Declared, never discovered.** `[nodes] names` lists them. Three things are held in step, and each
+mismatch is a `FAIL`: a declared node without its folder (a sub-folder holding an atlas), a folder
+holding an atlas that nothing declares, a declared node without its card in `nodes.md`, a card that
+names no declared node, a `nodes.md` with no `[nodes]` at all. ⚠ A workshop without nodes gets one
+`OK` line saying so — silence cannot be told apart from a check that did not run, and a stray
+`nodes.md` or an undeclared sub-folder is exactly the case this check exists for.
+
+**A card is read by its heading and its two fixed rows.** The heading is the node's folder,
+backticked and ending in `/`; the rows are the two `tree.md` fixes — *State* and *Open when*, or
+the local equivalents the workshop declares in `[nodes] card_rows`. A card lacking one is a `FAIL`:
+they are what the reading decision needs. The other rows are the node's own and are not read — a
+rule there would assume what a node is.
+
+**The socle runs once per node, with the root's keys.** Handoff, todo, sizes, growth, long-form
+folder, stray documents, grammar, item prefixes, delivered narratives, cited tags, header dates and
+citations — the same checks, the same thresholds, each line of the report prefixed with the node's
+name. A node that has measured its own thresholds overrides them in `[nodes.<name>.sizes]`. The
+root's documents are walked without the nodes', and each node's without the root's: a tag is
+unique **within its node**, so a node's tags read from the root would be tags that exist nowhere.
+
+**Citations cross nodes by a qualifier, and bare ones fall back to the root.** `billing:[RELEASE]`
+resolves in the node `billing`, `:[RELEASE]` in the root, and a qualified citation that resolves
+nowhere — no such node, no such tag there — is a `FAIL`, as an addressed citation is: the form is
+unambiguous, so it cannot be a turn of phrase. A bare `[RELEASE]` resolves in the scope where it is
+written, **then in the root** — the family's common ground, visible from every node; a sibling's
+tags are not — and stays a `WARN` when it resolves nowhere, as everywhere else. A delivered
+narrative follows the same rule: `billing/done/RELEASE.md` resolves in that node from anywhere,
+`done/RELEASE.md` in the current scope then in the root. ⚠ The fallback is what keeps `:[TAG]`
+rare: it is needed only where the root's tag is shadowed by the node's own, and a bare citation
+then means the node's.
+
+**The budget stays the root's.** `nodes.md` joins the chain the budget sums, since it is read at
+every start; a node is not in the sum, and its documents are bounded one by one by `[sizes]`. One
+`OK` line says what opening the heaviest node costs, on top of the budget — information, not a
+verdict, since a node is read only when the work calls for it.
+
+**A node's repository is a repository of the workshop.** `[nodes.<name>] repository` names it; the
+folder must exist (`FAIL`), and it belongs in `[workshop] repositories` like the others (`WARN` when
+it is not), so that its line endings and push state are checked with the rest. A node without a
+repository is ordinary.
+
+⚠ **Two limits are known and kept.** A version written on a card and the one the repository
+declares can drift, and so can a card's state and the todo's status line; both are reported by
+nobody today. Either could be held by a check reading the repository and the todo, and both are
+cheap — they wait for a real workshop to show which drifts first. And `git cat-file --batch` reads
+its paths from the repository root while `git log` reads them from the current folder: the growth
+check prefixes the path it asks for, because run from a node it would otherwise fetch the root's
+file of the same name — the root's todo in place of the node's — and report it in silence.
 
 ## Asking whether a newer version is published — the only check that reads a remote
 
