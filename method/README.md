@@ -21,6 +21,7 @@ Three ideas run through everything here:
 | `onboarding.md` | Building a first instance, when there is none — an interview, offered and never started unasked |
 | `corpus.md` | Writing a trigger, and cutting a set of files by it |
 | `tracking.md` | Roles and life cycle of the framing documents, the todo grammar, the closing protocol |
+| `nodes.md` | A workshop whose framing is split into nodes: the index, what is read, what is written, how tags cross |
 | `bootstrap.md` | The reading chain, its load and its budget |
 | `memory.md` | A tool's private memory versus memory shared between agents |
 | `git.md` | Repository creation, the versioned / local boundary, publication |
