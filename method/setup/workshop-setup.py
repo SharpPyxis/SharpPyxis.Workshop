@@ -4,6 +4,7 @@
 Reference implementation of `setup/CONTRACT.md`. What it copies lives in `templates/`.
 
     py -3 <method>/setup/workshop-setup.py <Name> [--repos a b] [--from <framing>] [--dry-run]
+    py -3 <method>/setup/workshop-setup.py <Name> --child <node> [--repo] [--from <framing>] [--dry-run]
 
 Run it from the framing folder of the workshop you are currently in, or point `--from` at one.
 That folder is not decoration: it is what tells the installer the corpus root, the naming
@@ -18,6 +19,11 @@ own refusals, because the check that guards the ordinary one cannot guard it —
 ⚠ The installer refuses to touch anything that already exists. Creating a wiring is a right,
 changing one is not, and the existence of the target is exactly what tells it which of the two
 it is being asked to do. See CONTRACT.md § *The one rule that bounds the whole thing*.
+
+`--child` is the one addition to an existing workshop it makes — a node (`tree.md`), from a
+session of that workshop. It writes the node's skeleton, its card and its declaration, and
+nothing that exists at the node's level; the wiring entry it prints. See CONTRACT.md § *Adding
+a node*.
 """
 
 import argparse
@@ -420,6 +426,143 @@ def init_repository(repo: Path, message: str, report: Report) -> None:
 
 
 # ============================================================================================
+# Adding a node — the one modification of an existing workshop (tree.md)
+# ============================================================================================
+
+# Folder names a node cannot take: the framing's own folders, and the one name the mailbox refuses.
+RESERVED_NODE_NAMES = {"done", "memories", "readme"}
+
+
+def declare_node(text: str, node: str, declared: list, repository: bool, report: Report) -> str:
+    """The node's declaration in `lint.toml`, added to the text of the file.
+
+    ⚠ Textual and additive on purpose. `tomllib` reads and nothing in the standard library writes
+    TOML; a rewrite through any serializer would drop every comment, and the comments are what
+    carry the reason each threshold holds. So the file is edited as text: the `names` array of
+    `[nodes]` is extended on its own line, or the section is appended; a `[nodes.<name>]` table and
+    the repository's entry in `[workshop] repositories` are appended or extended the same way. What
+    cannot be done that way — a `names` array spread over several lines — is refused, with the line
+    to write by hand."""
+    quoted = '"%s"' % node
+    section = re.search(r"^\[nodes\][ \t]*$(.*?)(?=^\[|\Z)", text, re.M | re.S)
+    if section:
+        names = re.search(r"^names[ \t]*=[ \t]*\[(.*)\][ \t]*$", section.group(1), re.M)
+        if not names:
+            report.refuse(
+                "[nodes] exists in lint.toml but its names = [...] does not sit on one line — add %s to it by hand."
+                % quoted
+            )
+        inside = ", ".join('"%s"' % n for n in declared + [node])
+        body = section.group(1).replace(names.group(0), "names = [%s]" % inside, 1)
+        text = text[: section.start(1)] + body + text[section.end(1):]
+        report.did("lint.toml: [nodes] names gains %s" % quoted)
+    else:
+        text = text.rstrip("\n") + (
+            "\n\n# Nodes — declared, never discovered; the lint holds this list, nodes.md and the folders in step\n"
+            "# (method/tree.md). A node that has measured its own thresholds overrides them in [nodes.<name>.sizes].\n"
+            "[nodes]\nnames = [%s]\n" % quoted
+        )
+        report.did("lint.toml: [nodes] declared, names = [%s]" % quoted)
+
+    if repository:
+        repositories = re.search(r"^repositories[ \t]*=[ \t]*\[(.*)\][ \t]*$", text, re.M)
+        if repositories:
+            current = repositories.group(1).strip()
+            extended = "repositories = [%s]" % ((current + ", " + quoted) if current else quoted)
+            text = text.replace(repositories.group(0), extended, 1)
+            report.did("lint.toml: [workshop] repositories gains %s" % quoted)
+        else:
+            report.warn("lint.toml: no single-line repositories = [...] — add %s to [workshop] repositories by hand" % quoted)
+        text = text.rstrip("\n") + "\n\n[nodes.%s]\nrepository = %s\n" % (node, quoted)
+        report.did("lint.toml: [nodes.%s] repository = %s" % (node, quoted))
+    return text
+
+
+def add_node(corpus: Corpus, name: str, node: str, with_repository: bool, report: Report) -> int:
+    """A node is added to an EXISTING workshop — the reverse of the rule that bounds creation, and
+    for the same reason: the folder is inside a framing that already has a session, so no author
+    other than that session is possible, and what is written is only what did not exist yet."""
+    workshop = corpus.root / name
+    framing = workshop / corpus.framing_name
+    config_path = framing / "lint.toml"
+    if not framing.is_dir() or not config_path.is_file():
+        report.refuse(
+            "%s is not a workshop of this corpus — no %s/ holding a lint.toml.\n"
+            "        A node is added to an existing workshop, from a session of that workshop; to create a\n"
+            "        workshop, drop --child." % (workshop, corpus.framing_name)
+        )
+    if not node or re.search(r"[\\/:*?\"<>|\s`]", node) or node.startswith((".", "_")) or node.casefold() in RESERVED_NODE_NAMES:
+        report.refuse(
+            "« %s » is not usable as a node name — a folder name, not starting with a dot or an underscore,\n"
+            "        and none of the framing's own folders (done, memories, _planning)." % node
+        )
+
+    node_dir = framing / node
+    index = framing / "nodes.md"
+    repository = workshop / node if with_repository else None
+    for existing in [node_dir] + ([repository] if repository else []):
+        if existing.exists():
+            report.refuse(
+                "%s already exists.\n"
+                "        The installer adds what is not there; what is there belongs to the sessions of this\n"
+                "        workshop. See method/setup/CONTRACT.md § Adding a node." % existing
+            )
+    config_text = config_path.read_text(encoding="utf-8")
+    try:
+        declared = list(tomllib.loads(config_text).get("nodes", {}).get("names", []))
+    except tomllib.TOMLDecodeError as error:
+        report.refuse("%s does not parse: %s" % (config_path, error))
+    if node in declared:
+        report.refuse("« %s » is already declared in [nodes] names of %s." % (node, config_path))
+    if index.is_file() and re.search(r"^## `%s/`" % re.escape(node), index.read_text(encoding="utf-8"), re.M):
+        report.refuse("nodes.md already carries a card for « %s »." % node)
+
+    values = {"WORKSHOP": name, "NODE": node, "DATE": date.today().isoformat()}
+    templates = corpus.method / "templates"
+    print("workshop  %s" % workshop)
+    print("node      %s" % node_dir)
+    print()
+
+    copy_template(templates / "node", node_dir, values, report)
+    report.did("node %s/ — atlas, todo, handoff, done/, _planning/" % corpus.relative(node_dir))
+
+    card = substitute((templates / "nodes" / "card.md").read_text(encoding="utf-8"), values)
+    if index.is_file():
+        rendered = index.read_text(encoding="utf-8").rstrip("\n") + "\n\n" + card
+        report.did("nodes.md: card « %s/ » appended — fill in what it is, its state, when to open it" % node)
+    else:
+        rendered = substitute((templates / "nodes" / "nodes.md").read_text(encoding="utf-8"), values) + "\n" + card
+        report.did("nodes.md: created with the first card, « %s/ »" % node)
+    if not report.dry_run:
+        index.write_text(rendered, encoding="utf-8", newline="\n")
+
+    config_text = declare_node(config_text, node, declared, with_repository, report)
+    if not report.dry_run:
+        config_path.write_text(config_text, encoding="utf-8", newline="\n")
+
+    if repository:
+        if not report.dry_run:
+            repository.mkdir(parents=True, exist_ok=True)
+        copy_template(templates / "repo", repository, values, report)
+        copy_template(templates / "code-repo", repository, dict(values, REPOSITORY=repository.name), report)
+        report.did("repository %s/" % repository.name)
+        init_repository(repository, "setup: %s — repository skeleton" % repository.name, report)
+
+    print()
+    print("Nothing was committed in %s/: this session commits its own framing, at the close." % corpus.framing_name)
+    if repository:
+        # ⚠ Printed, never written. Adding a folder to an existing wiring is a change, and a wiring is
+        # changed last, after the handover — rewriting it while the session runs can end the session
+        # (`bootstrap.md` § *Changing a wiring, and from where*).
+        conventions = Conventions(corpus, report)
+        entry = {"name": conventions.label(repository.name), "path": corpus.relative(repository)}
+        print("Add this folder to %s.code-workspace — last, after the handover, never mid-session:" % name)
+        print()
+        print(json.dumps(entry, indent=2, ensure_ascii=False))
+    return 0
+
+
+# ============================================================================================
 # Main
 # ============================================================================================
 
@@ -428,6 +571,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Create a workshop, and stop there.")
     parser.add_argument("name", help="the workshop's name — it names the folder and the wiring file alike")
     parser.add_argument("--repos", nargs="*", default=[], help="code repositories to create inside it, each initialised")
+    parser.add_argument("--child", default=None, metavar="NODE",
+                        help="add a node of that name to the EXISTING workshop <Name>, from a session of it (tree.md)")
+    parser.add_argument("--repo", action="store_true", help="with --child: also create the node's code repository, named after it")
     parser.add_argument("--from", dest="origin", default=None,
                         help="framing folder of the workshop you are in (default: the current folder, "
                              "or the meta level when the root holds no workshop yet)")
@@ -463,6 +609,13 @@ def main() -> int:
     name = args.name.strip()
     if not name or re.search(r"[\\/:*?\"<>|]", name):
         report.refuse("« %s » is not usable as a folder name" % args.name)
+
+    if args.child is not None:
+        if args.repos:
+            report.refuse("--child takes --repo, not --repos: a node has at most one repository, named after it.")
+        return add_node(corpus, name, args.child.strip(), args.repo, report)
+    if args.repo:
+        report.refuse("--repo goes with --child; a workshop's repositories are given with --repos.")
 
     # ⚠ The one name the mailbox cannot carry. Case-folded, because where the file system folds
     # case the address and the readme are one file, and the workshop then receives nothing without

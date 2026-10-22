@@ -28,7 +28,8 @@ longer the author, it is the neighbour, and the rule applies in full. That is wh
 existence of the target is exactly what tells it which side of the rule it is on.
 
 ⚠ And it stops at the skeleton. The installer creates; it does not migrate content, does not open
-the new workshop, and does not continue working in it.
+the new workshop, and does not continue working in it. One addition to an existing workshop is
+allowed, and it is bounded the same way — § *Adding a node*.
 
 ⚠ **One name is refused, case-folded: `README`.** The name of a workshop is its address in the
 mailbox, and that folder also holds the one readme the method ships — so a workshop of that name
@@ -169,6 +170,39 @@ words, in their own session.
 ⚠ The symmetric failure is already recorded: three citations of a closed tag survived it, stayed
 readable and plausible, and two of them announced a blocker that had been lifted. A citation left
 behind by a workshop that moved on fails nowhere at all.
+
+## Adding a node — the one modification of an existing workshop
+
+`tree.md` lets a workshop too large for one framing split it into nodes, and a node is **added to a
+workshop that exists** — which reverses the rule above, and for the same reason it was written. A
+node is a folder inside a framing that already has sessions of its own, so no author other than
+one of those sessions is possible; the installer runs from that session, and writes only what did
+not exist yet. What exists at the node's level is refused exactly as a workshop's existence is
+refused at creation: the folder, the card, the declaration, the repository.
+
+**What must be produced.** The node's framing folder, from a template holding the same documents
+as a root minus its configuration: atlas, todo, handoff, the delivered-narrative and long-form
+folders — created empty and from the start, for the reason given above. The node's **card** in the
+root's `nodes.md`, appended, or the file created with the first card; the card carries the two rows
+the method fixes, with placeholders the node's `[SETUP]` says to fill. The **declaration** in the
+root's `lint.toml`: the name added to `[nodes] names`, and when a repository is created, its
+`[nodes.<name>]` table and its entry in `[workshop] repositories`. Optionally the node's **code
+repository**, named after it, initialised like any other.
+
+⚠ **The declaration is written as text, and additively.** The standard library reads TOML and
+writes none, and a rewrite through any serializer would drop every comment — and the comments are
+what carry the reason each threshold holds, which is the one property the format was chosen for.
+So the `names` array is extended on its own line, or the section appended; what cannot be done that
+way — an array spread over several lines — is refused with the line to write by hand, never guessed.
+
+**What must not be produced.** No commit in the framing: unlike a workshop at birth, this framing
+has a history and a session, and the session commits its own work at the close. And **no change to
+the wiring**: adding the repository's folder to the workshop's wiring is a change, done last, after
+the handover, by the developer (`bootstrap.md` § *Changing a wiring, and from where*). The
+installer prints the entry to add, in the form the corpus already uses, and stops.
+
+**Names refused**: the framing's own folders (`done`, `memories`, the long-form folder), `README`
+case-folded, anything starting with a dot or an underscore, and a name `[nodes]` already carries.
 
 ## Levels
 
