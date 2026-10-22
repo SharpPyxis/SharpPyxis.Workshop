@@ -175,14 +175,15 @@ behind by a workshop that moved on fails nowhere at all.
 
 `tree.md` lets a workshop too large for one framing split it into nodes, and a node is **added to a
 workshop that exists** — which reverses the rule above, and for the same reason it was written. A
-node is a folder inside a framing that already has sessions of its own, so no author other than
+node is a folder inside the `nodes/` of a framing that already has sessions of its own, so no author other than
 one of those sessions is possible; the installer runs from that session, and writes only what did
 not exist yet. What exists at the node's level is refused exactly as a workshop's existence is
 refused at creation: the folder, the card, the declaration, the repository.
 
-**What must be produced.** The node's framing folder, from a template holding the same documents
-as a root minus its configuration: atlas, todo, handoff, the delivered-narrative and long-form
-folders — created empty and from the start, for the reason given above. The node's **card** in the
+**What must be produced.** The node's framing folder under the framing's `nodes/` — created with
+the first node — from a template holding the same documents as a root minus its configuration:
+atlas, todo, handoff, the delivered-narrative and long-form folders — created empty and from the
+start, for the reason given above. The node's **card** in the
 root's `nodes.md`, appended, or the file created with the first card; the card carries the two rows
 the method fixes, with placeholders the node's `[SETUP]` says to fill. The **declaration** in the
 root's `lint.toml`: the name added to `[nodes] names`, and when a repository is created, its
@@ -201,8 +202,10 @@ the wiring**: adding the repository's folder to the workshop's wiring is a chang
 the handover, by the developer (`bootstrap.md` § *Changing a wiring, and from where*). The
 installer prints the entry to add, in the form the corpus already uses, and stops.
 
-**Names refused**: the framing's own folders (`done`, `memories`, the long-form folder), `README`
-case-folded, anything starting with a dot or an underscore, and a name `[nodes]` already carries.
+**Names refused**: anything that is not a folder name, anything starting with a dot or an
+underscore, and a name `[nodes]` already carries. ⚠ The framing's own folders are no longer
+reserved: under `nodes/` a node cannot collide with them, and a refusal whose reason is gone is a
+rule that drifts.
 
 ## Levels
 

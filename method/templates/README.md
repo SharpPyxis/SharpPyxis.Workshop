@@ -40,7 +40,7 @@ at a distance on the corpus that ships it.
 | `repo/` | The two line-ending files every repository gets, the framing folder included (`method/git.md` § *Creating a repository*) |
 | `code-repo/` | What only a code repository gets on top: its `.gitignore`, and a readme holding its name |
 | `workshop/` | An empty workshop: its framing folder, and nothing else |
-| `node/` | An empty node of a framing (`tree.md`): the same documents as a root, minus its configuration |
+| `node/` | An empty node of a framing, laid out under its `nodes/` (`tree.md`): the same documents as a root, minus its configuration |
 | `nodes/` | The index of a framing's nodes — its header, and the card every node gets, with the two rows the method fixes |
 
 ⚠ **No `src/`, no `tests/`, no `docs/`.** `organization.md` says a repository's internal skeleton

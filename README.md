@@ -128,7 +128,7 @@ read, which is what keeps this list short.
 | Nothing exists yet | *"I have just copied the method here. There is nothing else yet."* — plus the entry point. The agent finds no instance and **offers** to build one |
 | The last session was cut before it recorded anything | Say so. The state is then established from the disk, mechanically, and the trace of that session is looked for before its reasons are called lost. The work is not replayed |
 | A workshop is to be created | *"Create the workshop Ledger, with the repositories ledger.api and ledger.web."* The installer lays it out, so it matches every other one |
-| A node is to be added | *"Add the node billing to Ledger, with its repository."* The installer lays it out inside the existing framing, adds its card and its declaration, and prints the folder to add to the wiring — which you add last, after the handover |
+| A node is to be added | *"Add the node billing to Ledger, with its repository."* The installer lays it out under the framing's `nodes/`, adds its card and its declaration, and prints the folder to add to the wiring — which you add last, after the handover |
 | A repository is to be published | Say so. The private-to-public pass is a procedure rather than a case-by-case call |
 
 Passing a finding to a neighbor comes up whenever a subject overflows the workshop that is open;
@@ -225,7 +225,7 @@ projects/                        THE ROOT — you choose it. Not a repository, n
 │       │   ├── handoff.md           what is volatile — one entry per session
 │       │   └── shared/              stable facts, reachable from an index
 │       ├── nodes.md                 only when the framing is split: which nodes exist, when to open each
-│       └── billing/                 a node — the same documents again, for one part of the workshop
+│       └── nodes/billing/           a node — the same documents again, for one part of the workshop
 │
 └── TinyParse/                   ANOTHER WORKSHOP — a single independent library
     ├── tinyparse/                 one repository is enough
@@ -250,7 +250,7 @@ projects/                        THE ROOT — you choose it. Not a repository, n
   a tracking tool; the tracking is the files.
 - **Several repositories, one workshop, as long as they serve one framing.** Two sets with
   independent framing are two workshops, however tempting it is to keep them together.
-- **A node is a folder inside `_workspace/` holding an atlas of its own** — one part of a
+- **A node is a folder inside `_workspace/nodes/`, holding an atlas of its own** — one part of a
   workshop too large for one framing, declared in the framing's `nodes.md`. It is not a
   workshop, and the test above does not see it: the root is read at every start, a node when
   the work calls for it. `method/tree.md` has the rest.

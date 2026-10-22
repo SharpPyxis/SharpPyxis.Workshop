@@ -143,7 +143,6 @@ class Layout:
         # the root — the folder holding lint.toml — and a node is seen through `for_node`.
         self.node = None
         self.root_framing = framing
-        self.nodes = []    # declared node folders, skipped when the root's documents are walked
         self.family = []   # declared node names, visible from every scope
 
     def for_node(self, name: str):
@@ -152,9 +151,8 @@ class Layout:
         for what resolves against it: a bare citation falls back to the root, a narrative of a
         sibling is cited by its path from the root."""
         inner = copy.copy(self)
-        inner.framing = self.framing / name
+        inner.framing = self.framing / NODES_FOLDER / name
         inner.node = name
-        inner.nodes = []
         return inner
 
     def _find_meta(self):
@@ -435,11 +433,29 @@ def check_growth(cfg, layout, report) -> None:
 # --------------------------------------------------------------------------------------------
 
 
+# The folder of the framing that holds its nodes, and nothing else (tree.md). Fixed by the method
+# like `nodes.md`, which lists it: the installer writes it and this check reads it, and neither
+# reads prose. Keeping the nodes out of the framing's root is what keeps them from interleaving
+# with `done/`, `memories/` and the long-form folder — measured on fifteen nodes, which sorted
+# between the three — and what lets a framing add a folder of its own without it being read as a
+# node.
+NODES_FOLDER = "nodes"
+
+
 def node_folders(framing: Path) -> list:
-    """Sub-folders of the framing that hold an atlas — what disposition says is a node."""
+    """The sub-folders of `nodes/` — every one of them is meant to be a node."""
+    folder = framing / NODES_FOLDER
+    if not folder.is_dir():
+        return []
+    return sorted(p.name for p in folder.iterdir() if p.is_dir() and not p.name.startswith("."))
+
+
+def stray_nodes(framing: Path) -> list:
+    """Sub-folders of the framing's root that hold an atlas: a node that sits outside `nodes/` —
+    the earlier disposition, or a framing carried over from a workshop of its own."""
     return sorted(
         p.name for p in framing.iterdir()
-        if p.is_dir() and not p.name.startswith((".", "_")) and (p / "atlas.md").is_file()
+        if p.is_dir() and not p.name.startswith((".", "_")) and p.name != NODES_FOLDER and (p / "atlas.md").is_file()
     )
 
 
@@ -461,32 +477,42 @@ def node_cards(lines) -> dict:
 
 def node_config(cfg: dict, name: str) -> dict:
     """The root's configuration, seen from one node: the same keys — the method's defaults or the
-    workshop's measured ones — with the node's own `[nodes.<name>.sizes]` on top, if it measured."""
+    workshop's measured ones — with the node's own tables on top, key by key. `[nodes.<name>.sizes]`
+    is the intended case, a node that measured its own thresholds. Any section of the root can be
+    overridden the same way — `[nodes.<name>.todo]`, `[nodes.<name>.framing]` — because a node
+    carried over from a workshop of its own arrives with its vocabulary and its dated files, and
+    the root's keys applied to it produced forty-six failures of that one origin on fifteen nodes.
+    ⚠ What a node overrides, it declares; the override is the exception, the root's keys the rule."""
     own = cfg.get("nodes", {}).get(name, {})
     inner = dict(cfg)
-    if isinstance(own, dict) and isinstance(own.get("sizes"), dict):
-        inner["sizes"] = dict(cfg.get("sizes", {}), **own["sizes"])
+    if isinstance(own, dict):
+        for key, value in own.items():
+            if isinstance(value, dict) and isinstance(cfg.get(key, {}), dict):
+                inner[key] = dict(cfg.get(key, {}), **value)
     return inner
 
 
 def check_nodes(cfg, layout, report) -> list:
     """Three things held in step: the declaration in `lint.toml`, the cards in `nodes.md`, the
-    folders on disk. Declared, never discovered — a folder nobody declared, a card no folder
-    answers, a declared node with no card: each is a FAIL, so the index cannot fall behind the
-    tree in silence. Returns the nodes the per-node checks will run on.
+    folders under `nodes/`. Declared, never discovered — a folder nobody declared, a card no
+    folder answers, a declared node with no card: each is a FAIL, so the index cannot fall behind
+    the tree in silence. Returns the nodes the per-node checks will run on.
 
     ⚠ A workshop without nodes gets a line too. Silence cannot be told apart from a check that
-    did not run — and a `nodes.md` or a sub-folder holding an atlas that nothing declares is
-    exactly the case this check exists for."""
+    did not run — and a `nodes.md`, a `nodes/` or a folder of the root holding an atlas that
+    nothing declares is exactly the case this check exists for."""
     section = cfg.get("nodes")
     index = layout.framing / "nodes.md"
     folders = node_folders(layout.framing)
+    strays = stray_nodes(layout.framing)
 
     if not section:
         problems = []
         if index.is_file():
             problems.append("nodes.md sits on disk and no [nodes] declares it")
-        for name in folders:
+        if (layout.framing / NODES_FOLDER).is_dir():
+            problems.append("%s/ sits on disk and no [nodes] declares it" % NODES_FOLDER)
+        for name in strays:
             problems.append("%s/ holds an atlas and no [nodes] declares it" % name)
         for problem in problems:
             report("FAIL", "nodes: %s — declared, never discovered" % problem)
@@ -495,7 +521,6 @@ def check_nodes(cfg, layout, report) -> list:
         return []
 
     names = list(section.get("names", []))
-    layout.nodes = names
     layout.family = names
     rows = section.get("card_rows", ["State", "Open when"])
     failures = 0
@@ -511,7 +536,10 @@ def check_nodes(cfg, layout, report) -> list:
             report("FAIL", "nodes: %s declared, no card in nodes.md" % name)
             failures += 1
         if name not in folders:
-            report("FAIL", "nodes: %s declared, no folder holding an atlas" % name)
+            report("FAIL", "nodes: %s declared, no %s/%s/ folder" % (name, NODES_FOLDER, name))
+            failures += 1
+        elif not (layout.framing / NODES_FOLDER / name / "atlas.md").is_file():
+            report("FAIL", "nodes: %s/%s/ holds no atlas — a node carries the same documents as the root" % (NODES_FOLDER, name))
             failures += 1
     for name in cards:
         if name not in names:
@@ -519,8 +547,13 @@ def check_nodes(cfg, layout, report) -> list:
             failures += 1
     for name in folders:
         if name not in names:
-            report("FAIL", "nodes: %s/ holds an atlas and [nodes] does not declare it" % name)
+            report("FAIL", "nodes: %s/%s/ sits on disk and [nodes] does not declare it" % (NODES_FOLDER, name))
             failures += 1
+    for name in strays:
+        # The earlier disposition, or a framing carried over whole: a node lives in nodes/, and a
+        # folder of the root holding an atlas is read by nobody — a second framing in silence.
+        report("FAIL", "nodes: %s/ holds an atlas outside %s/ — move it to %s/%s/ and declare it" % (name, NODES_FOLDER, NODES_FOLDER, name))
+        failures += 1
     for name, block in cards.items():
         missing = [row for row in rows if not any(re.match(r"^\|\s*%s\s*\|" % re.escape(row), line) for line in block)]
         if missing:
@@ -540,7 +573,7 @@ def check_nodes(cfg, layout, report) -> list:
         elif repository not in declared:
             report("WARN", "nodes: repository %s of %s is not in [workshop] repositories — its line endings and push state go unchecked" % (repository, name))
 
-    live = [name for name in names if name in folders]
+    live = [name for name in names if name in folders and (layout.framing / NODES_FOLDER / name / "atlas.md").is_file()]
     if failures == 0:
         report("OK", "nodes: %d declared, each with its card and its folder; cards carry %s" % (len(names), " / ".join(rows)))
 
@@ -549,7 +582,7 @@ def check_nodes(cfg, layout, report) -> list:
     files = bootstrap.get("framing_files", list(cfg.get("sizes", {}).keys()))
     ratio = bootstrap.get("chars_per_token", 3.5)
     costs = {
-        name: sum(len(read_text(layout.framing / name / f)) for f in files if (layout.framing / name / f).is_file())
+        name: sum(len(read_text(layout.framing / NODES_FOLDER / name / f)) for f in files if (layout.framing / NODES_FOLDER / name / f).is_file())
         for name in live
     }
     if costs:
@@ -818,17 +851,17 @@ def check_delivered(cfg, layout, report) -> set:
     # Every framing document, not just the todo: a narrative deleted or renamed leaves the same
     # dangling reference wherever it was cited, and the long-form folder cites them most.
     cited, dead = set(), {}
-    pattern = re.compile(r"(?:(?<![\w/.])([\w][\w-]*)/)?%s/([A-Z0-9-]+\.md)" % re.escape(folder.name))
+    pattern = re.compile(r"(?:(?<![\w/.])%s/([\w][\w-]*)/)?%s/([A-Z0-9-]+\.md)" % (re.escape(NODES_FOLDER), re.escape(folder.name)))
     for document in framing_documents(cfg, layout):
         for index, line in enumerate(read_lines(document)):
             for owner, name in pattern.findall(line):
-                # `billing/done/X.md` is a narrative of the node `billing`, resolved there from
-                # anywhere in the framing; `done/X.md` is one of the current scope, then of the
-                # root — the family's common ground, visible from every node. A prefix naming no
-                # node is read as before: a bare reference, resolved here.
-                if owner and owner in layout.family:
-                    label = "%s/%s/%s" % (owner, folder.name, name)
-                    found = (layout.root_framing / owner / folder.name / name).is_file()
+                # `nodes/billing/done/X.md` is a narrative of the node `billing`, cited by its path
+                # from the framing root and resolved there from anywhere in the framing;
+                # `done/X.md` is one of the current scope, then of the root — the family's common
+                # ground, visible from every node. A prefix naming no node is a dangling path.
+                if owner:
+                    label = "%s/%s/%s/%s" % (NODES_FOLDER, owner, folder.name, name)
+                    found = owner in layout.family and (layout.root_framing / NODES_FOLDER / owner / folder.name / name).is_file()
                 else:
                     label = "%s/%s" % (folder.name, name)
                     found = (folder / name).is_file() or (
@@ -960,7 +993,7 @@ def framing_documents(cfg, layout) -> list:
             continue
         # A node's documents are checked from the node, with its own tags and narratives; read
         # from the root they would be cited tags that exist nowhere.
-        if layout.nodes and path.relative_to(layout.framing).parts[0] in layout.nodes:
+        if layout.node is None and path.relative_to(layout.framing).parts[0] == NODES_FOLDER:
             continue
         if any(path.match(pattern) for pattern in excluded):
             continue
@@ -972,6 +1005,12 @@ class Resolver:
     def __init__(self, cfg, layout):
         self.layout = layout
         roots = [layout.framing, layout.workshop, layout.root]
+        if layout.node:
+            # A document of the root is cited from a node by its path from the framing root —
+            # `_planning/i18n.md` — the one form the narratives already use. Without this root
+            # the node's resolver saw the node, the workshop and the corpus, never the framing it
+            # sits in: measured as a dangling location on a real node.
+            roots.insert(1, layout.root_framing)
         if layout.meta:
             roots.append(layout.meta)
         for extra in cfg.get("references", {}).get("extra_roots", []):

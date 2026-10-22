@@ -21,9 +21,9 @@ changing one is not, and the existence of the target is exactly what tells it wh
 it is being asked to do. See CONTRACT.md § *The one rule that bounds the whole thing*.
 
 `--child` is the one addition to an existing workshop it makes — a node (`tree.md`), from a
-session of that workshop. It writes the node's skeleton, its card and its declaration, and
-nothing that exists at the node's level; the wiring entry it prints. See CONTRACT.md § *Adding
-a node*.
+session of that workshop. It writes the node's skeleton under the framing's `nodes/`, its card
+and its declaration, and nothing that exists at the node's level; the wiring entry it prints.
+See CONTRACT.md § *Adding a node*.
 """
 
 import argparse
@@ -429,8 +429,11 @@ def init_repository(repo: Path, message: str, report: Report) -> None:
 # Adding a node — the one modification of an existing workshop (tree.md)
 # ============================================================================================
 
-# Folder names a node cannot take: the framing's own folders, and the one name the mailbox refuses.
-RESERVED_NODE_NAMES = {"done", "memories", "readme"}
+# The folder of the framing that holds its nodes, and nothing else — the same name the lint reads
+# (`tree.md`). A node under it cannot collide with the framing's own folders, which is why no node
+# name is reserved any more: the list that refused `done` and `memories` lost its reason the day
+# the nodes left the root.
+NODES_FOLDER = "nodes"
 
 
 def declare_node(text: str, node: str, declared: list, repository: bool, report: Report) -> str:
@@ -491,13 +494,12 @@ def add_node(corpus: Corpus, name: str, node: str, with_repository: bool, report
             "        A node is added to an existing workshop, from a session of that workshop; to create a\n"
             "        workshop, drop --child." % (workshop, corpus.framing_name)
         )
-    if not node or re.search(r"[\\/:*?\"<>|\s`]", node) or node.startswith((".", "_")) or node.casefold() in RESERVED_NODE_NAMES:
+    if not node or re.search(r"[\\/:*?\"<>|\s`]", node) or node.startswith((".", "_")):
         report.refuse(
-            "« %s » is not usable as a node name — a folder name, not starting with a dot or an underscore,\n"
-            "        and none of the framing's own folders (done, memories, _planning)." % node
+            "« %s » is not usable as a node name — a folder name, not starting with a dot or an underscore." % node
         )
 
-    node_dir = framing / node
+    node_dir = framing / NODES_FOLDER / node
     index = framing / "nodes.md"
     repository = workshop / node if with_repository else None
     for existing in [node_dir] + ([repository] if repository else []):

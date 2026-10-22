@@ -110,8 +110,8 @@ The atlas keeps the consolidated result in a few lines; the narrative keeps the 
 todo keeps neither.
 
 In a workshop with nodes, `done/` is **per node**. A narrative cited from another node is cited by
-its path from the framing root — `billing/done/RELEASE.md` — so that it resolves from anywhere in
-the framing. A narrative is a location, and this is the one citation where the path *is* the
+its path from the framing root — `nodes/billing/done/RELEASE.md` — so that it resolves from
+anywhere in the framing. A narrative is a location, and this is the one citation where the path *is* the
 identity: the same tag closes in two nodes, and only the folder tells the two stories apart.
 
 ## `_planning/` — the long form, at any stage

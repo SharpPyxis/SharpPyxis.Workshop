@@ -91,7 +91,7 @@ workshop — and a half-rename is worse than none.
 │       ├── _planning/                     the long form, at any stage — status in each header
 │       ├── memories/handoff.md            what is volatile — one entry per session
 │       ├── nodes.md                       only with nodes: which exist, and when to open each
-│       └── <node>/                        a node — the same documents, for one part of the workshop
+│       └── nodes/<node>/                  a node — the same documents, for one part of the workshop
 └── <OtherWorkshop>/             WORKSHOP  a single library is still a workshop
     ├── <repo>/                  REPO
     └── _workspace/              FRAMING
@@ -136,9 +136,9 @@ depth, or how important it looks.
    **a repository of its own**, sitting outside every code repository: the method leans on its
    `git log` for the factual record, which is what lets the handoff stay short. Keep it
    private (§ *Never*, below); `git.md` has the rest.
-   A folder **inside it** that holds an `atlas.md` is a **node** of that framing — one part of
-   the workshop with framing documents of its own, declared by the framing's `nodes.md`. It is
-   not a workshop, and the test above does not see it. `tree.md` has the rest.
+   A folder **inside its `nodes/`** is a **node** of that framing — one part of the workshop
+   with framing documents of its own, declared by the framing's `nodes.md`. It is not a
+   workshop, and the test above does not see it. `tree.md` has the rest.
 4. **Holds `method/organization.md` and `instance/`** → it is the **meta level**. That pair is
    the whole test, and nothing depends on what the folder is called.
 5. **Contains workshops and nothing else of interest** → it is the **root**. Read nothing

@@ -29,10 +29,17 @@ which this method refuses everywhere else.
 
 ## What a node is
 
-A folder **inside the framing**, holding the same documents as the framing itself — `atlas.md`,
-`todo.md`, `memories/handoff.md`, `done/`, `_planning/` — for one part of the workshop. Same
-tenses, same grammar, same closing protocol, same lint keys: everything `tracking.md` says about a
-framing document holds inside a node, file for file.
+A folder **inside the framing's `nodes/`**, holding the same documents as the framing itself —
+`atlas.md`, `todo.md`, `memories/handoff.md`, `done/`, `_planning/` — for one part of the
+workshop. Same tenses, same grammar, same closing protocol, same lint keys: everything
+`tracking.md` says about a framing document holds inside a node, file for file.
+
+⚠ **The nodes live in `nodes/`, and nothing else does.** A first disposition put them at the
+root of the framing, beside `done/`, `memories/` and `_planning/`; on fifteen nodes the listing
+sorted them between the three, and a folder a framing adds of its own — an `infra/` declared in
+its atlas — could be read as a node, or a node as one of the framing's folders. One folder,
+named like the index that lists it, settles both: what is under `nodes/` is a node and nothing
+else is.
 
 - **A node is named after its code repository** when it has one, and the framing's tree then
   mirrors the workshop's. A repository without a node is ordinary — it is part of the main
@@ -159,8 +166,11 @@ re-read against what the session did — `tracking.md` § *Closing a session*.
   current node, and fails a bare one that resolves nowhere — the warning that a tag is cited from
   outside the workshop no longer has a reason to fire inside a family.
 - **A delivered narrative of another node is cited by its path from the framing root**:
-  `billing/done/RELEASE.md`. A narrative is a location, and the path is what makes it resolve from
-  anywhere in the framing.
+  `nodes/billing/done/RELEASE.md`. A narrative is a location, and the path is what makes it
+  resolve from anywhere in the framing.
+- **A document of the root is cited from a node by the same rule** — its path from the framing
+  root, `_planning/i18n.md` — and the checks resolve it there. One form for every location
+  inside the framing, wherever it is written.
 
 ## What does not change
 

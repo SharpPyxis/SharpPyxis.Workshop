@@ -29,7 +29,7 @@ method under other names.
 | the meta level | the folder under the root holding **`method/organization.md` and `instance/`** — that pair is the whole test |
 | the instance | `instance/` inside the meta level |
 | the method | `method/` inside the meta level — **except** in a workshop that contains the method itself, where the working copy prevails |
-| a node | a declared sub-folder of the framing holding an atlas (`tree.md`); the framing the checks are pointed at is always the root, the one holding `lint.toml` |
+| a node | a declared sub-folder of the framing's `nodes/`, holding an atlas (`tree.md`); the framing the checks are pointed at is always the root, the one holding `lint.toml` |
 
 ⚠ The meta-level rule used to read *"the workshop that also hosts the instance"*, and it was
 wrong in a way only another machine could reveal. It was inferred from the one corpus where the
@@ -312,15 +312,19 @@ go — and silence there would be indistinguishable from an empty one.
 ## Nodes — a framing split in one level
 
 `tree.md` lets a workshop too large for one framing split it into **nodes**, each a sub-folder of
-the framing holding the same documents, with a `nodes.md` at the root saying when to open each. The
-checks are pointed at the root — the folder holding `lint.toml` — and they see the nodes from there.
+the framing's `nodes/` holding the same documents, with a `nodes.md` at the root saying when to open
+each. The checks are pointed at the root — the folder holding `lint.toml` — and they see the nodes
+from there.
 
 **Declared, never discovered.** `[nodes] names` lists them. Three things are held in step, and each
-mismatch is a `FAIL`: a declared node without its folder (a sub-folder holding an atlas), a folder
-holding an atlas that nothing declares, a declared node without its card in `nodes.md`, a card that
-names no declared node, a `nodes.md` with no `[nodes]` at all. ⚠ A workshop without nodes gets one
-`OK` line saying so — silence cannot be told apart from a check that did not run, and a stray
-`nodes.md` or an undeclared sub-folder is exactly the case this check exists for.
+mismatch is a `FAIL`: a declared node without its folder under `nodes/`, or with a folder holding no
+atlas; a sub-folder of `nodes/` that nothing declares; a declared node without its card in
+`nodes.md`; a card that names no declared node; a `nodes.md` or a `nodes/` with no `[nodes]` at all.
+And a folder of the framing's **root** holding an atlas is a `FAIL` whatever `[nodes]` says: it is a
+node outside `nodes/` — the earlier disposition, or a framing carried over whole — and from the root
+it is read by nobody. ⚠ A workshop without nodes gets one `OK` line saying so — silence cannot be
+told apart from a check that did not run, and a stray `nodes.md` or an undeclared folder is exactly
+the case this check exists for.
 
 **A card is read by its heading and its two fixed rows.** The heading is the node's folder,
 backticked and ending in `/`; the rows are the two `tree.md` fixes — *State* and *Open when*, or
@@ -331,9 +335,14 @@ rule there would assume what a node is.
 **The socle runs once per node, with the root's keys.** Handoff, todo, sizes, growth, long-form
 folder, stray documents, grammar, item prefixes, delivered narratives, cited tags, header dates and
 citations — the same checks, the same thresholds, each line of the report prefixed with the node's
-name. A node that has measured its own thresholds overrides them in `[nodes.<name>.sizes]`. The
-root's documents are walked without the nodes', and each node's without the root's: a tag is
-unique **within its node**, so a node's tags read from the root would be tags that exist nowhere.
+name. A node that has measured its own thresholds overrides them in `[nodes.<name>.sizes]`, and any
+section of the root can be overridden the same way, key by key — `[nodes.<name>.todo]` for a status
+vocabulary of its own, `[nodes.<name>.framing]` for its dated files. ⚠ Measured on fifteen nodes
+carried over from workshops of their own: the root's vocabulary and dated files applied to them
+produced forty-six failures of that one origin. The override is the exception a node declares; the
+root's keys stay the rule. The root's documents are walked without the nodes', and each node's
+without the root's: a tag is unique **within its node**, so a node's tags read from the root would
+be tags that exist nowhere.
 
 **Citations cross nodes by a qualifier, and bare ones fall back to the root.** `billing:[RELEASE]`
 resolves in the node `billing`, `:[RELEASE]` in the root, and a qualified citation that resolves
@@ -341,10 +350,14 @@ nowhere — no such node, no such tag there — is a `FAIL`, as an addressed cit
 unambiguous, so it cannot be a turn of phrase. A bare `[RELEASE]` resolves in the scope where it is
 written, **then in the root** — the family's common ground, visible from every node; a sibling's
 tags are not — and stays a `WARN` when it resolves nowhere, as everywhere else. A delivered
-narrative follows the same rule: `billing/done/RELEASE.md` resolves in that node from anywhere,
+narrative follows the same rule: `nodes/billing/done/RELEASE.md` resolves in that node from anywhere,
 `done/RELEASE.md` in the current scope then in the root. ⚠ The fallback is what keeps `:[TAG]`
 rare: it is needed only where the root's tag is shadowed by the node's own, and a bare citation
-then means the node's.
+then means the node's. **A document of the root is cited from a node by its path from the framing
+root** — `_planning/i18n.md` — and a node's resolver reads the root framing right after the node's
+own folder, before the workshop and the corpus. ⚠ It did not, at first: a node citing a long-form
+document of the root was a dangling location, while the narratives already resolved by that very
+rule.
 
 **The budget stays the root's.** `nodes.md` joins the chain the budget sums, since it is read at
 every start; a node is not in the sum, and its documents are bounded one by one by `[sizes]`. One
