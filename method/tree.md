@@ -147,7 +147,8 @@ open — except a line deposited in the index, above.
 **Two handoffs record the same work.** The root's entry lists the nodes the session touched. Each
 node touched gets an entry of its own, saying what was done there. ⚠ A session that opens that node
 later must not learn from the `git log` what the root changed under it: the history is the factual
-record, and the handoff is what lets it stay unread.
+record, and the handoff is what lets it stay unread. At the close, the cards of the nodes touched are
+re-read against what the session did — `tracking.md` § *Closing a session*.
 
 ## Citing across nodes
 

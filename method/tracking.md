@@ -443,7 +443,12 @@ In order:
 
 ⚠ **In a workshop with nodes, steps 1 to 3 apply to the root and to every node the session
 opened**, and the root's handoff entry names them — § `memories/handoff.md`. The lint of step 4
-runs once, from the root, over all of them.
+runs once, from the root, over all of them. Step 3 takes one more file there: **re-read the cards
+of the nodes touched in `nodes.md`** and name what the session made false in them — a state that
+moved, a version published, something the node owns that changed, a trigger that no longer names
+the work it would now receive. A short pass, and the only moment the index meets what just
+happened: a card is written at a node's birth and read at every start, so without it the card is
+read a hundred times and corrected never.
 
 ⚠ If a workshop's atlas defines a more precise closing checklist, **it prevails** — it adds
 the local specifics: tooling, sites, scripts. What belongs there is what is genuinely due *at the
